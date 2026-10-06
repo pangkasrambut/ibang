@@ -139,6 +139,41 @@
             background: #fef2f2;
             box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
         }
+
+        /* Password wrapper dengan icon mata */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.password-wrapper input {
+    padding-right: 44px !important;
+}
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 6px 8px;
+    line-height: 1;
+    color: #64748b;
+    border-radius: 8px;
+    transition: 0.15s;
+    user-select: none;
+    touch-action: manipulation;
+    z-index: 2;
+}
+.toggle-password:hover,
+.toggle-password:active {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+        
         input[type="date"], input[type="time"] {
             -webkit-appearance: none;
             appearance: none;
@@ -1099,9 +1134,12 @@
                     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label>Password <span class="required">*</span></label>
-                    <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
-                </div>
+    <label>Password <span class="required">*</span></label>
+    <div class="password-wrapper">
+        <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+        <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Tampilkan password">👁️</button>
+    </div>
+</div>
             </div>
 
             <button class="btn btn-green" id="btnLogin" style="margin-top:1rem;" disabled>
@@ -1120,9 +1158,12 @@
                 <input type="text" id="regUsername" placeholder="Contoh: ibang" autocomplete="off">
             </div>
             <div class="form-group">
-                <label>Password <span class="required">*</span></label>
-                <input type="password" id="regPassword" placeholder="Minimal 4 karakter" autocomplete="off">
-            </div>
+    <label>Password <span class="required">*</span></label>
+    <div class="password-wrapper">
+        <input type="password" id="regPassword" placeholder="Minimal 4 karakter" autocomplete="off">
+        <button type="button" class="toggle-password" data-target="regPassword" aria-label="Tampilkan password">👁️</button>
+    </div>
+</div>
             <div class="form-group">
                 <label>Nama Operator <span class="required">*</span></label>
                 <input type="text" id="regNamaOperator" placeholder="Contoh: Ibang" autocomplete="off">
@@ -1349,7 +1390,28 @@
     // ============================================================
     // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
     // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxop-AijqgScI9EOwrj-1SRWPX09l02kMNvUAqsQ1TfO3CDpR301d_kJl-Ygn7leS5S9A/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycby7bHELLf17LwhYcQEbsDwN4chV8IXLmZZ5eCP0iR4LNH3ZJ2OQnpxU1skI-cr1XGywRQ/exec'
+document.querySelectorAll('.toggle-password').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        if (!input) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+            btn.setAttribute('aria-label', 'Sembunyikan password');
+        } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+            btn.setAttribute('aria-label', 'Tampilkan password');
+        }
+
+        // Fokuskan kembali ke input agar user tetap bisa lanjut mengetik
+        input.focus();
+    });
+});';
 
     (function() {
         const LAYANAN_MASTER = [
@@ -2239,6 +2301,30 @@
             }
         });
 
+
+        // ============ TOGGLE PASSWORD (ICON MATA) ============
+document.querySelectorAll('.toggle-password').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        if (!input) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+            btn.setAttribute('aria-label', 'Sembunyikan password');
+        } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+            btn.setAttribute('aria-label', 'Tampilkan password');
+        }
+
+        // Fokuskan kembali ke input agar user tetap bisa lanjut mengetik
+        input.focus();
+    });
+});
+        
         // ============ INIT ============
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
