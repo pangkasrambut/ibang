@@ -1112,7 +1112,7 @@
         <!-- REGISTER -->
         <div id="registerFormContainer" style="display:none;">
             <div class="alert-box alert-info show" style="margin-bottom:1rem;">
-                📝 Khusus <b>Barberman</b>. Admin tidak perlu register </b>.
+                📝 Khusus <b>Barberman</b>. Admin tidak perlu register.
             </div>
 
             <div class="form-group">
@@ -1621,14 +1621,23 @@
         }
 
         // ============ TAB ============
-        function switchTab(tab) {
+                function switchTab(tab) {
             tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
             if (tab === 'login') {
                 loginFormContainer.style.display = 'block';
                 registerFormContainer.style.display = 'none';
+                // Kalau role sudah dipilih, fokus ke username atau password
+                if (selectedLoginRole) {
+                    if (loginUsername.value) {
+                        setTimeout(() => loginPassword.focus(), 100);
+                    } else {
+                        setTimeout(() => loginUsername.focus(), 100);
+                    }
+                }
             } else {
                 loginFormContainer.style.display = 'none';
                 registerFormContainer.style.display = 'block';
+                setTimeout(() => regUsername.focus(), 100);
             }
             hideAlert();
         }
@@ -1636,24 +1645,20 @@
 
         // ============ ROLE SELECTOR ============
         loginRoleSelector.querySelectorAll('.role-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
-                opt.classList.add('selected');
-                selectedLoginRole = opt.dataset.role;
-                loginFieldsContainer.style.display = 'block';
-                hideAlert();
-                if (selectedLoginRole === 'admin') {
-                    loginUsername.value = '';
-                    loginPassword.value = '';
-                    loginPassword.placeholder = '';
-                } else {
-                    loginUsername.value = '';
-                    loginPassword.value = '';
-                    loginUsername.placeholder = 'Username barberman';
-                    loginPassword.placeholder = 'Password';
-                }
-                validateLoginForm();
-                setTimeout(() => loginPassword.focus(), 200);
+    opt.addEventListener('click', function() {
+        loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedLoginRole = opt.dataset.role;
+        loginFieldsContainer.style.display = 'block';
+        hideAlert();
+        // Kosongkan form, tanpa hint apa pun
+        loginUsername.value = '';
+        loginPassword.value = '';
+        loginUsername.placeholder = 'Masukkan username';
+        loginPassword.placeholder = 'Masukkan password';
+                        validateLoginForm();
+                // Fokus ke USERNAME dulu, bukan password
+                setTimeout(() => loginUsername.focus(), 200);
             });
         });
         function validateLoginForm() {
@@ -1663,6 +1668,14 @@
         }
         loginUsername.addEventListener('input', function() { loginUsername.classList.remove('error'); validateLoginForm(); });
         loginPassword.addEventListener('input', function() { loginPassword.classList.remove('error'); validateLoginForm(); });
+                // Enter di username → pindah ke password
+        loginUsername.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                loginPassword.focus();
+            }
+        });
+        
 
         // ============ LOGIN ============
         btnLogin.addEventListener('click', async function() {
@@ -1700,7 +1713,7 @@
             } else {
                 loginUsername.classList.add('error');
                 loginPassword.classList.add('error');
-                showAlert('❌ ' + (res.message || 'Login gagal.'), 'error');
+                showAlert('❌ Username atau password salah.', 'error');
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
         });
