@@ -327,20 +327,6 @@
             loadSesiFromCache();
             updateClockUI();
             loadKeuangan(); loadShopProfile();
-// Sync keuangan & settings dari server
-if (apiOnline) {
-    apiCall('getKeuangan', {}, 'GET').then(res => {
-        if (res && res.ok && res.data) { keuanganList = res.data; saveKeuangan(); updateSaldo(); renderKeuangan(); }
-    });
-    apiCall('getSettings', {}, 'GET').then(res => {
-        if (res && res.ok && res.data) {
-            shopProfile.nama = res.data.shopNama || shopProfile.nama;
-            shopProfile.alamat = res.data.shopAlamat || shopProfile.alamat;
-            shopProfile.hp = res.data.shopHP || shopProfile.hp;
-            saveShopProfile();
-        }
-    });
-}
             syncDataFromServer();
             switchTab('nota');
         }
