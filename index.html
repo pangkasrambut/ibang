@@ -842,7 +842,7 @@
 </div>
 
     <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwgwdm7x7e_TVqllb84F2TvNfdfYUcYwl1qVCtMIbTbVEQwQvbqu5IElgk4LH2tgDw_XQ/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxRAxlPLvEVAG0FUEM-slWP_JsXXtCtTPz7SaZb4AR4ivHVApaDM6nwg5S8rFqmUlh5tg/exec';
 
     (function() {
         const LAYANAN_MASTER = [
@@ -938,7 +938,28 @@
             });
         });
 
-        function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0); }
+                function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0); }
+
+        // ⭐ Helper: format tanggal dari berbagai format ke DD/MM/YYYY
+        function formatTanggalKeu(tgl) {
+            if (!tgl) return '-';
+            if (typeof tgl === 'string' && (tgl.includes('GMT') || tgl.includes('Waktu') || tgl.includes('UTC'))) {
+                try {
+                    const d = new Date(tgl);
+                    if (isNaN(d.getTime())) return tgl;
+                    const dd = String(d.getDate()).padStart(2, '0');
+                    const mm = String(d.getMonth() + 1).padStart(2, '0');
+                    const yyyy = d.getFullYear();
+                    return `${dd}/${mm}/${yyyy}`;
+                } catch (e) { return tgl; }
+            }
+            if (/^\d{4}-\d{2}-\d{2}/.test(String(tgl))) {
+                const [y, m, d] = String(tgl).substring(0, 10).split('-');
+                return `${d}/${m}/${y}`;
+            }
+            return String(tgl);
+        }   
+        
         function timeToMinutes(t) { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; }
         function hitungSelisihMenit(a, b) { return Math.abs(timeToMinutes(a) - timeToMinutes(b)); }
         function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
@@ -1332,10 +1353,10 @@
                 <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
                 <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
                 <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
-                <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
-                <div class="nt-row"><span class="nt-label">No Kursi</span><span class="nt-value">${escapeHtml(nota.noKursi || '-')}</span></div>
+                                <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
                 <div class="nt-barber">💈 Operator: ${escapeHtml(nota.barberman || '-')}</div>
                 <div class="nt-line"></div>
+                <div class="nt-row"><span class="nt-label">No Kursi</span><span class="nt-value">${escapeHtml(nota.noKursi || '-')}</span></div>
                 <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${nota.jamMulai}</span></div>
                 <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
                 <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
@@ -1590,7 +1611,7 @@
                 const isMasuk = k.jenis === 'masuk';
                                 const dariNota = !!k.refNotaId;
                 html += `<tr${dariNota ? ' style="background:#f0fdf4;"' : ''}>
-                    <td data-label="Tanggal">${k.tanggal || '-'}</td>
+                    <td data-label="Tanggal">${formatTanggalKeu(k.tanggal)}</td>
                     <td data-label="Jenis">
                         <span class="badge ${isMasuk ? 'badge-green' : 'badge-red'}">${isMasuk ? '💵 Masuk' : '💸 Keluar'}</span>
                         ${dariNota ? '<div class="badge badge-blue" style="margin-top:2px; font-size:0.6rem;">📋 dari Nota</div>' : ''}
