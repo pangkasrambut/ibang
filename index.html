@@ -2066,12 +2066,23 @@
             });
             const total = layananArr.reduce((s, l) => s + l.harga, 0);
             const barberman = sesiAktif.barberman || (currentUser.role === 'barberman' ? currentUser.namaOperator : '-');
+            
+
+            // Hitung nomor urut nota hari ini
+            const tanggalNota = sesiAktif.tanggal || getTanggalSekarang();
+            const notaHariIni = notaList.filter(n => n.tanggal === tanggalNota);
+            const urut = String(notaHariIni.length + 1).padStart(3, '0');
+            const nomorNota = `INV-${tanggalNota.replace(/-/g, '')}-${urut}`;
+
             const notaBaru = {
-                id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama, barberman, layanan: layananArr, total,
-                jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai,
-                tanggal: sesiAktif.tanggal || getTanggalSekarang()
-            };
+            id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            nomorNota: nomorNota,   // ← tambah field ini
+            nama, barberman, layanan: layananArr, total,
+            jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai,
+            tanggal: tanggalNota
+        };
+            
+            
 
             btnOkLayanan.disabled = true;
             btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
@@ -2113,7 +2124,7 @@
                     <div class="nt-center nt-sub">Jl. Contoh No. 123, Kota</div>
                     <div class="nt-center nt-sub">Telp: 0812-3456-7890</div>
                     <div class="nt-line"></div>
-                    <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.id.slice(-6).toUpperCase()}</span></div>
+                    <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
                     <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
                     <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
                     <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
