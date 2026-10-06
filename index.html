@@ -2,124 +2,148 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1e293b">
     <title>Barbershop • Pembukuan & CCTV Match</title>
     <style>
         * {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             background: #f4f7fc;
-            padding: 1.5rem;
+            padding: 1rem;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
+            font-size: 15px;
+            color: #1e293b;
         }
         .app {
             max-width: 1400px;
             width: 100%;
+            margin: 0 auto;
             background: white;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            padding: 2rem 2rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.15);
+            padding: 1.5rem;
         }
+
+        /* ===== HEADER ===== */
         h1 {
-            font-size: 2.2rem;
+            font-size: 1.6rem;
             font-weight: 700;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
             color: #1e293b;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
         h1 span {
             background: #1e293b;
             color: white;
-            font-size: 1rem;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .subhead {
             color: #64748b;
-            margin-bottom: 2rem;
-            border-left: 5px solid #f59e0b;
-            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #f59e0b;
+            padding-left: 0.85rem;
             font-weight: 500;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
+
+        /* ===== GRID UTAMA ===== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
-            gap: 1.8rem;
-            margin-bottom: 2rem;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
         }
+
+        /* ===== CARD ===== */
         .card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 24px;
-            padding: 1.6rem 1.8rem;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-            transition: 0.2s;
+            border-radius: 20px;
+            padding: 1.25rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
         .card-title {
-            font-weight: 600;
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: #0f172a;
             border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.65rem;
         }
-        .card-title i {
-            font-size: 1.5rem;
-        }
+
+        /* ===== FORM ===== */
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
         label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
             color: #475569;
             margin-bottom: 6px;
         }
         input, select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 14px;
             border: 1.5px solid #e2e8f0;
-            border-radius: 16px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 16px; /* 16px penting agar iOS tidak zoom */
             background: #f8fafc;
             transition: 0.2s;
             outline: none;
+            font-family: inherit;
+            color: #1e293b;
         }
         input:focus, select:focus {
             border-color: #f59e0b;
             background: white;
             box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
         }
+
+        /* iOS date/time fix */
+        input[type="date"],
+        input[type="time"] {
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 44px;
+        }
+
         .row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
         }
+
+        /* ===== BUTTON ===== */
         .btn {
             border: none;
             background: #1e293b;
             color: white;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 1rem;
+            font-weight: 700;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: 0.2s;
             display: inline-flex;
@@ -128,43 +152,43 @@
             gap: 8px;
             width: 100%;
             margin-top: 0.5rem;
+            font-family: inherit;
+            min-height: 48px;
+            touch-action: manipulation;
         }
-        .btn:hover {
+        .btn:hover, .btn:active {
             background: #0f172a;
-            transform: scale(1.01);
+            transform: scale(0.99);
         }
         .btn-outline {
             background: white;
             color: #1e293b;
             border: 1.5px solid #cbd5e1;
         }
-        .btn-outline:hover {
+        .btn-outline:hover, .btn-outline:active {
             background: #f1f5f9;
             border-color: #94a3b8;
         }
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            width: auto;
-            margin: 0;
-        }
+
+        /* ===== DAFTAR NOTA & CCTV ===== */
         .nota-list, .cctv-list {
-            max-height: 300px;
+            max-height: 320px;
             overflow-y: auto;
-            padding-right: 6px;
+            padding-right: 4px;
             margin-top: 0.5rem;
+            -webkit-overflow-scrolling: touch;
         }
         .nota-item, .cctv-item {
             background: #f8fafc;
-            border-radius: 18px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 10px;
-            border-left: 6px solid #f59e0b;
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 8px;
+            border-left: 5px solid #f59e0b;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            transition: 0.15s;
-            font-size: 0.9rem;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.85rem;
         }
         .cctv-item {
             border-left-color: #3b82f6;
@@ -174,158 +198,387 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            flex: 1;
+            min-width: 0;
         }
         .nota-item .name, .cctv-item .name {
             font-weight: 700;
             color: #0f172a;
+            word-break: break-word;
+            font-size: 0.9rem;
         }
         .nota-item .detail, .cctv-item .detail {
             color: #475569;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
+            line-height: 1.4;
         }
+        .delete-btn {
+            background: #fee2e2;
+            border: none;
+            color: #dc2626;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 10px;
+            line-height: 1;
+            font-weight: 700;
+            flex-shrink: 0;
+            touch-action: manipulation;
+            min-width: 32px;
+            min-height: 32px;
+        }
+        .delete-btn:hover, .delete-btn:active {
+            background: #fecaca;
+        }
+
+        /* ===== BADGE ===== */
         .badge {
             background: #e2e8f0;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             color: #1e293b;
-        }
-        .badge-green {
-            background: #dcfce7;
-            color: #166534;
+            white-space: nowrap;
         }
         .badge-blue {
             background: #dbeafe;
             color: #1e40af;
         }
-        .delete-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.4rem;
-            cursor: pointer;
-            padding: 0 6px;
-            border-radius: 20px;
-            line-height: 1;
-            transition: 0.15s;
-        }
-        .delete-btn:hover {
-            color: #dc2626;
-            background: #fee2e2;
-        }
+
+        /* ===== LAPORAN ===== */
         .report-section {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             border-top: 2px dashed #e2e8f0;
-            padding-top: 2rem;
+            padding-top: 1.5rem;
         }
+
+        /* Tabel Desktop */
         .table-wrapper {
             overflow-x: auto;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #e2e8f0;
-            margin: 1rem 0;
+            margin: 0.75rem 0;
+            -webkit-overflow-scrolling: touch;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
-            min-width: 700px;
+            font-size: 0.85rem;
+            min-width: 640px;
         }
         th {
             background: #f1f5f9;
             text-align: left;
-            padding: 16px 18px;
-            font-weight: 600;
+            padding: 12px 14px;
+            font-weight: 700;
             color: #1e293b;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
         }
         td {
-            padding: 14px 18px;
+            padding: 12px 14px;
             border-bottom: 1px solid #edf2f7;
             color: #1e293b;
+            vertical-align: middle;
         }
-        tr:last-child td {
-            border-bottom: none;
+        tr:last-child td { border-bottom: none; }
+
+        /* ===== KARTU LAPORAN MOBILE (pengganti tabel) ===== */
+        .laporan-mobile {
+            display: none;
         }
+        .laporan-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 12px;
+            border-left: 5px solid #f59e0b;
+        }
+        .laporan-card .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 6px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            gap: 12px;
+            font-size: 0.82rem;
+        }
+        .laporan-card .row:last-child { border-bottom: none; }
+        .laporan-card .row .lbl {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+        .laporan-card .row .val {
+            color: #0f172a;
+            font-weight: 600;
+            text-align: right;
+            word-break: break-word;
+        }
+        .laporan-card .card-name {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #0f172a;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* Status badge */
         .match-status {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 5px 14px;
-            border-radius: 30px;
-            font-size: 0.75rem;
+            gap: 4px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
             font-weight: 700;
+            white-space: nowrap;
         }
-        .match-true {
-            background: #dcfce7;
-            color: #15803d;
-        }
-        .match-false {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-        .match-warning {
-            background: #fef9c3;
-            color: #854d0e;
-        }
+        .match-true { background: #dcfce7; color: #15803d; }
+        .match-false { background: #fee2e2; color: #b91c1c; }
+        .match-warning { background: #fef9c3; color: #854d0e; }
+
+        /* ===== SUMMARY ===== */
         .summary-cards {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 1.25rem;
         }
         .sum-card {
             background: #f8fafc;
-            border-radius: 20px;
-            padding: 1.2rem 2rem;
-            flex: 1;
-            min-width: 150px;
+            border-radius: 16px;
+            padding: 1rem 1.1rem;
             border: 1px solid #e2e8f0;
         }
         .sum-card .label {
-            font-size: 0.8rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             color: #64748b;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
         }
         .sum-card .value {
-            font-size: 1.9rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #0f172a;
             line-height: 1.2;
+            word-break: break-word;
         }
+
+        /* ===== LAIN-LAIN ===== */
         .empty-state {
             color: #94a3b8;
             font-style: italic;
             text-align: center;
-            padding: 1.5rem;
-            font-size: 0.9rem;
+            padding: 1.25rem;
+            font-size: 0.85rem;
         }
         .flex-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
-        .mt-2 { margin-top: 1rem; }
-        .text-muted { color: #64748b; font-size: 0.8rem; }
-        .highlight {
-            background: #fef9c3;
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-weight: 600;
-        }
+        .mt-2 { margin-top: 0.75rem; }
+        .text-muted { color: #64748b; font-size: 0.78rem; }
         .footer-note {
             text-align: center;
-            margin-top: 2rem;
-            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
             color: #94a3b8;
             border-top: 1px solid #e2e8f0;
-            padding-top: 1.5rem;
+            padding-top: 1rem;
+            line-height: 1.5;
+        }
+
+        /* ===== SCROLLBAR HALUS ===== */
+        .nota-list::-webkit-scrollbar,
+        .cctv-list::-webkit-scrollbar,
+        .table-wrapper::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .nota-list::-webkit-scrollbar-thumb,
+        .cctv-list::-webkit-scrollbar-thumb,
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* ================================================= */
+        /* ================= TABLET ======================== */
+        /* ================================================= */
+        @media (max-width: 900px) {
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ================================================= */
+        /* ================= MOBILE ======================== */
+        /* ================================================= */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.75rem;
+                font-size: 14px;
+            }
+            .app {
+                padding: 1rem;
+                border-radius: 18px;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            h1 span {
+                font-size: 0.62rem;
+                padding: 3px 10px;
+            }
+            .subhead {
+                font-size: 0.78rem;
+                margin-bottom: 1.25rem;
+            }
+
+            /* Grid jadi 1 kolom */
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 1rem;
+                border-radius: 16px;
+            }
+            .card-title {
+                font-size: 0.95rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Input lebih besar & nyaman disentuh */
+            input, select {
+                padding: 11px 12px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+            label {
+                font-size: 0.68rem;
+            }
+
+            .btn {
+                padding: 13px 16px;
+                font-size: 0.9rem;
+                min-height: 46px;
+                border-radius: 12px;
+            }
+
+            /* Row-2 tetap 2 kolom untuk input pendek, tapi lebih rapat */
+            .row-2 {
+                gap: 0.6rem;
+            }
+
+            .nota-list, .cctv-list {
+                max-height: 260px;
+            }
+
+            /* Sembunyikan tabel, tampilkan kartu */
+            .table-wrapper {
+                display: none;
+            }
+            .laporan-mobile {
+                display: block;
+            }
+
+            /* Summary 2 kolom */
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+            .sum-card {
+                padding: 0.85rem;
+                border-radius: 14px;
+            }
+            .sum-card .value {
+                font-size: 1.15rem;
+            }
+            .sum-card .label {
+                font-size: 0.62rem;
+            }
+        }
+
+        /* ================================================= */
+        /* ============== MOBILE KECIL ===================== */
+        /* ================================================= */
+        @media (max-width: 420px) {
+            body {
+                padding: 0.5rem;
+            }
+            .app {
+                padding: 0.85rem;
+                border-radius: 14px;
+            }
+            h1 {
+                font-size: 1.1rem;
+            }
+            .subhead {
+                font-size: 0.72rem;
+                padding-left: 0.7rem;
+            }
+            .card {
+                padding: 0.85rem;
+                border-radius: 14px;
+            }
+            .card-title {
+                font-size: 0.88rem;
+            }
+
+            /* Di HP sangat kecil, row-2 jadi 1 kolom supaya tidak sempit */
+            .row-2 {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+            .sum-card .value {
+                font-size: 1rem;
+            }
+
+            .nota-item, .cctv-item {
+                padding: 0.75rem 0.85rem;
+            }
+            .nota-item .name, .cctv-item .name {
+                font-size: 0.85rem;
+            }
+            .nota-item .detail, .cctv-item .detail {
+                font-size: 0.7rem;
+                gap: 6px;
+            }
+
+            .laporan-card {
+                padding: 0.85rem;
+            }
+            .laporan-card .card-name {
+                font-size: 0.92rem;
+            }
+            .laporan-card .row {
+                font-size: 0.78rem;
+            }
+            .laporan-card .row .lbl {
+                font-size: 0.66rem;
+            }
         }
     </style>
 </head>
@@ -341,7 +594,7 @@
 
     <!-- DUA KOLOM INPUT -->
     <div class="grid-2">
-        <!-- KOLOM NOTA / TRANSAKSI -->
+        <!-- KOLOM NOTA -->
         <div class="card">
             <div class="card-title">
                 <span>🧾</span> Input Nota / Transaksi
@@ -364,16 +617,16 @@
                 </div>
                 <div class="form-group">
                     <label>Harga (Rp)</label>
-                    <input type="number" id="harga" placeholder="35000" min="0" step="5000">
+                    <input type="number" id="harga" placeholder="35000" min="0" step="5000" inputmode="numeric">
                 </div>
             </div>
             <div class="row-2">
                 <div class="form-group">
-                    <label>Jam Mulai (CCTV)</label>
+                    <label>Jam Mulai</label>
                     <input type="time" id="jamMulai" value="10:00">
                 </div>
                 <div class="form-group">
-                    <label>Jam Selesai (CCTV)</label>
+                    <label>Jam Selesai</label>
                     <input type="time" id="jamSelesai" value="10:30">
                 </div>
             </div>
@@ -386,14 +639,14 @@
             </button>
         </div>
 
-        <!-- KOLOM CCTV / REFERENSI -->
+        <!-- KOLOM CCTV -->
         <div class="card">
             <div class="card-title">
                 <span>📹</span> Rekaman CCTV (Referensi)
             </div>
             <div class="form-group">
                 <label>Keterangan / Nama</label>
-                <input type="text" id="cctvNama" placeholder="Contoh: Pelanggan A / Kursi 2">
+                <input type="text" id="cctvNama" placeholder="Contoh: Kursi 2 - Pelanggan A" autocomplete="off">
             </div>
             <div class="row-2">
                 <div class="form-group">
@@ -413,15 +666,12 @@
                 <span>📌</span> Tambah Referensi CCTV
             </button>
 
-            <!-- Daftar CCTV singkat -->
             <div class="mt-2">
                 <div class="flex-between">
                     <span class="text-muted">Daftar CCTV</span>
                     <span class="badge" id="cctvCount">0</span>
                 </div>
-                <div class="cctv-list" id="cctvListContainer">
-                    <!-- dynamic -->
-                </div>
+                <div class="cctv-list" id="cctvListContainer"></div>
             </div>
         </div>
     </div>
@@ -430,21 +680,20 @@
     <div class="card" style="margin-bottom: 1rem;">
         <div class="flex-between">
             <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-                <span>📋</span> Daftar Nota Transaksi
+                <span>📋</span> Daftar Nota
             </div>
             <span class="badge badge-blue" id="notaCount">0 nota</span>
         </div>
-        <div class="nota-list" id="notaListContainer">
-            <!-- dynamic -->
-        </div>
+        <div class="nota-list" id="notaListContainer"></div>
     </div>
 
-    <!-- LAPORAN & COCOKAN CCTV -->
+    <!-- LAPORAN -->
     <div class="report-section">
-        <div class="card-title" style="border-bottom: none; margin-bottom: 1rem;">
-            <span>📊</span> Laporan Keuangan & Pencocokan Jam CCTV
+        <div class="card-title" style="border-bottom: none; margin-bottom: 0.75rem;">
+            <span>📊</span> Laporan & Pencocokan CCTV
         </div>
-        
+
+        <!-- TABEL: tampil di desktop -->
         <div class="table-wrapper">
             <table id="laporanTable">
                 <thead>
@@ -455,16 +704,17 @@
                         <th>Tanggal</th>
                         <th>Jam Nota</th>
                         <th>Jam CCTV</th>
-                        <th>Status Cocok</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                <tbody id="laporanBody">
-                    <!-- dynamic -->
-                </tbody>
+                <tbody id="laporanBody"></tbody>
             </table>
         </div>
 
-        <!-- Ringkasan -->
+        <!-- KARTU: tampil di mobile -->
+        <div class="laporan-mobile" id="laporanMobileContainer"></div>
+
+        <!-- SUMMARY -->
         <div class="summary-cards" id="summaryContainer">
             <div class="sum-card">
                 <div class="label">Total Pendapatan</div>
@@ -491,11 +741,10 @@
 
 <script>
     (function() {
-        // ---------- STATE ----------
-        let notaList = [];      // { id, nama, layanan, harga, jamMulai, jamSelesai, tanggal }
-        let cctvList = [];      // { id, nama, jamMulai, jamSelesai, tanggal }
+        let notaList = [];
+        let cctvList = [];
 
-        // ---------- ELEMEN ----------
+        // Ambil elemen
         const elNama = document.getElementById('namaPelanggan');
         const elLayanan = document.getElementById('layanan');
         const elHarga = document.getElementById('harga');
@@ -516,79 +765,64 @@
         const cctvCount = document.getElementById('cctvCount');
 
         const laporanBody = document.getElementById('laporanBody');
+        const laporanMobileContainer = document.getElementById('laporanMobileContainer');
         const totalPendapatan = document.getElementById('totalPendapatan');
         const totalTransaksi = document.getElementById('totalTransaksi');
         const totalCocok = document.getElementById('totalCocok');
         const totalTidakCocok = document.getElementById('totalTidakCocok');
 
-        // ---------- UTIL ----------
+        // Helper
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
         }
-
-        function timeToMinutes(timeStr) {
-            if (!timeStr) return 0;
-            const [h, m] = timeStr.split(':').map(Number);
+        function timeToMinutes(t) {
+            if (!t) return 0;
+            const [h, m] = t.split(':').map(Number);
             return h * 60 + m;
         }
-
-        // selisih menit terkecil antara dua rentang waktu (jam mulai & selesai)
-        // kita bandingkan jam mulai nota vs jam mulai cctv, dan jam selesai nota vs jam selesai cctv
-        // ambil selisih maksimum dari kedua ujung? Kita pakai selisih jam mulai dan selisih jam selesai, lalu ambil rata-rata? 
-        // lebih baik: cek apakah selisih jam mulai <= 10 DAN selisih jam selesai <= 10? Tapi bisa jadi durasi beda.
-        // Pendekatan: hitung selisih antara jam mulai nota dengan jam mulai cctv, dan selisih jam selesai nota dengan jam selesai cctv.
-        // Kita anggap cocok jika KEDUA selisih <= 10 menit (toleransi).
-        function hitungSelisihMenit(jam1, jam2) {
-            return Math.abs(timeToMinutes(jam1) - timeToMinutes(jam2));
+        function hitungSelisihMenit(a, b) {
+            return Math.abs(timeToMinutes(a) - timeToMinutes(b));
+        }
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        // Mencari CCTV yang cocok dengan nota (berdasarkan tanggal & selisih jam)
+        // Cari CCTV yang cocok
         function cariCctvMatch(nota) {
             if (!nota.tanggal) return null;
-            // Filter cctv dengan tanggal sama
             const kandidat = cctvList.filter(c => c.tanggal === nota.tanggal);
-            if (kandidat.length === 0) return null;
-
-            let bestMatch = null;
-            let bestScore = Infinity; // semakin kecil semakin baik
-
+            let bestMatch = null, bestScore = Infinity;
             for (let c of kandidat) {
-                const selisihMulai = hitungSelisihMenit(nota.jamMulai, c.jamMulai);
-                const selisihSelesai = hitungSelisihMenit(nota.jamSelesai, c.jamSelesai);
-                // Kita pakai nilai maksimum dari kedua selisih sebagai skor
-                const maxSelisih = Math.max(selisihMulai, selisihSelesai);
-                // toleransi 10 menit
-                if (maxSelisih <= 10) {
-                    if (maxSelisih < bestScore) {
-                        bestScore = maxSelisih;
-                        bestMatch = c;
-                    }
+                const maxSelisih = Math.max(
+                    hitungSelisihMenit(nota.jamMulai, c.jamMulai),
+                    hitungSelisihMenit(nota.jamSelesai, c.jamSelesai)
+                );
+                if (maxSelisih <= 10 && maxSelisih < bestScore) {
+                    bestScore = maxSelisih;
+                    bestMatch = c;
                 }
             }
             return bestMatch;
         }
 
-        // Dapatkan status kecocokan: true, false, atau null (tidak ada cctv)
         function getMatchStatus(nota) {
-            if (!nota.tanggal) return { status: 'no-date', matchedCctv: null, selisih: null };
+            if (!nota.tanggal) return { status: 'no-date' };
             const match = cariCctvMatch(nota);
             if (match) {
-                const selisihMulai = hitungSelisihMenit(nota.jamMulai, match.jamMulai);
-                const selisihSelesai = hitungSelisihMenit(nota.jamSelesai, match.jamSelesai);
-                const maxSelisih = Math.max(selisihMulai, selisihSelesai);
-                return { status: 'match', matchedCctv: match, selisih: maxSelisih };
-            } else {
-                // Cek apakah ada cctv di tanggal yang sama? kalau tidak ada, berarti tidak ada referensi
-                const adaCctvTanggalSama = cctvList.some(c => c.tanggal === nota.tanggal);
-                if (!adaCctvTanggalSama) {
-                    return { status: 'no-cctv', matchedCctv: null, selisih: null };
-                } else {
-                    return { status: 'mismatch', matchedCctv: null, selisih: null };
-                }
+                const selisih = Math.max(
+                    hitungSelisihMenit(nota.jamMulai, match.jamMulai),
+                    hitungSelisihMenit(nota.jamSelesai, match.jamSelesai)
+                );
+                return { status: 'match', matchedCctv: match, selisih };
             }
+            const adaCctvTanggalSama = cctvList.some(c => c.tanggal === nota.tanggal);
+            return { status: adaCctvTanggalSama ? 'mismatch' : 'no-cctv' };
         }
 
-        // ---------- RENDER ----------
+        // Render daftar nota
         function renderNotaList() {
             if (notaList.length === 0) {
                 notaListContainer.innerHTML = '<div class="empty-state">Belum ada nota transaksi.</div>';
@@ -597,25 +831,26 @@
             }
             notaCount.textContent = `${notaList.length} nota`;
             let html = '';
-            notaList.forEach(nota => {
+            notaList.forEach(n => {
                 html += `
-                    <div class="nota-item" data-id="${nota.id}">
+                    <div class="nota-item">
                         <div class="info">
-                            <span class="name">${escapeHtml(nota.nama) || 'Tanpa Nama'}</span>
+                            <span class="name">${escapeHtml(n.nama) || 'Tanpa Nama'}</span>
                             <div class="detail">
-                                <span>✂️ ${escapeHtml(nota.layanan)}</span>
-                                <span>💰 ${formatRupiah(nota.harga)}</span>
-                                <span>⏰ ${nota.jamMulai} - ${nota.jamSelesai}</span>
-                                <span>📅 ${nota.tanggal || '-'}</span>
+                                <span>✂️ ${escapeHtml(n.layanan)}</span>
+                                <span>💰 ${formatRupiah(n.harga)}</span>
+                                <span>⏰ ${n.jamMulai}-${n.jamSelesai}</span>
+                                <span>📅 ${n.tanggal || '-'}</span>
                             </div>
                         </div>
-                        <button class="delete-btn" onclick="deleteNota('${nota.id}')" title="Hapus nota">✕</button>
+                        <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
                     </div>
                 `;
             });
             notaListContainer.innerHTML = html;
         }
 
+        // Render daftar cctv
         function renderCctvList() {
             if (cctvList.length === 0) {
                 cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
@@ -626,33 +861,26 @@
             let html = '';
             cctvList.forEach(c => {
                 html += `
-                    <div class="cctv-item" data-id="${c.id}">
+                    <div class="cctv-item">
                         <div class="info">
                             <span class="name">${escapeHtml(c.nama) || 'Tanpa Nama'}</span>
                             <div class="detail">
-                                <span>⏰ ${c.jamMulai} - ${c.jamSelesai}</span>
+                                <span>⏰ ${c.jamMulai}-${c.jamSelesai}</span>
                                 <span>📅 ${c.tanggal || '-'}</span>
                             </div>
                         </div>
-                        <button class="delete-btn" onclick="deleteCctv('${c.id}')" title="Hapus CCTV">✕</button>
+                        <button class="delete-btn" onclick="deleteCctv('${c.id}')" title="Hapus">✕</button>
                     </div>
                 `;
             });
             cctvListContainer.innerHTML = html;
         }
 
-        // escape html sederhana
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // render laporan dan summary
+        // Render laporan (tabel + mobile cards)
         function renderLaporan() {
             if (notaList.length === 0) {
                 laporanBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data transaksi</td></tr>`;
+                laporanMobileContainer.innerHTML = '<div class="empty-state">Belum ada data transaksi</div>';
                 totalPendapatan.textContent = 'Rp 0';
                 totalTransaksi.textContent = '0';
                 totalCocok.textContent = '0';
@@ -660,49 +888,76 @@
                 return;
             }
 
-            let total = 0;
-            let cocok = 0;
-            let tidakCocok = 0;
-            let rows = '';
+            let total = 0, cocok = 0, tidakCocok = 0;
+            let rows = '', cards = '';
 
-            notaList.forEach(nota => {
-                total += Number(nota.harga) || 0;
-                const matchInfo = getMatchStatus(nota);
-                let statusHtml = '';
-                let cctvJamDisplay = '-';
+            notaList.forEach(n => {
+                total += Number(n.harga) || 0;
+                const m = getMatchStatus(n);
+                let statusHtml = '', cctvJam = '-';
 
-                if (matchInfo.status === 'match') {
+                if (m.status === 'match') {
                     cocok++;
-                    statusHtml = `<span class="match-status match-true">✅ Cocok (${matchInfo.selisih} mnt)</span>`;
-                    cctvJamDisplay = `${matchInfo.matchedCctv.jamMulai} - ${matchInfo.matchedCctv.jamSelesai}`;
-                } else if (matchInfo.status === 'mismatch') {
+                    statusHtml = `<span class="match-status match-true">✅ Cocok (${m.selisih}m)</span>`;
+                    cctvJam = `${m.matchedCctv.jamMulai}-${m.matchedCctv.jamSelesai}`;
+                } else if (m.status === 'mismatch') {
                     tidakCocok++;
                     statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`;
-                    // cari cctv terdekat untuk ditampilkan? kita tampilkan '—' atau jam cctv terdekat? biarkan '-'
-                    cctvJamDisplay = '-';
-                } else if (matchInfo.status === 'no-cctv') {
+                } else if (m.status === 'no-cctv') {
                     tidakCocok++;
                     statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`;
-                    cctvJamDisplay = '-';
                 } else {
                     tidakCocok++;
                     statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`;
                 }
 
+                // Baris tabel (desktop)
                 rows += `
                     <tr>
-                        <td><strong>${escapeHtml(nota.nama) || '-'}</strong></td>
-                        <td>${escapeHtml(nota.layanan)}</td>
-                        <td>${formatRupiah(nota.harga)}</td>
-                        <td>${nota.tanggal || '-'}</td>
-                        <td>${nota.jamMulai} - ${nota.jamSelesai}</td>
-                        <td>${cctvJamDisplay}</td>
+                        <td><strong>${escapeHtml(n.nama) || '-'}</strong></td>
+                        <td>${escapeHtml(n.layanan)}</td>
+                        <td>${formatRupiah(n.harga)}</td>
+                        <td>${n.tanggal || '-'}</td>
+                        <td>${n.jamMulai}-${n.jamSelesai}</td>
+                        <td>${cctvJam}</td>
                         <td>${statusHtml}</td>
                     </tr>
+                `;
+
+                // Kartu mobile
+                cards += `
+                    <div class="laporan-card">
+                        <div class="card-name">${escapeHtml(n.nama) || 'Tanpa Nama'}</div>
+                        <div class="row">
+                            <span class="lbl">Layanan</span>
+                            <span class="val">${escapeHtml(n.layanan)}</span>
+                        </div>
+                        <div class="row">
+                            <span class="lbl">Harga</span>
+                            <span class="val">${formatRupiah(n.harga)}</span>
+                        </div>
+                        <div class="row">
+                            <span class="lbl">Tanggal</span>
+                            <span class="val">${n.tanggal || '-'}</span>
+                        </div>
+                        <div class="row">
+                            <span class="lbl">Jam Nota</span>
+                            <span class="val">${n.jamMulai}-${n.jamSelesai}</span>
+                        </div>
+                        <div class="row">
+                            <span class="lbl">Jam CCTV</span>
+                            <span class="val">${cctvJam}</span>
+                        </div>
+                        <div class="row">
+                            <span class="lbl">Status</span>
+                            <span class="val">${statusHtml}</span>
+                        </div>
+                    </div>
                 `;
             });
 
             laporanBody.innerHTML = rows;
+            laporanMobileContainer.innerHTML = cards;
             totalPendapatan.textContent = formatRupiah(total);
             totalTransaksi.textContent = notaList.length;
             totalCocok.textContent = cocok;
@@ -715,18 +970,17 @@
             renderLaporan();
         }
 
-        // ---------- CRUD ----------
+        // Delete
         window.deleteNota = function(id) {
             notaList = notaList.filter(n => n.id !== id);
             renderAll();
         };
-
         window.deleteCctv = function(id) {
             cctvList = cctvList.filter(c => c.id !== id);
             renderAll();
         };
 
-        // tambah nota
+        // Tambah nota
         btnTambahNota.addEventListener('click', function() {
             const nama = elNama.value.trim();
             const layanan = elLayanan.value;
@@ -740,132 +994,65 @@
             if (!jamMulai || !jamSelesai) { alert('Jam mulai dan selesai harus diisi.'); return; }
             if (!tanggal) { alert('Tanggal nota harus diisi.'); return; }
             if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
-                alert('Jam selesai harus lebih besar dari jam mulai.');
-                return;
+                alert('Jam selesai harus lebih besar dari jam mulai.'); return;
             }
 
-            const newNota = {
+            notaList.push({
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama,
-                layanan,
-                harga,
-                jamMulai,
-                jamSelesai,
-                tanggal
-            };
-            notaList.push(newNota);
-            // reset form
+                nama, layanan, harga, jamMulai, jamSelesai, tanggal
+            });
             elNama.value = '';
             elHarga.value = '';
             elJamMulai.value = '10:00';
             elJamSelesai.value = '10:30';
-            // tetap pakai tanggal terakhir? biarkan
             renderAll();
         });
 
-        // tambah cctv
+        // Tambah cctv
         btnTambahCctv.addEventListener('click', function() {
             const nama = elCctvNama.value.trim();
             const jamMulai = elCctvMulai.value;
             const jamSelesai = elCctvSelesai.value;
             const tanggal = elCctvTanggal.value;
 
-            if (!nama) { alert('Nama / keterangan CCTV harus diisi.'); return; }
+            if (!nama) { alert('Nama CCTV harus diisi.'); return; }
             if (!jamMulai || !jamSelesai) { alert('Jam CCTV harus diisi.'); return; }
             if (!tanggal) { alert('Tanggal CCTV harus diisi.'); return; }
             if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
-                alert('Jam selesai CCTV harus lebih besar dari jam mulai.');
-                return;
+                alert('Jam selesai CCTV harus lebih besar dari jam mulai.'); return;
             }
 
-            const newCctv = {
+            cctvList.push({
                 id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama,
-                jamMulai,
-                jamSelesai,
-                tanggal
-            };
-            cctvList.push(newCctv);
+                nama, jamMulai, jamSelesai, tanggal
+            });
             elCctvNama.value = '';
             elCctvMulai.value = '10:00';
             elCctvSelesai.value = '10:30';
-            // elCctvTanggal biarkan
             renderAll();
         });
 
-        // ---------- INISIALISASI TANGGAL HARI INI ----------
-        function setDefaultDates() {
-            const today = new Date().toISOString().split('T')[0];
-            elTanggalNota.value = today;
-            elCctvTanggal.value = today;
-        }
+        // Inisialisasi tanggal
+        const today = new Date().toISOString().split('T')[0];
+        elTanggalNota.value = today;
+        elCctvTanggal.value = today;
 
-        // ---------- SEED DATA CONTOH (biar langsung terlihat) ----------
+        // Seed data contoh
         function seedExample() {
-            const today = new Date().toISOString().split('T')[0];
-            // contoh nota
-            notaList.push({
-                id: 'nota_seed1',
-                nama: 'Budi Santoso',
-                layanan: 'Potong Rambut',
-                harga: 35000,
-                jamMulai: '10:00',
-                jamSelesai: '10:30',
-                tanggal: today
-            });
-            notaList.push({
-                id: 'nota_seed2',
-                nama: 'Andi Wijaya',
-                layanan: 'Cukur Jenggot',
-                harga: 20000,
-                jamMulai: '11:15',
-                jamSelesai: '11:45',
-                tanggal: today
-            });
-            notaList.push({
-                id: 'nota_seed3',
-                nama: 'Rudi Hartono',
-                layanan: 'Paket Komplit',
-                harga: 75000,
-                jamMulai: '13:00',
-                jamSelesai: '14:00',
-                tanggal: today
-            });
-            // contoh cctv
-            cctvList.push({
-                id: 'cctv_seed1',
-                nama: 'CCTV Kursi 1 - Budi',
-                jamMulai: '10:05',
-                jamSelesai: '10:28',
-                tanggal: today
-            });
-            cctvList.push({
-                id: 'cctv_seed2',
-                nama: 'CCTV Kursi 2 - Andi',
-                jamMulai: '11:10',
-                jamSelesai: '11:40',
-                tanggal: today
-            });
-            cctvList.push({
-                id: 'cctv_seed3',
-                nama: 'CCTV Kursi 3 - Pelanggan X',
-                jamMulai: '13:20',
-                jamSelesai: '14:10',
-                tanggal: today
-            });
-            // satu cctv yang tidak match untuk Rudi (13:00-14:00 vs 13:20-14:10) -> selisih mulai 20 menit, selesai 10 menit, max 20 > 10 => mismatch
+            notaList.push(
+                { id: 'n1', nama: 'Budi Santoso', layanan: 'Potong Rambut', harga: 35000, jamMulai: '10:00', jamSelesai: '10:30', tanggal: today },
+                { id: 'n2', nama: 'Andi Wijaya', layanan: 'Cukur Jenggot', harga: 20000, jamMulai: '11:15', jamSelesai: '11:45', tanggal: today },
+                { id: 'n3', nama: 'Rudi Hartono', layanan: 'Paket Komplit', harga: 75000, jamMulai: '13:00', jamSelesai: '14:00', tanggal: today }
+            );
+            cctvList.push(
+                { id: 'c1', nama: 'CCTV Kursi 1 - Budi', jamMulai: '10:05', jamSelesai: '10:28', tanggal: today },
+                { id: 'c2', nama: 'CCTV Kursi 2 - Andi', jamMulai: '11:10', jamSelesai: '11:40', tanggal: today },
+                { id: 'c3', nama: 'CCTV Kursi 3 - Pelanggan X', jamMulai: '13:20', jamSelesai: '14:10', tanggal: today }
+            );
         }
 
-        // panggil
-        setDefaultDates();
         seedExample();
         renderAll();
-
-        // update tanggal default jika kosong
-        if (!elTanggalNota.value) elTanggalNota.value = new Date().toISOString().split('T')[0];
-        if (!elCctvTanggal.value) elCctvTanggal.value = new Date().toISOString().split('T')[0];
-
-        // expose delete functions globally (sudah di window)
     })();
 </script>
 </body>
