@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbershop • Pembukuan & CCTV Match</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #f4f7fc;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        .app {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            padding: 2rem 2rem 2.5rem;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1e293b;
+            margin-bottom: 0.35rem;
+        }
+        h1 span {
+            background: #1e293b;
+            color: white;
+            font-size: 1rem;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+        .subhead {
+            color: #64748b;
+            margin-bottom: 2rem;
+            border-left: 5px solid #f59e0b;
+            padding-left: 1rem;
+            font-weight: 500;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.6rem 1.8rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+            transition: 0.2s;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0f172a;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+        }
+        .card-title i {
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            background: #f8fafc;
+            transition: 0.2s;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #f59e0b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+        }
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .btn {
+            border: none;
+            background: #1e293b;
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn:hover {
+            background: #0f172a;
+            transform: scale(1.01);
+        }
+        .btn-outline {
+            background: white;
+            color: #1e293b;
+            border: 1.5px solid #cbd5e1;
+        }
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            width: auto;
+            margin: 0;
+        }
+        .nota-list, .cctv-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 6px;
+            margin-top: 0.5rem;
+        }
+        .nota-item, .cctv-item {
+            background: #f8fafc;
+            border-radius: 18px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 10px;
+            border-left: 6px solid #f59e0b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.15s;
+            font-size: 0.9rem;
+        }
+        .cctv-item {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .nota-item .info, .cctv-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .nota-item .name, .cctv-item .name {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .nota-item .detail, .cctv-item .detail {
+            color: #475569;
+            font-size: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .badge-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 20px;
+            line-height: 1;
+            transition: 0.15s;
+        }
+        .delete-btn:hover {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+        .report-section {
+            margin-top: 2rem;
+            border-top: 2px dashed #e2e8f0;
+            padding-top: 2rem;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 700px;
+        }
+        th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 16px 18px;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #edf2f7;
+            color: #1e293b;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .match-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .match-true {
+            background: #dcfce7;
+            color: #15803d;
+        }
+        .match-false {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .match-warning {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .sum-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            flex: 1;
+            min-width: 150px;
+            border: 1px solid #e2e8f0;
+        }
+        .sum-card .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .sum-card .value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+        }
+        .empty-state {
+            color: #94a3b8;
+            font-style: italic;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mt-2 { margin-top: 1rem; }
+        .text-muted { color: #64748b; font-size: 0.8rem; }
+        .highlight {
+            background: #fef9c3;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <h1>
+        ✂️ Barbershop Finance
+        <span>CCTV SYNC</span>
+    </h1>
+    <div class="subhead">
+        Pembukuan nota & pencocokan jam potong rambut dengan rekaman CCTV
+    </div>
+
+    <!-- DUA KOLOM INPUT -->
+    <div class="grid-2">
+        <!-- KOLOM NOTA / TRANSAKSI -->
+        <div class="card">
+            <div class="card-title">
+                <span>🧾</span> Input Nota / Transaksi
+            </div>
+            <div class="form-group">
+                <label>Nama Pelanggan</label>
+                <input type="text" id="namaPelanggan" placeholder="Contoh: Budi Santoso" autocomplete="off">
+            </div>
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Layanan</label>
+                    <select id="layanan">
+                        <option value="Potong Rambut">Potong Rambut</option>
+                        <option value="Cukur Jenggot">Cukur Jenggot</option>
+                        <option value="Potong + Cukur">Potong + Cukur</option>
+                        <option value="Cuci Rambut">Cuci Rambut</option>
+                        <option value="Styling">Styling</option>
+                        <option value="Paket Komplit">Paket Komplit</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Harga (Rp)</label>
+                    <input type="number" id="harga" placeholder="35000" min="0" step="5000">
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Jam Mulai (CCTV)</label>
+                    <input type="time" id="jamMulai" value="10:00">
+                </div>
+                <div class="form-group">
+                    <label>Jam Selesai (CCTV)</label>
+                    <input type="time" id="jamSelesai" value="10:30">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tanggal</label>
+                <input type="date" id="tanggalNota">
+            </div>
+            <button class="btn" id="btnTambahNota">
+                <span>➕</span> Tambah Nota
+            </button>
+        </div>
+
+        <!-- KOLOM CCTV / REFERENSI -->
+        <div class="card">
+            <div class="card-title">
+                <span>📹</span> Rekaman CCTV (Referensi)
+            </div>
+            <div class="form-group">
+                <label>Keterangan / Nama</label>
+                <input type="text" id="cctvNama" placeholder="Contoh: Pelanggan A / Kursi 2">
+            </div>
+            <div class="row-2">
+                <div class="form-group">
+                    <label>Jam Mulai</label>
+                    <input type="time" id="cctvMulai" value="10:00">
+                </div>
+                <div class="form-group">
+                    <label>Jam Selesai</label>
+                    <input type="time" id="cctvSelesai" value="10:30">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tanggal CCTV</label>
+                <input type="date" id="cctvTanggal">
+            </div>
+            <button class="btn btn-outline" id="btnTambahCctv">
+                <span>📌</span> Tambah Referensi CCTV
+            </button>
+
+            <!-- Daftar CCTV singkat -->
+            <div class="mt-2">
+                <div class="flex-between">
+                    <span class="text-muted">Daftar CCTV</span>
+                    <span class="badge" id="cctvCount">0</span>
+                </div>
+                <div class="cctv-list" id="cctvListContainer">
+                    <!-- dynamic -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAFTAR NOTA -->
+    <div class="card" style="margin-bottom: 1rem;">
+        <div class="flex-between">
+            <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+                <span>📋</span> Daftar Nota Transaksi
+            </div>
+            <span class="badge badge-blue" id="notaCount">0 nota</span>
+        </div>
+        <div class="nota-list" id="notaListContainer">
+            <!-- dynamic -->
+        </div>
+    </div>
+
+    <!-- LAPORAN & COCOKAN CCTV -->
+    <div class="report-section">
+        <div class="card-title" style="border-bottom: none; margin-bottom: 1rem;">
+            <span>📊</span> Laporan Keuangan & Pencocokan Jam CCTV
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="laporanTable">
+                <thead>
+                    <tr>
+                        <th>Pelanggan</th>
+                        <th>Layanan</th>
+                        <th>Harga</th>
+                        <th>Tanggal</th>
+                        <th>Jam Nota</th>
+                        <th>Jam CCTV</th>
+                        <th>Status Cocok</th>
+                    </tr>
+                </thead>
+                <tbody id="laporanBody">
+                    <!-- dynamic -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Ringkasan -->
+        <div class="summary-cards" id="summaryContainer">
+            <div class="sum-card">
+                <div class="label">Total Pendapatan</div>
+                <div class="value" id="totalPendapatan">Rp 0</div>
+            </div>
+            <div class="sum-card">
+                <div class="label">Jumlah Transaksi</div>
+                <div class="value" id="totalTransaksi">0</div>
+            </div>
+            <div class="sum-card">
+                <div class="label">Cocok CCTV</div>
+                <div class="value" id="totalCocok">0</div>
+            </div>
+            <div class="sum-card">
+                <div class="label">Tidak Cocok</div>
+                <div class="value" id="totalTidakCocok">0</div>
+            </div>
+        </div>
+        <div class="footer-note">
+            ⏱️ Pencocokan berdasarkan selisih jam ≤ 10 menit (toleransi).
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- STATE ----------
+        let notaList = [];      // { id, nama, layanan, harga, jamMulai, jamSelesai, tanggal }
+        let cctvList = [];      // { id, nama, jamMulai, jamSelesai, tanggal }
+
+        // ---------- ELEMEN ----------
+        const elNama = document.getElementById('namaPelanggan');
+        const elLayanan = document.getElementById('layanan');
+        const elHarga = document.getElementById('harga');
+        const elJamMulai = document.getElementById('jamMulai');
+        const elJamSelesai = document.getElementById('jamSelesai');
+        const elTanggalNota = document.getElementById('tanggalNota');
+        const btnTambahNota = document.getElementById('btnTambahNota');
+
+        const elCctvNama = document.getElementById('cctvNama');
+        const elCctvMulai = document.getElementById('cctvMulai');
+        const elCctvSelesai = document.getElementById('cctvSelesai');
+        const elCctvTanggal = document.getElementById('cctvTanggal');
+        const btnTambahCctv = document.getElementById('btnTambahCctv');
+
+        const notaListContainer = document.getElementById('notaListContainer');
+        const cctvListContainer = document.getElementById('cctvListContainer');
+        const notaCount = document.getElementById('notaCount');
+        const cctvCount = document.getElementById('cctvCount');
+
+        const laporanBody = document.getElementById('laporanBody');
+        const totalPendapatan = document.getElementById('totalPendapatan');
+        const totalTransaksi = document.getElementById('totalTransaksi');
+        const totalCocok = document.getElementById('totalCocok');
+        const totalTidakCocok = document.getElementById('totalTidakCocok');
+
+        // ---------- UTIL ----------
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        }
+
+        function timeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        // selisih menit terkecil antara dua rentang waktu (jam mulai & selesai)
+        // kita bandingkan jam mulai nota vs jam mulai cctv, dan jam selesai nota vs jam selesai cctv
+        // ambil selisih maksimum dari kedua ujung? Kita pakai selisih jam mulai dan selisih jam selesai, lalu ambil rata-rata? 
+        // lebih baik: cek apakah selisih jam mulai <= 10 DAN selisih jam selesai <= 10? Tapi bisa jadi durasi beda.
+        // Pendekatan: hitung selisih antara jam mulai nota dengan jam mulai cctv, dan selisih jam selesai nota dengan jam selesai cctv.
+        // Kita anggap cocok jika KEDUA selisih <= 10 menit (toleransi).
+        function hitungSelisihMenit(jam1, jam2) {
+            return Math.abs(timeToMinutes(jam1) - timeToMinutes(jam2));
+        }
+
+        // Mencari CCTV yang cocok dengan nota (berdasarkan tanggal & selisih jam)
+        function cariCctvMatch(nota) {
+            if (!nota.tanggal) return null;
+            // Filter cctv dengan tanggal sama
+            const kandidat = cctvList.filter(c => c.tanggal === nota.tanggal);
+            if (kandidat.length === 0) return null;
+
+            let bestMatch = null;
+            let bestScore = Infinity; // semakin kecil semakin baik
+
+            for (let c of kandidat) {
+                const selisihMulai = hitungSelisihMenit(nota.jamMulai, c.jamMulai);
+                const selisihSelesai = hitungSelisihMenit(nota.jamSelesai, c.jamSelesai);
+                // Kita pakai nilai maksimum dari kedua selisih sebagai skor
+                const maxSelisih = Math.max(selisihMulai, selisihSelesai);
+                // toleransi 10 menit
+                if (maxSelisih <= 10) {
+                    if (maxSelisih < bestScore) {
+                        bestScore = maxSelisih;
+                        bestMatch = c;
+                    }
+                }
+            }
+            return bestMatch;
+        }
+
+        // Dapatkan status kecocokan: true, false, atau null (tidak ada cctv)
+        function getMatchStatus(nota) {
+            if (!nota.tanggal) return { status: 'no-date', matchedCctv: null, selisih: null };
+            const match = cariCctvMatch(nota);
+            if (match) {
+                const selisihMulai = hitungSelisihMenit(nota.jamMulai, match.jamMulai);
+                const selisihSelesai = hitungSelisihMenit(nota.jamSelesai, match.jamSelesai);
+                const maxSelisih = Math.max(selisihMulai, selisihSelesai);
+                return { status: 'match', matchedCctv: match, selisih: maxSelisih };
+            } else {
+                // Cek apakah ada cctv di tanggal yang sama? kalau tidak ada, berarti tidak ada referensi
+                const adaCctvTanggalSama = cctvList.some(c => c.tanggal === nota.tanggal);
+                if (!adaCctvTanggalSama) {
+                    return { status: 'no-cctv', matchedCctv: null, selisih: null };
+                } else {
+                    return { status: 'mismatch', matchedCctv: null, selisih: null };
+                }
+            }
+        }
+
+        // ---------- RENDER ----------
+        function renderNotaList() {
+            if (notaList.length === 0) {
+                notaListContainer.innerHTML = '<div class="empty-state">Belum ada nota transaksi.</div>';
+                notaCount.textContent = '0 nota';
+                return;
+            }
+            notaCount.textContent = `${notaList.length} nota`;
+            let html = '';
+            notaList.forEach(nota => {
+                html += `
+                    <div class="nota-item" data-id="${nota.id}">
+                        <div class="info">
+                            <span class="name">${escapeHtml(nota.nama) || 'Tanpa Nama'}</span>
+                            <div class="detail">
+                                <span>✂️ ${escapeHtml(nota.layanan)}</span>
+                                <span>💰 ${formatRupiah(nota.harga)}</span>
+                                <span>⏰ ${nota.jamMulai} - ${nota.jamSelesai}</span>
+                                <span>📅 ${nota.tanggal || '-'}</span>
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteNota('${nota.id}')" title="Hapus nota">✕</button>
+                    </div>
+                `;
+            });
+            notaListContainer.innerHTML = html;
+        }
+
+        function renderCctvList() {
+            if (cctvList.length === 0) {
+                cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
+                cctvCount.textContent = '0';
+                return;
+            }
+            cctvCount.textContent = cctvList.length;
+            let html = '';
+            cctvList.forEach(c => {
+                html += `
+                    <div class="cctv-item" data-id="${c.id}">
+                        <div class="info">
+                            <span class="name">${escapeHtml(c.nama) || 'Tanpa Nama'}</span>
+                            <div class="detail">
+                                <span>⏰ ${c.jamMulai} - ${c.jamSelesai}</span>
+                                <span>📅 ${c.tanggal || '-'}</span>
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteCctv('${c.id}')" title="Hapus CCTV">✕</button>
+                    </div>
+                `;
+            });
+            cctvListContainer.innerHTML = html;
+        }
+
+        // escape html sederhana
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // render laporan dan summary
+        function renderLaporan() {
+            if (notaList.length === 0) {
+                laporanBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data transaksi</td></tr>`;
+                totalPendapatan.textContent = 'Rp 0';
+                totalTransaksi.textContent = '0';
+                totalCocok.textContent = '0';
+                totalTidakCocok.textContent = '0';
+                return;
+            }
+
+            let total = 0;
+            let cocok = 0;
+            let tidakCocok = 0;
+            let rows = '';
+
+            notaList.forEach(nota => {
+                total += Number(nota.harga) || 0;
+                const matchInfo = getMatchStatus(nota);
+                let statusHtml = '';
+                let cctvJamDisplay = '-';
+
+                if (matchInfo.status === 'match') {
+                    cocok++;
+                    statusHtml = `<span class="match-status match-true">✅ Cocok (${matchInfo.selisih} mnt)</span>`;
+                    cctvJamDisplay = `${matchInfo.matchedCctv.jamMulai} - ${matchInfo.matchedCctv.jamSelesai}`;
+                } else if (matchInfo.status === 'mismatch') {
+                    tidakCocok++;
+                    statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`;
+                    // cari cctv terdekat untuk ditampilkan? kita tampilkan '—' atau jam cctv terdekat? biarkan '-'
+                    cctvJamDisplay = '-';
+                } else if (matchInfo.status === 'no-cctv') {
+                    tidakCocok++;
+                    statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`;
+                    cctvJamDisplay = '-';
+                } else {
+                    tidakCocok++;
+                    statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`;
+                }
+
+                rows += `
+                    <tr>
+                        <td><strong>${escapeHtml(nota.nama) || '-'}</strong></td>
+                        <td>${escapeHtml(nota.layanan)}</td>
+                        <td>${formatRupiah(nota.harga)}</td>
+                        <td>${nota.tanggal || '-'}</td>
+                        <td>${nota.jamMulai} - ${nota.jamSelesai}</td>
+                        <td>${cctvJamDisplay}</td>
+                        <td>${statusHtml}</td>
+                    </tr>
+                `;
+            });
+
+            laporanBody.innerHTML = rows;
+            totalPendapatan.textContent = formatRupiah(total);
+            totalTransaksi.textContent = notaList.length;
+            totalCocok.textContent = cocok;
+            totalTidakCocok.textContent = tidakCocok;
+        }
+
+        function renderAll() {
+            renderNotaList();
+            renderCctvList();
+            renderLaporan();
+        }
+
+        // ---------- CRUD ----------
+        window.deleteNota = function(id) {
+            notaList = notaList.filter(n => n.id !== id);
+            renderAll();
+        };
+
+        window.deleteCctv = function(id) {
+            cctvList = cctvList.filter(c => c.id !== id);
+            renderAll();
+        };
+
+        // tambah nota
+        btnTambahNota.addEventListener('click', function() {
+            const nama = elNama.value.trim();
+            const layanan = elLayanan.value;
+            const harga = parseFloat(elHarga.value);
+            const jamMulai = elJamMulai.value;
+            const jamSelesai = elJamSelesai.value;
+            const tanggal = elTanggalNota.value;
+
+            if (!nama) { alert('Nama pelanggan harus diisi.'); return; }
+            if (isNaN(harga) || harga <= 0) { alert('Harga harus diisi dengan angka positif.'); return; }
+            if (!jamMulai || !jamSelesai) { alert('Jam mulai dan selesai harus diisi.'); return; }
+            if (!tanggal) { alert('Tanggal nota harus diisi.'); return; }
+            if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
+                alert('Jam selesai harus lebih besar dari jam mulai.');
+                return;
+            }
+
+            const newNota = {
+                id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                nama,
+                layanan,
+                harga,
+                jamMulai,
+                jamSelesai,
+                tanggal
+            };
+            notaList.push(newNota);
+            // reset form
+            elNama.value = '';
+            elHarga.value = '';
+            elJamMulai.value = '10:00';
+            elJamSelesai.value = '10:30';
+            // tetap pakai tanggal terakhir? biarkan
+            renderAll();
+        });
+
+        // tambah cctv
+        btnTambahCctv.addEventListener('click', function() {
+            const nama = elCctvNama.value.trim();
+            const jamMulai = elCctvMulai.value;
+            const jamSelesai = elCctvSelesai.value;
+            const tanggal = elCctvTanggal.value;
+
+            if (!nama) { alert('Nama / keterangan CCTV harus diisi.'); return; }
+            if (!jamMulai || !jamSelesai) { alert('Jam CCTV harus diisi.'); return; }
+            if (!tanggal) { alert('Tanggal CCTV harus diisi.'); return; }
+            if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
+                alert('Jam selesai CCTV harus lebih besar dari jam mulai.');
+                return;
+            }
+
+            const newCctv = {
+                id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                nama,
+                jamMulai,
+                jamSelesai,
+                tanggal
+            };
+            cctvList.push(newCctv);
+            elCctvNama.value = '';
+            elCctvMulai.value = '10:00';
+            elCctvSelesai.value = '10:30';
+            // elCctvTanggal biarkan
+            renderAll();
+        });
+
+        // ---------- INISIALISASI TANGGAL HARI INI ----------
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            elTanggalNota.value = today;
+            elCctvTanggal.value = today;
+        }
+
+        // ---------- SEED DATA CONTOH (biar langsung terlihat) ----------
+        function seedExample() {
+            const today = new Date().toISOString().split('T')[0];
+            // contoh nota
+            notaList.push({
+                id: 'nota_seed1',
+                nama: 'Budi Santoso',
+                layanan: 'Potong Rambut',
+                harga: 35000,
+                jamMulai: '10:00',
+                jamSelesai: '10:30',
+                tanggal: today
+            });
+            notaList.push({
+                id: 'nota_seed2',
+                nama: 'Andi Wijaya',
+                layanan: 'Cukur Jenggot',
+                harga: 20000,
+                jamMulai: '11:15',
+                jamSelesai: '11:45',
+                tanggal: today
+            });
+            notaList.push({
+                id: 'nota_seed3',
+                nama: 'Rudi Hartono',
+                layanan: 'Paket Komplit',
+                harga: 75000,
+                jamMulai: '13:00',
+                jamSelesai: '14:00',
+                tanggal: today
+            });
+            // contoh cctv
+            cctvList.push({
+                id: 'cctv_seed1',
+                nama: 'CCTV Kursi 1 - Budi',
+                jamMulai: '10:05',
+                jamSelesai: '10:28',
+                tanggal: today
+            });
+            cctvList.push({
+                id: 'cctv_seed2',
+                nama: 'CCTV Kursi 2 - Andi',
+                jamMulai: '11:10',
+                jamSelesai: '11:40',
+                tanggal: today
+            });
+            cctvList.push({
+                id: 'cctv_seed3',
+                nama: 'CCTV Kursi 3 - Pelanggan X',
+                jamMulai: '13:20',
+                jamSelesai: '14:10',
+                tanggal: today
+            });
+            // satu cctv yang tidak match untuk Rudi (13:00-14:00 vs 13:20-14:10) -> selisih mulai 20 menit, selesai 10 menit, max 20 > 10 => mismatch
+        }
+
+        // panggil
+        setDefaultDates();
+        seedExample();
+        renderAll();
+
+        // update tanggal default jika kosong
+        if (!elTanggalNota.value) elTanggalNota.value = new Date().toISOString().split('T')[0];
+        if (!elCctvTanggal.value) elCctvTanggal.value = new Date().toISOString().split('T')[0];
+
+        // expose delete functions globally (sudah di window)
+    })();
+</script>
+</body>
+</html>
