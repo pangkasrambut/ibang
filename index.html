@@ -141,39 +141,38 @@
         }
 
         /* Password wrapper dengan icon mata */
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-.password-wrapper input {
-    padding-right: 44px !important;
-}
-.toggle-password {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    padding: 6px 8px;
-    line-height: 1;
-    color: #64748b;
-    border-radius: 8px;
-    transition: 0.15s;
-    user-select: none;
-    touch-action: manipulation;
-    z-index: 2;
-}
-.toggle-password:hover,
-.toggle-password:active {
-    background: #f1f5f9;
-    color: #1e293b;
-}
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            padding-right: 44px !important;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 6px 8px;
+            line-height: 1;
+            color: #64748b;
+            border-radius: 8px;
+            transition: 0.15s;
+            user-select: none;
+            touch-action: manipulation;
+            z-index: 2;
+        }
+        .toggle-password:hover,
+        .toggle-password:active {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
 
-        
         input[type="date"], input[type="time"] {
             -webkit-appearance: none;
             appearance: none;
@@ -419,78 +418,134 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Tabel Daftar Nota */
-.nota-table-wrapper {
-    overflow-x: auto;
-    border-radius: 14px;
-    border: 1px solid #e2e8f0;
-    margin-top: 0.75rem;
-    -webkit-overflow-scrolling: touch;
-}
-.nota-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-    min-width: 720px;
-}
-.nota-table th {
-    background: #f1f5f9;
-    text-align: left;
-    padding: 10px 12px;
-    font-weight: 700;
-    color: #1e293b;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    white-space: nowrap;
-}
-.nota-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #edf2f7;
-    color: #1e293b;
-    vertical-align: top;
-}
-.nota-table tr:last-child td { border-bottom: none; }
-.nota-table .cell-no {
-    font-weight: 700;
-    color: #64748b;
-    width: 40px;
-    text-align: center;
-}
-.nota-table .cell-jam {
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    font-weight: 600;
-}
-.nota-table .cell-actions {
-    white-space: nowrap;
-    text-align: right;
-}
-.nota-table .cell-layanan {
-    max-width: 260px;
-}
-.nota-table .layanan-line-sm {
-    display: block;
-    font-size: 0.72rem;
-    color: #475569;
-    line-height: 1.5;
-}
-.nota-table .layanan-line-sm .harga {
-    color: #f59e0b;
-    font-weight: 700;
-}
+        /* ================== TABEL DAFTAR NOTA ================== */
+        .nota-table-wrapper {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            margin-top: 0.75rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nota-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 720px;
+        }
+        .nota-table th {
+            background: #f1f5f9;
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+        .nota-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #edf2f7;
+            color: #1e293b;
+            vertical-align: top;
+        }
+        .nota-table tr:last-child td { border-bottom: none; }
+        .nota-table .cell-no {
+            font-weight: 700;
+            color: #64748b;
+            width: 40px;
+            text-align: center;
+        }
+        .nota-table .cell-jam {
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .nota-table .cell-actions {
+            white-space: nowrap;
+            text-align: right;
+        }
 
-/* Responsive: sembunyikan kolom tanggal & total di HP kecil */
-@media (max-width: 600px) {
-    .nota-table .col-tanggal,
-    .nota-table .col-total {
-        display: none;
-    }
-    .nota-table { min-width: 0; font-size: 0.75rem; }
-    .nota-table th,
-    .nota-table td { padding: 8px 8px; }
-}
-        
+        /* ====== KHUSUS HP: SEMUA KOLOM TETAP TAMPIL ====== */
+        @media (max-width: 600px) {
+            .nota-table-wrapper {
+                overflow-x: visible;
+                border: none;
+            }
+            .nota-table {
+                min-width: 0;
+                width: 100%;
+                font-size: 0.75rem;
+            }
+            .nota-table thead { display: none; }
+            .nota-table tbody,
+            .nota-table tr,
+            .nota-table td {
+                display: block;
+                width: 100%;
+            }
+            .nota-table tr {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-left: 4px solid #f59e0b;
+                border-radius: 12px;
+                padding: 0.6rem 0.75rem;
+                margin-bottom: 10px;
+                position: relative;
+            }
+            .nota-table td {
+                border: none;
+                padding: 3px 0;
+                color: #1e293b;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 10px;
+                font-size: 0.75rem;
+                line-height: 1.4;
+            }
+            .nota-table td::before {
+                content: attr(data-label);
+                font-size: 0.66rem;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                color: #64748b;
+                font-weight: 700;
+                flex-shrink: 0;
+                min-width: 70px;
+            }
+            .nota-table td > * {
+                text-align: right;
+                word-break: break-word;
+            }
+            .nota-table .cell-no {
+                position: absolute;
+                top: 6px;
+                right: 8px;
+                background: #1e293b;
+                color: white;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.68rem;
+                padding: 0;
+                text-align: center;
+                font-weight: 700;
+            }
+            .nota-table .cell-no::before { content: none; }
+            .nota-table .cell-actions {
+                justify-content: flex-end;
+                padding-top: 6px;
+                border-top: 1px dashed #e2e8f0;
+                margin-top: 4px;
+                gap: 6px;
+            }
+            .nota-table .cell-actions::before { content: none; }
+        }
+
         .nota-item, .cctv-item {
             background: #f8fafc;
             border-radius: 14px;
@@ -1207,12 +1262,12 @@
                     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
                 </div>
                 <div class="form-group">
-    <label>Password <span class="required">*</span></label>
-    <div class="password-wrapper">
-        <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
-        <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Tampilkan password">👁️</button>
-    </div>
-</div>
+                    <label>Password <span class="required">*</span></label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+                        <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Tampilkan password">👁️</button>
+                    </div>
+                </div>
             </div>
 
             <button class="btn btn-green" id="btnLogin" style="margin-top:1rem;" disabled>
@@ -1231,12 +1286,12 @@
                 <input type="text" id="regUsername" placeholder="Contoh: ibang" autocomplete="off">
             </div>
             <div class="form-group">
-    <label>Password <span class="required">*</span></label>
-    <div class="password-wrapper">
-        <input type="password" id="regPassword" placeholder="Minimal 4 karakter" autocomplete="off">
-        <button type="button" class="toggle-password" data-target="regPassword" aria-label="Tampilkan password">👁️</button>
-    </div>
-</div>
+                <label>Password <span class="required">*</span></label>
+                <div class="password-wrapper">
+                    <input type="password" id="regPassword" placeholder="Minimal 4 karakter" autocomplete="off">
+                    <button type="button" class="toggle-password" data-target="regPassword" aria-label="Tampilkan password">👁️</button>
+                </div>
+            </div>
             <div class="form-group">
                 <label>Nama Operator <span class="required">*</span></label>
                 <input type="text" id="regNamaOperator" placeholder="Contoh: Ibang" autocomplete="off">
@@ -1335,30 +1390,31 @@
     </div>
 
     <div class="card">
-    <div class="flex-between">
-        <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-            <span>📋</span> Daftar Nota
+        <div class="flex-between">
+            <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+                <span>📋</span> Daftar Nota
+            </div>
+            <span class="badge badge-blue" id="notaCount">0 nota</span>
         </div>
-        <span class="badge badge-blue" id="notaCount">0 nota</span>
+        <div class="nota-table-wrapper">
+            <table class="nota-table">
+                <thead>
+                    <tr>
+                        <th class="cell-no">No</th>
+                        <th>Jam Mulai</th>
+                        <th>Jam Selesai</th>
+                        <th>Pelanggan</th>
+                        <th>Operator</th>
+                        <th>Total</th>
+                        <th>Tanggal</th>
+                        <th style="text-align:right;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="notaListContainer"></tbody>
+            </table>
+        </div>
     </div>
-    <div class="nota-table-wrapper">
-        <table class="nota-table">
-            <thead>
-                <tr>
-                    <th class="cell-no">No</th>
-                    <th>Jam Mulai</th>
-                    <th>Jam Selesai</th>
-                    <th>Pelanggan</th>
-                    <th>Operator</th>
-                    <th class="col-total">Total</th>
-                    <th class="col-tanggal">Tanggal</th>
-                    <th style="text-align:right;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="notaListContainer"></tbody>
-        </table>
-    </div>
-</div>
+
     <div class="report-section">
         <div class="card-title" style="border-bottom: none; margin-bottom: 0.75rem;">
             <span>📊</span> Laporan & Pencocokan CCTV
@@ -1475,7 +1531,6 @@
 </div>
 
 <script>
-
     // ============================================================
     // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
     // ============================================================
@@ -2066,7 +2121,6 @@
             });
             const total = layananArr.reduce((s, l) => s + l.harga, 0);
             const barberman = sesiAktif.barberman || (currentUser.role === 'barberman' ? currentUser.namaOperator : '-');
-            
 
             // Hitung nomor urut nota hari ini
             const tanggalNota = sesiAktif.tanggal || getTanggalSekarang();
@@ -2075,14 +2129,12 @@
             const nomorNota = `INV-${tanggalNota.replace(/-/g, '')}-${urut}`;
 
             const notaBaru = {
-            id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-            nomorNota: nomorNota,   // ← tambah field ini
-            nama, barberman, layanan: layananArr, total,
-            jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai,
-            tanggal: tanggalNota
-        };
-            
-            
+                id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                nomorNota: nomorNota,
+                nama, barberman, layanan: layananArr, total,
+                jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai,
+                tanggal: tanggalNota
+            };
 
             btnOkLayanan.disabled = true;
             btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
@@ -2204,8 +2256,8 @@
             renderLaporan(); renderNotaList();
         });
 
-        // ============ RENDER ============
-                function renderNotaList() {
+        // ============ RENDER NOTA (TABEL) ============
+        function renderNotaList() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
                 notaListContainer.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota transaksi.</td></tr>';
@@ -2224,12 +2276,12 @@
                 html += `
                     <tr>
                         <td class="cell-no">${nomor}</td>
-                        <td class="cell-jam">${n.jamMulai}</td>
-                        <td class="cell-jam">${n.jamSelesai}</td>
-                        <td><strong>${namaPelanggan}</strong></td>
-                        <td><span class="barber-tag">💈 ${operator}</span></td>
-                        <td class="col-total"><strong>${total}</strong></td>
-                        <td class="col-tanggal">${tanggal}</td>
+                        <td class="cell-jam" data-label="Jam Mulai">${n.jamMulai}</td>
+                        <td class="cell-jam" data-label="Jam Selesai">${n.jamSelesai}</td>
+                        <td data-label="Pelanggan"><strong>${namaPelanggan}</strong></td>
+                        <td data-label="Operator"><span class="barber-tag">💈 ${operator}</span></td>
+                        <td data-label="Total"><strong>${total}</strong></td>
+                        <td data-label="Tanggal">${tanggal}</td>
                         <td class="cell-actions">
                             <button class="btn-mini print" onclick="cetakNotaById('${n.id}')" title="Cetak">🖨️</button>
                             <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
@@ -2239,7 +2291,6 @@
             notaListContainer.innerHTML = html;
         }
 
-        
         function renderCctvList() {
             if (cctvList.length === 0) {
                 cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
