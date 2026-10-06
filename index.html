@@ -30,7 +30,7 @@
             padding: 1.5rem;
         }
 
-        /* ===== HEADER ===== */
+        /* HEADER */
         h1 {
             font-size: 1.6rem;
             font-weight: 700;
@@ -62,15 +62,13 @@
             line-height: 1.5;
         }
 
-        /* ===== GRID UTAMA ===== */
+        /* GRID */
         .grid-2 {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
             gap: 1.25rem;
             margin-bottom: 1.25rem;
         }
-
-        /* ===== CARD ===== */
         .card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -90,10 +88,8 @@
             padding-bottom: 0.65rem;
         }
 
-        /* ===== FORM ===== */
-        .form-group {
-            margin-bottom: 1rem;
-        }
+        /* FORM */
+        .form-group { margin-bottom: 1rem; }
         label {
             display: block;
             font-size: 0.72rem;
@@ -108,7 +104,7 @@
             padding: 12px 14px;
             border: 1.5px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 16px; /* 16px penting agar iOS tidak zoom */
+            font-size: 16px;
             background: #f8fafc;
             transition: 0.2s;
             outline: none;
@@ -120,22 +116,18 @@
             background: white;
             box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
         }
-
-        /* iOS date/time fix */
-        input[type="date"],
-        input[type="time"] {
+        input[type="date"], input[type="time"] {
             -webkit-appearance: none;
             appearance: none;
             min-height: 44px;
         }
-
         .row-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.75rem;
         }
 
-        /* ===== BUTTON ===== */
+        /* BUTTON */
         .btn {
             border: none;
             background: #1e293b;
@@ -156,10 +148,8 @@
             min-height: 48px;
             touch-action: manipulation;
         }
-        .btn:hover, .btn:active {
-            background: #0f172a;
-            transform: scale(0.99);
-        }
+        .btn:hover, .btn:active { background: #0f172a; transform: scale(0.99); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
         .btn-outline {
             background: white;
             color: #1e293b;
@@ -169,8 +159,64 @@
             background: #f1f5f9;
             border-color: #94a3b8;
         }
+        .btn-green { background: #16a34a; }
+        .btn-green:hover, .btn-green:active { background: #15803d; }
+        .btn-red { background: #dc2626; }
+        .btn-red:hover, .btn-red:active { background: #b91c1c; }
+        .btn:disabled.btn-red { background: #cbd5e1; }
 
-        /* ===== DAFTAR NOTA & CCTV ===== */
+        /* PANEL JAM */
+        .clock-panel {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 20px;
+            padding: 1.25rem;
+            color: white;
+            margin-bottom: 1.25rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+        .clock-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .clock-status {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            align-self: flex-start;
+        }
+        .clock-status.running { background: #16a34a; }
+        .clock-status.done { background: #f59e0b; }
+        .clock-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        .clock-row .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
+        .clock-row .val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+        .clock-row .val.active { color: #fbbf24; }
+        .clock-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+        }
+        .clock-actions .btn { margin-top: 0; }
+
+        /* DAFTAR NOTA & CCTV */
         .nota-list, .cctv-list {
             max-height: 320px;
             overflow-y: auto;
@@ -190,10 +236,7 @@
             gap: 8px;
             font-size: 0.85rem;
         }
-        .cctv-item {
-            border-left-color: #3b82f6;
-            background: #eff6ff;
-        }
+        .cctv-item { border-left-color: #3b82f6; background: #eff6ff; }
         .nota-item .info, .cctv-item .info {
             display: flex;
             flex-direction: column;
@@ -215,6 +258,23 @@
             gap: 8px;
             line-height: 1.4;
         }
+        .nota-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .btn-mini {
+            background: #e2e8f0;
+            border: none;
+            color: #1e293b;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            touch-action: manipulation;
+            min-width: 36px;
+            min-height: 32px;
+        }
+        .btn-mini:hover, .btn-mini:active { background: #cbd5e1; }
+        .btn-mini.print { background: #1e293b; color: white; }
+        .btn-mini.print:hover { background: #0f172a; }
         .delete-btn {
             background: #fee2e2;
             border: none;
@@ -230,11 +290,9 @@
             min-width: 32px;
             min-height: 32px;
         }
-        .delete-btn:hover, .delete-btn:active {
-            background: #fecaca;
-        }
+        .delete-btn:hover, .delete-btn:active { background: #fecaca; }
 
-        /* ===== BADGE ===== */
+        /* BADGE */
         .badge {
             background: #e2e8f0;
             padding: 4px 12px;
@@ -244,19 +302,14 @@
             color: #1e293b;
             white-space: nowrap;
         }
-        .badge-blue {
-            background: #dbeafe;
-            color: #1e40af;
-        }
+        .badge-blue { background: #dbeafe; color: #1e40af; }
 
-        /* ===== LAPORAN ===== */
+        /* LAPORAN */
         .report-section {
             margin-top: 1.5rem;
             border-top: 2px dashed #e2e8f0;
             padding-top: 1.5rem;
         }
-
-        /* Tabel Desktop */
         .table-wrapper {
             overflow-x: auto;
             border-radius: 16px;
@@ -289,10 +342,7 @@
         }
         tr:last-child td { border-bottom: none; }
 
-        /* ===== KARTU LAPORAN MOBILE (pengganti tabel) ===== */
-        .laporan-mobile {
-            display: none;
-        }
+        .laporan-mobile { display: none; }
         .laporan-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -316,7 +366,6 @@
             font-weight: 600;
             font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
             flex-shrink: 0;
         }
         .laporan-card .row .val {
@@ -334,7 +383,6 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        /* Status badge */
         .match-status {
             display: inline-flex;
             align-items: center;
@@ -349,7 +397,7 @@
         .match-false { background: #fee2e2; color: #b91c1c; }
         .match-warning { background: #fef9c3; color: #854d0e; }
 
-        /* ===== SUMMARY ===== */
+        /* SUMMARY */
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -378,7 +426,6 @@
             word-break: break-word;
         }
 
-        /* ===== LAIN-LAIN ===== */
         .empty-state {
             color: #94a3b8;
             font-style: italic;
@@ -404,181 +451,286 @@
             line-height: 1.5;
         }
 
-        /* ===== SCROLLBAR HALUS ===== */
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+            animation: slideUp 0.25s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .modal-header h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-close {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #64748b;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .modal-close:hover { background: #e2e8f0; }
+
+        /* Info jam di modal */
+        .session-info {
+            background: #eff6ff;
+            border: 1.5px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            text-align: center;
+        }
+        .session-info .si-box .si-lbl {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #1e40af;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .session-info .si-box .si-val {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Layanan picker */
+        .layanan-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        .layanan-option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+        .layanan-option:hover, .layanan-option:active {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .layanan-option.selected {
+            border-color: #1e293b;
+            background: #1e293b;
+            color: white;
+        }
+        .layanan-option .lo-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .layanan-option .lo-price {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #f59e0b;
+            white-space: nowrap;
+        }
+        .layanan-option.selected .lo-price { color: #fbbf24; }
+        .layanan-option .lo-range {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-weight: 500;
+            display: block;
+            margin-top: 2px;
+        }
+        .layanan-option.selected .lo-range { color: #cbd5e1; }
+
+        .custom-price-box {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: 14px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+        }
+        .custom-price-box label { color: #92400e; }
+
+        /* Nota preview thermal 58mm */
+        .nota-thermal-wrapper {
+            background: #f1f5f9;
+            border-radius: 14px;
+            padding: 1.25rem 1rem;
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .nota-thermal {
+            width: 58mm;
+            background: white;
+            padding: 4mm 3mm;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9pt;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            line-height: 1.4;
+        }
+        .nota-thermal .nt-center { text-align: center; }
+        .nota-thermal .nt-bold { font-weight: bold; }
+        .nota-thermal .nt-line {
+            border-top: 1px dashed #000;
+            margin: 4px 0;
+        }
+        .nota-thermal .nt-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 4px;
+        }
+        .nota-thermal .nt-row .nt-label { flex: 1; }
+        .nota-thermal .nt-row .nt-value {
+            text-align: right;
+            white-space: nowrap;
+        }
+        .nota-thermal .nt-title {
+            font-size: 12pt;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .nota-thermal .nt-sub { font-size: 7pt; color: #333; }
+        .nota-thermal .nt-total { font-size: 11pt; font-weight: bold; }
+        .nota-thermal .nt-footer {
+            font-size: 7pt;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* PRINT */
+        @media print {
+            @page {
+                size: 58mm auto;
+                margin: 0;
+            }
+            body * { visibility: hidden; }
+            .nota-thermal-wrapper,
+            .nota-thermal-wrapper * { visibility: visible; }
+            .nota-thermal-wrapper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                padding: 0;
+                background: white;
+                box-shadow: none;
+                width: 58mm;
+            }
+            .nota-thermal { box-shadow: none; width: 58mm; }
+        }
+
+        /* SCROLLBAR */
         .nota-list::-webkit-scrollbar,
         .cctv-list::-webkit-scrollbar,
-        .table-wrapper::-webkit-scrollbar {
+        .table-wrapper::-webkit-scrollbar,
+        .modal::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         .nota-list::-webkit-scrollbar-thumb,
         .cctv-list::-webkit-scrollbar-thumb,
-        .table-wrapper::-webkit-scrollbar-thumb {
+        .table-wrapper::-webkit-scrollbar-thumb,
+        .modal::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 10px;
         }
 
-        /* ================================================= */
-        /* ================= TABLET ======================== */
-        /* ================================================= */
+        /* RESPONSIVE */
         @media (max-width: 900px) {
-            .summary-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .summary-cards { grid-template-columns: repeat(2, 1fr); }
+            .clock-panel { grid-template-columns: 1fr; }
         }
-
-        /* ================================================= */
-        /* ================= MOBILE ======================== */
-        /* ================================================= */
         @media (max-width: 768px) {
-            body {
-                padding: 0.75rem;
-                font-size: 14px;
-            }
-            .app {
-                padding: 1rem;
-                border-radius: 18px;
-            }
-            h1 {
-                font-size: 1.3rem;
-            }
-            h1 span {
-                font-size: 0.62rem;
-                padding: 3px 10px;
-            }
-            .subhead {
-                font-size: 0.78rem;
-                margin-bottom: 1.25rem;
-            }
-
-            /* Grid jadi 1 kolom */
-            .grid-2 {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .card {
-                padding: 1rem;
-                border-radius: 16px;
-            }
-            .card-title {
-                font-size: 0.95rem;
-                margin-bottom: 1rem;
-            }
-
-            /* Input lebih besar & nyaman disentuh */
-            input, select {
-                padding: 11px 12px;
-                font-size: 16px;
-                border-radius: 10px;
-            }
-            label {
-                font-size: 0.68rem;
-            }
-
-            .btn {
-                padding: 13px 16px;
-                font-size: 0.9rem;
-                min-height: 46px;
-                border-radius: 12px;
-            }
-
-            /* Row-2 tetap 2 kolom untuk input pendek, tapi lebih rapat */
-            .row-2 {
-                gap: 0.6rem;
-            }
-
-            .nota-list, .cctv-list {
-                max-height: 260px;
-            }
-
-            /* Sembunyikan tabel, tampilkan kartu */
-            .table-wrapper {
-                display: none;
-            }
-            .laporan-mobile {
-                display: block;
-            }
-
-            /* Summary 2 kolom */
-            .summary-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.6rem;
-            }
-            .sum-card {
-                padding: 0.85rem;
-                border-radius: 14px;
-            }
-            .sum-card .value {
-                font-size: 1.15rem;
-            }
-            .sum-card .label {
-                font-size: 0.62rem;
-            }
+            body { padding: 0.75rem; font-size: 14px; }
+            .app { padding: 1rem; border-radius: 18px; }
+            h1 { font-size: 1.3rem; }
+            h1 span { font-size: 0.62rem; padding: 3px 10px; }
+            .subhead { font-size: 0.78rem; margin-bottom: 1.25rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 1rem; }
+            .card { padding: 1rem; border-radius: 16px; }
+            .card-title { font-size: 0.95rem; margin-bottom: 1rem; }
+            input, select { padding: 11px 12px; font-size: 16px; border-radius: 10px; }
+            label { font-size: 0.68rem; }
+            .btn { padding: 13px 16px; font-size: 0.9rem; min-height: 46px; border-radius: 12px; }
+            .row-2 { gap: 0.6rem; }
+            .nota-list, .cctv-list { max-height: 260px; }
+            .table-wrapper { display: none; }
+            .laporan-mobile { display: block; }
+            .summary-cards { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .sum-card { padding: 0.85rem; border-radius: 14px; }
+            .sum-card .value { font-size: 1.15rem; }
+            .sum-card .label { font-size: 0.62rem; }
+            .modal { padding: 1.15rem; border-radius: 16px; }
+            .modal-header h2 { font-size: 1rem; }
+            .clock-row .val { font-size: 1.3rem; }
         }
-
-        /* ================================================= */
-        /* ============== MOBILE KECIL ===================== */
-        /* ================================================= */
         @media (max-width: 420px) {
-            body {
-                padding: 0.5rem;
-            }
-            .app {
-                padding: 0.85rem;
-                border-radius: 14px;
-            }
-            h1 {
-                font-size: 1.1rem;
-            }
-            .subhead {
-                font-size: 0.72rem;
-                padding-left: 0.7rem;
-            }
-            .card {
-                padding: 0.85rem;
-                border-radius: 14px;
-            }
-            .card-title {
-                font-size: 0.88rem;
-            }
-
-            /* Di HP sangat kecil, row-2 jadi 1 kolom supaya tidak sempit */
-            .row-2 {
-                grid-template-columns: 1fr;
-                gap: 0.6rem;
-            }
-
-            .summary-cards {
-                grid-template-columns: 1fr 1fr;
-            }
-            .sum-card .value {
-                font-size: 1rem;
-            }
-
-            .nota-item, .cctv-item {
-                padding: 0.75rem 0.85rem;
-            }
-            .nota-item .name, .cctv-item .name {
-                font-size: 0.85rem;
-            }
-            .nota-item .detail, .cctv-item .detail {
-                font-size: 0.7rem;
-                gap: 6px;
-            }
-
-            .laporan-card {
-                padding: 0.85rem;
-            }
-            .laporan-card .card-name {
-                font-size: 0.92rem;
-            }
-            .laporan-card .row {
-                font-size: 0.78rem;
-            }
-            .laporan-card .row .lbl {
-                font-size: 0.66rem;
-            }
+            body { padding: 0.5rem; }
+            .app { padding: 0.85rem; border-radius: 14px; }
+            h1 { font-size: 1.1rem; }
+            .subhead { font-size: 0.72rem; padding-left: 0.7rem; }
+            .card { padding: 0.85rem; border-radius: 14px; }
+            .card-title { font-size: 0.88rem; }
+            .row-2 { grid-template-columns: 1fr; gap: 0.6rem; }
+            .summary-cards { grid-template-columns: 1fr 1fr; }
+            .sum-card .value { font-size: 1rem; }
+            .nota-item, .cctv-item { padding: 0.75rem 0.85rem; }
+            .nota-item .name, .cctv-item .name { font-size: 0.85rem; }
+            .nota-item .detail, .cctv-item .detail { font-size: 0.7rem; gap: 6px; }
+            .laporan-card { padding: 0.85rem; }
+            .laporan-card .card-name { font-size: 0.92rem; }
+            .laporan-card .row { font-size: 0.78rem; }
+            .laporan-card .row .lbl { font-size: 0.66rem; }
+            .clock-panel { padding: 1rem; }
+            .clock-actions { grid-template-columns: 1fr; }
+            .session-info { grid-template-columns: 1fr 1fr 1fr; padding: 0.75rem; }
+            .session-info .si-box .si-val { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -589,15 +741,37 @@
         <span>CCTV SYNC</span>
     </h1>
     <div class="subhead">
-        Pembukuan nota & pencocokan jam potong rambut dengan rekaman CCTV
+        Klik <b>MULAI</b> saat pelanggan datang · Klik <b>SELESAI</b> saat selesai → pilih layanan → cetak nota
     </div>
 
-    <!-- DUA KOLOM INPUT -->
+    <!-- PANEL JAM (BUKAN TIMER) -->
+    <div class="clock-panel">
+        <div class="clock-info">
+            <div class="clock-status" id="clockStatus">⏸️ Menunggu pelanggan</div>
+            <div class="clock-row">
+                <span class="lbl">Mulai</span>
+                <span class="val" id="jamMulaiDisplay">--:--</span>
+            </div>
+            <div class="clock-row">
+                <span class="lbl">Selesai</span>
+                <span class="val" id="jamSelesaiDisplay">--:--</span>
+            </div>
+        </div>
+        <div class="clock-actions">
+            <button class="btn btn-green" id="btnMulai">
+                <span>▶️</span> MULAI
+            </button>
+            <button class="btn btn-red" id="btnSelesai" disabled>
+                <span>⏹️</span> SELESAI
+            </button>
+        </div>
+    </div>
+
+    <!-- FORM MANUAL (opsional, tetap ada) -->
     <div class="grid-2">
-        <!-- KOLOM NOTA -->
         <div class="card">
             <div class="card-title">
-                <span>🧾</span> Input Nota / Transaksi
+                <span>🧾</span> Input Nota Manual
             </div>
             <div class="form-group">
                 <label>Nama Pelanggan</label>
@@ -607,17 +781,15 @@
                 <div class="form-group">
                     <label>Layanan</label>
                     <select id="layanan">
-                        <option value="Potong Rambut">Potong Rambut</option>
-                        <option value="Cukur Jenggot">Cukur Jenggot</option>
-                        <option value="Potong + Cukur">Potong + Cukur</option>
-                        <option value="Cuci Rambut">Cuci Rambut</option>
-                        <option value="Styling">Styling</option>
-                        <option value="Paket Komplit">Paket Komplit</option>
+                        <option value="Potong Rambut" data-harga="30000">Potong Rambut - Rp 30.000</option>
+                        <option value="Semir Rambut Hitam" data-harga="120000" data-range="true">Semir Rambut Hitam - Rp 120.000+</option>
+                        <option value="Hairlight" data-harga="150000" data-range="true">Hairlight - Rp 150.000+</option>
+                        <option value="Perming" data-harga="200000">Perming - Rp 200.000</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Harga (Rp)</label>
-                    <input type="number" id="harga" placeholder="35000" min="0" step="5000" inputmode="numeric">
+                    <input type="number" id="harga" placeholder="30000" min="0" step="5000" inputmode="numeric">
                 </div>
             </div>
             <div class="row-2">
@@ -635,11 +807,10 @@
                 <input type="date" id="tanggalNota">
             </div>
             <button class="btn" id="btnTambahNota">
-                <span>➕</span> Tambah Nota
+                <span>➕</span> Tambah Nota Manual
             </button>
         </div>
 
-        <!-- KOLOM CCTV -->
         <div class="card">
             <div class="card-title">
                 <span>📹</span> Rekaman CCTV (Referensi)
@@ -693,9 +864,8 @@
             <span>📊</span> Laporan & Pencocokan CCTV
         </div>
 
-        <!-- TABEL: tampil di desktop -->
         <div class="table-wrapper">
-            <table id="laporanTable">
+            <table>
                 <thead>
                     <tr>
                         <th>Pelanggan</th>
@@ -711,11 +881,9 @@
             </table>
         </div>
 
-        <!-- KARTU: tampil di mobile -->
         <div class="laporan-mobile" id="laporanMobileContainer"></div>
 
-        <!-- SUMMARY -->
-        <div class="summary-cards" id="summaryContainer">
+        <div class="summary-cards">
             <div class="sum-card">
                 <div class="label">Total Pendapatan</div>
                 <div class="value" id="totalPendapatan">Rp 0</div>
@@ -739,12 +907,114 @@
     </div>
 </div>
 
+<!-- MODAL PILIH LAYANAN -->
+<div class="modal-overlay" id="modalLayanan">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>✂️ Pilih Layanan</h2>
+            <button class="modal-close" id="modalCloseBtn">✕</button>
+        </div>
+
+        <div class="session-info">
+            <div class="si-box">
+                <div class="si-lbl">Mulai</div>
+                <div class="si-val" id="modalJamMulai">--:--</div>
+            </div>
+            <div class="si-box">
+                <div class="si-lbl">Selesai</div>
+                <div class="si-val" id="modalJamSelesai">--:--</div>
+            </div>
+            <div class="si-box">
+                <div class="si-lbl">Durasi</div>
+                <div class="si-val" id="modalDurasi">-- mnt</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Nama Pelanggan (opsional)</label>
+            <input type="text" id="modalNamaPelanggan" placeholder="Kosongkan jika tidak perlu" autocomplete="off">
+        </div>
+
+        <label>Pilih Layanan</label>
+        <div class="layanan-grid" id="layananGrid">
+            <div class="layanan-option" data-nama="Potong Rambut" data-harga="30000" data-range="false">
+                <div>
+                    <div class="lo-name">Potong Rambut</div>
+                    <div class="lo-range">Tarif tetap</div>
+                </div>
+                <div class="lo-price">Rp 30.000</div>
+            </div>
+            <div class="layanan-option" data-nama="Semir Rambut Hitam" data-harga="120000" data-range="true">
+                <div>
+                    <div class="lo-name">Semir Rambut Hitam</div>
+                    <div class="lo-range">Rp 120.000 – 150.000</div>
+                </div>
+                <div class="lo-price">Rp 120.000+</div>
+            </div>
+            <div class="layanan-option" data-nama="Hairlight" data-harga="150000" data-range="true">
+                <div>
+                    <div class="lo-name">Hairlight</div>
+                    <div class="lo-range">Rp 150.000 – 200.000</div>
+                </div>
+                <div class="lo-price">Rp 150.000+</div>
+            </div>
+            <div class="layanan-option" data-nama="Perming" data-harga="200000" data-range="false">
+                <div>
+                    <div class="lo-name">Perming</div>
+                    <div class="lo-range">Tarif tetap</div>
+                </div>
+                <div class="lo-price">Rp 200.000</div>
+            </div>
+        </div>
+
+        <!-- Custom price muncul jika layanan range dipilih -->
+        <div class="custom-price-box" id="customPriceBox" style="display:none;">
+            <label>Masukkan Tarif Custom (Rp)</label>
+            <input type="number" id="customPrice" placeholder="Contoh: 135000" min="0" step="5000" inputmode="numeric">
+            <div class="text-muted" style="margin-top:6px; color:#92400e;">
+                Range: <span id="customRangeHint">Rp 0 – Rp 0</span>
+            </div>
+        </div>
+
+        <button class="btn btn-orange" id="btnOkLayanan" style="margin-top:1rem;">
+            <span>✅</span> OK — Buat Nota & Siap Cetak
+        </button>
+    </div>
+</div>
+
+<!-- MODAL CETAK NOTA -->
+<div class="modal-overlay" id="modalCetak">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2>🖨️ Nota Siap Cetak</h2>
+            <button class="modal-close" id="modalCetakClose">✕</button>
+        </div>
+
+        <div class="nota-thermal-wrapper" id="notaPreviewWrapper">
+            <!-- diisi JS -->
+        </div>
+
+        <button class="btn btn-print" id="btnPrint">
+            <span>🖨️</span> CETAK NOTA (Thermal 58mm)
+        </button>
+        <button class="btn btn-outline" id="btnTutupCetak" style="margin-top:0.5rem;">
+            Tutup
+        </button>
+    </div>
+</div>
+
 <script>
     (function() {
+        // ============ STATE ============
         let notaList = [];
         let cctvList = [];
+        let sesiAktif = null;          // { jamMulai, tanggal }
+        let layananDipilih = null;     // { nama, harga, range }
+        let notaTerakhir = null;       // nota yang barusan dibuat (untuk cetak)
 
-        // Ambil elemen
+        const STORAGE_KEY = 'barbershop_sesi_aktif';
+
+        // ============ ELEMEN ============
         const elNama = document.getElementById('namaPelanggan');
         const elLayanan = document.getElementById('layanan');
         const elHarga = document.getElementById('harga');
@@ -764,6 +1034,30 @@
         const notaCount = document.getElementById('notaCount');
         const cctvCount = document.getElementById('cctvCount');
 
+        const btnMulai = document.getElementById('btnMulai');
+        const btnSelesai = document.getElementById('btnSelesai');
+        const clockStatus = document.getElementById('clockStatus');
+        const jamMulaiDisplay = document.getElementById('jamMulaiDisplay');
+        const jamSelesaiDisplay = document.getElementById('jamSelesaiDisplay');
+
+        const modalLayanan = document.getElementById('modalLayanan');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const modalJamMulai = document.getElementById('modalJamMulai');
+        const modalJamSelesai = document.getElementById('modalJamSelesai');
+        const modalDurasi = document.getElementById('modalDurasi');
+        const modalNamaPelanggan = document.getElementById('modalNamaPelanggan');
+        const layananGrid = document.getElementById('layananGrid');
+        const customPriceBox = document.getElementById('customPriceBox');
+        const customPrice = document.getElementById('customPrice');
+        const customRangeHint = document.getElementById('customRangeHint');
+        const btnOkLayanan = document.getElementById('btnOkLayanan');
+
+        const modalCetak = document.getElementById('modalCetak');
+        const modalCetakClose = document.getElementById('modalCetakClose');
+        const btnPrint = document.getElementById('btnPrint');
+        const btnTutupCetak = document.getElementById('btnTutupCetak');
+        const notaPreviewWrapper = document.getElementById('notaPreviewWrapper');
+
         const laporanBody = document.getElementById('laporanBody');
         const laporanMobileContainer = document.getElementById('laporanMobileContainer');
         const totalPendapatan = document.getElementById('totalPendapatan');
@@ -771,7 +1065,7 @@
         const totalCocok = document.getElementById('totalCocok');
         const totalTidakCocok = document.getElementById('totalTidakCocok');
 
-        // Helper
+        // ============ HELPER ============
         function formatRupiah(angka) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
         }
@@ -789,8 +1083,279 @@
             div.textContent = text;
             return div.innerHTML;
         }
+        function getJamSekarang() {
+            const d = new Date();
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            return `${h}:${m}`;
+        }
+        function getTanggalSekarang() {
+            const d = new Date();
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+        function getTanggalFormatted(tgl) {
+            // tgl: YYYY-MM-DD → DD/MM/YYYY
+            if (!tgl) return '-';
+            const [y, m, d] = tgl.split('-');
+            return `${d}/${m}/${y}`;
+        }
+        function getHariFormatted(tgl) {
+            const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const d = new Date(tgl);
+            return hari[d.getDay()] || '-';
+        }
 
-        // Cari CCTV yang cocok
+        // ============ SESI (MULAI / SELESAI) ============
+        function loadSesiFromCache() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    sesiAktif = JSON.parse(raw);
+                }
+            } catch (e) {
+                sesiAktif = null;
+            }
+            updateClockUI();
+        }
+        function saveSesiToCache() {
+            if (sesiAktif) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(sesiAktif));
+            } else {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+        }
+        function updateClockUI() {
+            if (sesiAktif && sesiAktif.jamMulai) {
+                jamMulaiDisplay.textContent = sesiAktif.jamMulai;
+                jamMulaiDisplay.classList.add('active');
+                if (sesiAktif.jamSelesai) {
+                    jamSelesaiDisplay.textContent = sesiAktif.jamSelesai;
+                    jamSelesaiDisplay.classList.add('active');
+                    clockStatus.textContent = '✅ Sesi selesai — pilih layanan';
+                    clockStatus.className = 'clock-status done';
+                    btnMulai.disabled = false;
+                    btnSelesai.disabled = true;
+                } else {
+                    jamSelesaiDisplay.textContent = '--:--';
+                    jamSelesaiDisplay.classList.remove('active');
+                    clockStatus.textContent = '🟢 Sedang melayani...';
+                    clockStatus.className = 'clock-status running';
+                    btnMulai.disabled = true;
+                    btnSelesai.disabled = false;
+                }
+            } else {
+                jamMulaiDisplay.textContent = '--:--';
+                jamSelesaiDisplay.textContent = '--:--';
+                jamMulaiDisplay.classList.remove('active');
+                jamSelesaiDisplay.classList.remove('active');
+                clockStatus.textContent = '⏸️ Menunggu pelanggan';
+                clockStatus.className = 'clock-status';
+                btnMulai.disabled = false;
+                btnSelesai.disabled = true;
+            }
+        }
+
+        btnMulai.addEventListener('click', function() {
+            if (sesiAktif && sesiAktif.jamMulai && !sesiAktif.jamSelesai) {
+                alert('Sesi sedang berjalan. Klik SELESAI dulu.');
+                return;
+            }
+            // Kalau ada sesi selesai yang belum dibuat nota, tanya konfirmasi
+            if (sesiAktif && sesiAktif.jamSelesai) {
+                if (!confirm('Masih ada sesi selesai yang belum dibuat nota. Mulai sesi baru?')) {
+                    return;
+                }
+            }
+            sesiAktif = {
+                jamMulai: getJamSekarang(),
+                jamSelesai: null,
+                tanggal: getTanggalSekarang()
+            };
+            saveSesiToCache();
+            updateClockUI();
+            // getar feedback kalau didukung
+            if (navigator.vibrate) navigator.vibrate(50);
+        });
+
+        btnSelesai.addEventListener('click', function() {
+            if (!sesiAktif || !sesiAktif.jamMulai) {
+                alert('Belum ada sesi. Klik MULAI dulu.');
+                return;
+            }
+            sesiAktif.jamSelesai = getJamSekarang();
+            saveSesiToCache();
+            updateClockUI();
+            if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+
+            // Buka modal pilih layanan
+            bukaModalLayanan();
+        });
+
+        // ============ MODAL PILIH LAYANAN ============
+        function bukaModalLayanan() {
+            if (!sesiAktif || !sesiAktif.jamSelesai) {
+                alert('Sesi belum selesai.');
+                return;
+            }
+            modalJamMulai.textContent = sesiAktif.jamMulai;
+            modalJamSelesai.textContent = sesiAktif.jamSelesai;
+            const durasi = timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai);
+            modalDurasi.textContent = (durasi >= 0 ? durasi : 0) + ' mnt';
+            modalNamaPelanggan.value = '';
+
+            // reset pilihan
+            layananDipilih = null;
+            document.querySelectorAll('.layanan-option').forEach(el => el.classList.remove('selected'));
+            customPriceBox.style.display = 'none';
+            customPrice.value = '';
+
+            modalLayanan.classList.add('active');
+        }
+        function tutupModalLayanan() {
+            modalLayanan.classList.remove('active');
+        }
+
+        modalCloseBtn.addEventListener('click', function() {
+            if (confirm('Batalkan pemilihan layanan? Sesi selesai akan tetap tersimpan.')) {
+                tutupModalLayanan();
+            }
+        });
+        modalLayanan.addEventListener('click', function(e) {
+            if (e.target === modalLayanan) {
+                if (confirm('Batalkan pemilihan layanan?')) {
+                    tutupModalLayanan();
+                }
+            }
+        });
+
+        // Pilih layanan
+        document.querySelectorAll('.layanan-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.layanan-option').forEach(el => el.classList.remove('selected'));
+                opt.classList.add('selected');
+                layananDipilih = {
+                    nama: opt.dataset.nama,
+                    harga: parseInt(opt.dataset.harga),
+                    range: opt.dataset.range === 'true'
+                };
+                if (layananDipilih.range) {
+                    customPriceBox.style.display = 'block';
+                    customPrice.value = layananDipilih.harga;
+                    // hint range
+                    let min, max;
+                    if (layananDipilih.nama === 'Semir Rambut Hitam') { min = 120000; max = 150000; }
+                    else if (layananDipilih.nama === 'Hairlight') { min = 150000; max = 200000; }
+                    else { min = layananDipilih.harga; max = layananDipilih.harga; }
+                    customRangeHint.textContent = `${formatRupiah(min)} – ${formatRupiah(max)}`;
+                    customPrice.focus();
+                } else {
+                    customPriceBox.style.display = 'none';
+                }
+            });
+        });
+
+        // OK → buat nota
+        btnOkLayanan.addEventListener('click', function() {
+            if (!layananDipilih) {
+                alert('Pilih layanan dulu.');
+                return;
+            }
+            let hargaFinal = layananDipilih.harga;
+            if (layananDipilih.range) {
+                const c = parseFloat(customPrice.value);
+                if (isNaN(c) || c <= 0) {
+                    alert('Masukkan tarif custom dengan benar.');
+                    return;
+                }
+                // validasi range
+                let min, max;
+                if (layananDipilih.nama === 'Semir Rambut Hitam') { min = 120000; max = 150000; }
+                else if (layananDipilih.nama === 'Hairlight') { min = 150000; max = 200000; }
+                else { min = 0; max = Infinity; }
+                if (c < min || c > max) {
+                    if (!confirm(`Tarif ${formatRupiah(c)} di luar range ${formatRupiah(min)} – ${formatRupiah(max)}. Lanjutkan?`)) {
+                        return;
+                    }
+                }
+                hargaFinal = c;
+            }
+
+            const nama = modalNamaPelanggan.value.trim() || 'Pelanggan';
+            const notaBaru = {
+                id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                nama: nama,
+                layanan: layananDipilih.nama,
+                harga: hargaFinal,
+                jamMulai: sesiAktif.jamMulai,
+                jamSelesai: sesiAktif.jamSelesai,
+                tanggal: sesiAktif.tanggal || getTanggalSekarang()
+            };
+            notaList.push(notaBaru);
+            notaTerakhir = notaBaru;
+
+            // hapus sesi aktif dari cache
+            sesiAktif = null;
+            saveSesiToCache();
+            updateClockUI();
+
+            tutupModalLayanan();
+            renderAll();
+
+            // buka modal cetak
+            bukaModalCetak(notaBaru);
+        });
+
+        // ============ MODAL CETAK ============
+        function buatHtmlNota(nota) {
+            const tglFormatted = getTanggalFormatted(nota.tanggal);
+            const hariFormatted = getHariFormatted(nota.tanggal);
+            const durasi = Math.max(0, timeToMinutes(nota.jamSelesai) - timeToMinutes(nota.jamMulai));
+            return `
+                <div class="nota-thermal" id="notaThermal">
+                    <div class="nt-center nt-bold nt-title">BARBERSHOP</div>
+                    <div class="nt-center nt-sub">Jl. Contoh No. 123, Kota</div>
+                    <div class="nt-center nt-sub">Telp: 0812-3456-7890</div>
+                    <div class="nt-line"></div>
+                    <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.id.slice(-6).toUpperCase()}</span></div>
+                    <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
+                    <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
+                    <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
+                    <div class="nt-line"></div>
+                    <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${nota.jamMulai}</span></div>
+                    <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
+                    <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
+                    <div class="nt-line"></div>
+                    <div class="nt-row nt-bold"><span class="nt-label">${escapeHtml(nota.layanan)}</span><span class="nt-value">${formatRupiah(nota.harga)}</span></div>
+                    <div class="nt-line"></div>
+                    <div class="nt-row nt-total"><span class="nt-label">TOTAL</span><span class="nt-value">${formatRupiah(nota.harga)}</span></div>
+                    <div class="nt-line"></div>
+                    <div class="nt-footer">Terima kasih atas kunjungan Anda<br>Selamat datang kembali 🙏</div>
+                </div>
+            `;
+        }
+
+        function bukaModalCetak(nota) {
+            notaPreviewWrapper.innerHTML = buatHtmlNota(nota);
+            modalCetak.classList.add('active');
+        }
+        function tutupModalCetak() {
+            modalCetak.classList.remove('active');
+        }
+
+        modalCetakClose.addEventListener('click', tutupModalCetak);
+        btnTutupCetak.addEventListener('click', tutupModalCetak);
+        modalCetak.addEventListener('click', function(e) {
+            if (e.target === modalCetak) tutupModalCetak();
+        });
+
+        btnPrint.addEventListener('click', function() {
+            window.print();
+        });
+
+        // ============ CCTV MATCH ============
         function cariCctvMatch(nota) {
             if (!nota.tanggal) return null;
             const kandidat = cctvList.filter(c => c.tanggal === nota.tanggal);
@@ -807,7 +1372,6 @@
             }
             return bestMatch;
         }
-
         function getMatchStatus(nota) {
             if (!nota.tanggal) return { status: 'no-date' };
             const match = cariCctvMatch(nota);
@@ -822,7 +1386,7 @@
             return { status: adaCctvTanggalSama ? 'mismatch' : 'no-cctv' };
         }
 
-        // Render daftar nota
+        // ============ RENDER ============
         function renderNotaList() {
             if (notaList.length === 0) {
                 notaListContainer.innerHTML = '<div class="empty-state">Belum ada nota transaksi.</div>';
@@ -831,11 +1395,12 @@
             }
             notaCount.textContent = `${notaList.length} nota`;
             let html = '';
-            notaList.forEach(n => {
+            // tampilkan dari yang terbaru
+            [...notaList].reverse().forEach(n => {
                 html += `
                     <div class="nota-item">
                         <div class="info">
-                            <span class="name">${escapeHtml(n.nama) || 'Tanpa Nama'}</span>
+                            <span class="name">${escapeHtml(n.nama)}</span>
                             <div class="detail">
                                 <span>✂️ ${escapeHtml(n.layanan)}</span>
                                 <span>💰 ${formatRupiah(n.harga)}</span>
@@ -843,14 +1408,16 @@
                                 <span>📅 ${n.tanggal || '-'}</span>
                             </div>
                         </div>
-                        <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
+                        <div class="nota-actions">
+                            <button class="btn-mini print" onclick="cetakNotaById('${n.id}')" title="Cetak">🖨️</button>
+                            <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
+                        </div>
                     </div>
                 `;
             });
             notaListContainer.innerHTML = html;
         }
 
-        // Render daftar cctv
         function renderCctvList() {
             if (cctvList.length === 0) {
                 cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
@@ -859,11 +1426,11 @@
             }
             cctvCount.textContent = cctvList.length;
             let html = '';
-            cctvList.forEach(c => {
+            [...cctvList].reverse().forEach(c => {
                 html += `
                     <div class="cctv-item">
                         <div class="info">
-                            <span class="name">${escapeHtml(c.nama) || 'Tanpa Nama'}</span>
+                            <span class="name">${escapeHtml(c.nama)}</span>
                             <div class="detail">
                                 <span>⏰ ${c.jamMulai}-${c.jamSelesai}</span>
                                 <span>📅 ${c.tanggal || '-'}</span>
@@ -876,7 +1443,6 @@
             cctvListContainer.innerHTML = html;
         }
 
-        // Render laporan (tabel + mobile cards)
         function renderLaporan() {
             if (notaList.length === 0) {
                 laporanBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data transaksi</td></tr>`;
@@ -887,15 +1453,13 @@
                 totalTidakCocok.textContent = '0';
                 return;
             }
-
             let total = 0, cocok = 0, tidakCocok = 0;
             let rows = '', cards = '';
-
-            notaList.forEach(n => {
+            // urutkan terbaru dulu
+            [...notaList].reverse().forEach(n => {
                 total += Number(n.harga) || 0;
                 const m = getMatchStatus(n);
                 let statusHtml = '', cctvJam = '-';
-
                 if (m.status === 'match') {
                     cocok++;
                     statusHtml = `<span class="match-status match-true">✅ Cocok (${m.selisih}m)</span>`;
@@ -910,11 +1474,9 @@
                     tidakCocok++;
                     statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`;
                 }
-
-                // Baris tabel (desktop)
                 rows += `
                     <tr>
-                        <td><strong>${escapeHtml(n.nama) || '-'}</strong></td>
+                        <td><strong>${escapeHtml(n.nama)}</strong></td>
                         <td>${escapeHtml(n.layanan)}</td>
                         <td>${formatRupiah(n.harga)}</td>
                         <td>${n.tanggal || '-'}</td>
@@ -923,39 +1485,18 @@
                         <td>${statusHtml}</td>
                     </tr>
                 `;
-
-                // Kartu mobile
                 cards += `
                     <div class="laporan-card">
-                        <div class="card-name">${escapeHtml(n.nama) || 'Tanpa Nama'}</div>
-                        <div class="row">
-                            <span class="lbl">Layanan</span>
-                            <span class="val">${escapeHtml(n.layanan)}</span>
-                        </div>
-                        <div class="row">
-                            <span class="lbl">Harga</span>
-                            <span class="val">${formatRupiah(n.harga)}</span>
-                        </div>
-                        <div class="row">
-                            <span class="lbl">Tanggal</span>
-                            <span class="val">${n.tanggal || '-'}</span>
-                        </div>
-                        <div class="row">
-                            <span class="lbl">Jam Nota</span>
-                            <span class="val">${n.jamMulai}-${n.jamSelesai}</span>
-                        </div>
-                        <div class="row">
-                            <span class="lbl">Jam CCTV</span>
-                            <span class="val">${cctvJam}</span>
-                        </div>
-                        <div class="row">
-                            <span class="lbl">Status</span>
-                            <span class="val">${statusHtml}</span>
-                        </div>
+                        <div class="card-name">${escapeHtml(n.nama)}</div>
+                        <div class="row"><span class="lbl">Layanan</span><span class="val">${escapeHtml(n.layanan)}</span></div>
+                        <div class="row"><span class="lbl">Harga</span><span class="val">${formatRupiah(n.harga)}</span></div>
+                        <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
+                        <div class="row"><span class="lbl">Jam Nota</span><span class="val">${n.jamMulai}-${n.jamSelesai}</span></div>
+                        <div class="row"><span class="lbl">Jam CCTV</span><span class="val">${cctvJam}</span></div>
+                        <div class="row"><span class="lbl">Status</span><span class="val">${statusHtml}</span></div>
                     </div>
                 `;
             });
-
             laporanBody.innerHTML = rows;
             laporanMobileContainer.innerHTML = cards;
             totalPendapatan.textContent = formatRupiah(total);
@@ -970,17 +1511,34 @@
             renderLaporan();
         }
 
-        // Delete
+        // ============ DELETE ============
         window.deleteNota = function(id) {
+            if (!confirm('Hapus nota ini?')) return;
             notaList = notaList.filter(n => n.id !== id);
             renderAll();
         };
         window.deleteCctv = function(id) {
+            if (!confirm('Hapus referensi CCTV ini?')) return;
             cctvList = cctvList.filter(c => c.id !== id);
             renderAll();
         };
+        window.cetakNotaById = function(id) {
+            const nota = notaList.find(n => n.id === id);
+            if (nota) bukaModalCetak(nota);
+        };
 
-        // Tambah nota
+        // ============ FORM MANUAL ============
+        // Auto-isi harga saat pilih layanan di form manual
+        elLayanan.addEventListener('change', function() {
+            const opt = elLayanan.options[elLayanan.selectedIndex];
+            const h = opt.dataset.harga;
+            if (h && elLayanan.value !== 'Semir Rambut Hitam' && elLayanan.value !== 'Hairlight') {
+                elHarga.value = h;
+            } else if (h) {
+                elHarga.value = h;
+            }
+        });
+
         btnTambahNota.addEventListener('click', function() {
             const nama = elNama.value.trim();
             const layanan = elLayanan.value;
@@ -1003,12 +1561,9 @@
             });
             elNama.value = '';
             elHarga.value = '';
-            elJamMulai.value = '10:00';
-            elJamSelesai.value = '10:30';
             renderAll();
         });
 
-        // Tambah cctv
         btnTambahCctv.addEventListener('click', function() {
             const nama = elCctvNama.value.trim();
             const jamMulai = elCctvMulai.value;
@@ -1027,32 +1582,37 @@
                 nama, jamMulai, jamSelesai, tanggal
             });
             elCctvNama.value = '';
-            elCctvMulai.value = '10:00';
-            elCctvSelesai.value = '10:30';
             renderAll();
         });
 
-        // Inisialisasi tanggal
-        const today = new Date().toISOString().split('T')[0];
+        // ============ INIT ============
+        const today = getTanggalSekarang();
         elTanggalNota.value = today;
         elCctvTanggal.value = today;
 
-        // Seed data contoh
-        function seedExample() {
+        // Seed contoh
+        (function seed() {
             notaList.push(
-                { id: 'n1', nama: 'Budi Santoso', layanan: 'Potong Rambut', harga: 35000, jamMulai: '10:00', jamSelesai: '10:30', tanggal: today },
-                { id: 'n2', nama: 'Andi Wijaya', layanan: 'Cukur Jenggot', harga: 20000, jamMulai: '11:15', jamSelesai: '11:45', tanggal: today },
-                { id: 'n3', nama: 'Rudi Hartono', layanan: 'Paket Komplit', harga: 75000, jamMulai: '13:00', jamSelesai: '14:00', tanggal: today }
+                { id: 'n1', nama: 'Budi Santoso', layanan: 'Potong Rambut', harga: 30000, jamMulai: '10:00', jamSelesai: '10:30', tanggal: today },
+                { id: 'n2', nama: 'Andi Wijaya', layanan: 'Semir Rambut Hitam', harga: 135000, jamMulai: '11:15', jamSelesai: '12:15', tanggal: today },
+                { id: 'n3', nama: 'Rudi Hartono', layanan: 'Perming', harga: 200000, jamMulai: '13:00', jamSelesai: '15:00', tanggal: today }
             );
             cctvList.push(
                 { id: 'c1', nama: 'CCTV Kursi 1 - Budi', jamMulai: '10:05', jamSelesai: '10:28', tanggal: today },
-                { id: 'c2', nama: 'CCTV Kursi 2 - Andi', jamMulai: '11:10', jamSelesai: '11:40', tanggal: today },
-                { id: 'c3', nama: 'CCTV Kursi 3 - Pelanggan X', jamMulai: '13:20', jamSelesai: '14:10', tanggal: today }
+                { id: 'c2', nama: 'CCTV Kursi 2 - Andi', jamMulai: '11:10', jamSelesai: '12:10', tanggal: today },
+                { id: 'c3', nama: 'CCTV Kursi 3 - Pelanggan X', jamMulai: '13:20', jamSelesai: '15:10', tanggal: today }
             );
-        }
+        })();
 
-        seedExample();
+        loadSesiFromCache();
+        updateClockUI();
         renderAll();
+
+        // Update tampilan jam mulai form manual sesuai jam sekarang
+        elJamMulai.value = getJamSekarang();
+        const now = new Date();
+        now.setMinutes(now.getMinutes() + 30);
+        elJamSelesai.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     })();
 </script>
 </body>
