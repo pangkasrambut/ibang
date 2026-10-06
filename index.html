@@ -62,19 +62,14 @@
             line-height: 1.5;
         }
 
-        /* GRID */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 1.25rem;
-            margin-bottom: 1.25rem;
-        }
+        /* CARD */
         .card {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 20px;
             padding: 1.25rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            margin-bottom: 1.25rem;
         }
         .card-title {
             font-weight: 700;
@@ -99,6 +94,10 @@
             color: #475569;
             margin-bottom: 6px;
         }
+        label .required {
+            color: #dc2626;
+            margin-left: 2px;
+        }
         input, select {
             width: 100%;
             padding: 12px 14px;
@@ -115,6 +114,11 @@
             border-color: #f59e0b;
             background: white;
             box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+        }
+        input.error {
+            border-color: #dc2626;
+            background: #fef2f2;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
         }
         input[type="date"], input[type="time"] {
             -webkit-appearance: none;
@@ -394,6 +398,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            width: 100%;
         }
         .laporan-card .layanan-line {
             display: flex;
@@ -769,7 +774,6 @@
             h1 { font-size: 1.3rem; }
             h1 span { font-size: 0.62rem; padding: 3px 10px; }
             .subhead { font-size: 0.78rem; margin-bottom: 1.25rem; }
-            .grid-2 { grid-template-columns: 1fr; gap: 1rem; }
             .card { padding: 1rem; border-radius: 16px; }
             .card-title { font-size: 0.95rem; margin-bottom: 1rem; }
             input, select { padding: 11px 12px; font-size: 16px; border-radius: 10px; }
@@ -847,83 +851,44 @@
         </div>
     </div>
 
-    <!-- FORM MANUAL + CCTV -->
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title">
-                <span>🧾</span> Input Nota Manual
-            </div>
-            <div class="form-group">
-                <label>Nama Pelanggan</label>
-                <input type="text" id="namaPelanggan" placeholder="Contoh: Budi Santoso" autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label>Layanan (bisa pilih lebih dari 1)</label>
-                <div class="layanan-grid" id="manualLayananGrid">
-                    <!-- diisi JS -->
-                </div>
-            </div>
-            <div class="total-box">
-                <span class="tb-label">Total</span>
-                <span class="tb-value" id="manualTotal">Rp 0</span>
-            </div>
-            <div class="row-2">
-                <div class="form-group">
-                    <label>Jam Mulai</label>
-                    <input type="time" id="jamMulai" value="10:00">
-                </div>
-                <div class="form-group">
-                    <label>Jam Selesai</label>
-                    <input type="time" id="jamSelesai" value="10:30">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input type="date" id="tanggalNota">
-            </div>
-            <button class="btn" id="btnTambahNota">
-                <span>➕</span> Tambah Nota Manual
-            </button>
+    <!-- CCTV -->
+    <div class="card">
+        <div class="card-title">
+            <span>📹</span> Rekaman CCTV (Referensi)
         </div>
-
-        <div class="card">
-            <div class="card-title">
-                <span>📹</span> Rekaman CCTV (Referensi)
+        <div class="form-group">
+            <label>Keterangan / Nama</label>
+            <input type="text" id="cctvNama" placeholder="Contoh: Kursi 2 - Pelanggan A" autocomplete="off">
+        </div>
+        <div class="row-2">
+            <div class="form-group">
+                <label>Jam Mulai</label>
+                <input type="time" id="cctvMulai" value="10:00">
             </div>
             <div class="form-group">
-                <label>Keterangan / Nama</label>
-                <input type="text" id="cctvNama" placeholder="Contoh: Kursi 2 - Pelanggan A" autocomplete="off">
+                <label>Jam Selesai</label>
+                <input type="time" id="cctvSelesai" value="10:30">
             </div>
-            <div class="row-2">
-                <div class="form-group">
-                    <label>Jam Mulai</label>
-                    <input type="time" id="cctvMulai" value="10:00">
-                </div>
-                <div class="form-group">
-                    <label>Jam Selesai</label>
-                    <input type="time" id="cctvSelesai" value="10:30">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Tanggal CCTV</label>
-                <input type="date" id="cctvTanggal">
-            </div>
-            <button class="btn btn-outline" id="btnTambahCctv">
-                <span>📌</span> Tambah Referensi CCTV
-            </button>
+        </div>
+        <div class="form-group">
+            <label>Tanggal CCTV</label>
+            <input type="date" id="cctvTanggal">
+        </div>
+        <button class="btn btn-outline" id="btnTambahCctv">
+            <span>📌</span> Tambah Referensi CCTV
+        </button>
 
-            <div class="mt-2">
-                <div class="flex-between">
-                    <span class="text-muted">Daftar CCTV</span>
-                    <span class="badge" id="cctvCount">0</span>
-                </div>
-                <div class="cctv-list" id="cctvListContainer"></div>
+        <div class="mt-2">
+            <div class="flex-between">
+                <span class="text-muted">Daftar CCTV</span>
+                <span class="badge" id="cctvCount">0</span>
             </div>
+            <div class="cctv-list" id="cctvListContainer"></div>
         </div>
     </div>
 
     <!-- DAFTAR NOTA -->
-    <div class="card" style="margin-bottom: 1rem;">
+    <div class="card">
         <div class="flex-between">
             <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
                 <span>📋</span> Daftar Nota
@@ -1006,8 +971,11 @@
         </div>
 
         <div class="form-group">
-            <label>Nama Pelanggan (opsional)</label>
-            <input type="text" id="modalNamaPelanggan" placeholder="Kosongkan jika tidak perlu" autocomplete="off">
+            <label>Nama Pelanggan <span class="required">*</span></label>
+            <input type="text" id="modalNamaPelanggan" placeholder="Wajib diisi" autocomplete="off">
+            <div class="text-muted" id="namaError" style="color:#dc2626; margin-top:4px; display:none;">
+                ⚠️ Nama pelanggan harus diisi
+            </div>
         </div>
 
         <label>Pilih Layanan (bisa lebih dari 1)</label>
@@ -1065,20 +1033,11 @@
         let notaList = [];
         let cctvList = [];
         let sesiAktif = null;
-        let layananDipilihModal = [];  // array id layanan
-        let layananDipilihManual = []; // array id layanan (untuk form manual)
+        let layananDipilihModal = [];
 
         const STORAGE_KEY = 'barbershop_sesi_aktif';
 
         // ============ ELEMEN ============
-        const elNama = document.getElementById('namaPelanggan');
-        const elJamMulai = document.getElementById('jamMulai');
-        const elJamSelesai = document.getElementById('jamSelesai');
-        const elTanggalNota = document.getElementById('tanggalNota');
-        const btnTambahNota = document.getElementById('btnTambahNota');
-        const manualLayananGrid = document.getElementById('manualLayananGrid');
-        const manualTotal = document.getElementById('manualTotal');
-
         const elCctvNama = document.getElementById('cctvNama');
         const elCctvMulai = document.getElementById('cctvMulai');
         const elCctvSelesai = document.getElementById('cctvSelesai');
@@ -1105,6 +1064,7 @@
         const modalLayananGrid = document.getElementById('modalLayananGrid');
         const modalTotal = document.getElementById('modalTotal');
         const modalJumlahLayanan = document.getElementById('modalJumlahLayanan');
+        const namaError = document.getElementById('namaError');
         const btnOkLayanan = document.getElementById('btnOkLayanan');
 
         const modalCetak = document.getElementById('modalCetak');
@@ -1196,7 +1156,6 @@
                     } else {
                         selectedIds.push(id);
                     }
-                    // update UI
                     opt.classList.toggle('selected');
                     const cb = opt.querySelector('.checkbox');
                     cb.textContent = opt.classList.contains('selected') ? '✓' : '';
@@ -1291,7 +1250,10 @@
             modalJamSelesai.textContent = sesiAktif.jamSelesai;
             const durasi = Math.max(0, timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai));
             modalDurasi.textContent = durasi + ' mnt';
+
             modalNamaPelanggan.value = '';
+            modalNamaPelanggan.classList.remove('error');
+            namaError.style.display = 'none';
 
             layananDipilihModal = [];
             buildLayananCheckboxes(modalLayananGrid, layananDipilihModal, function(ids) {
@@ -1303,6 +1265,8 @@
             modalJumlahLayanan.textContent = '0';
 
             modalLayanan.classList.add('active');
+            // Focus ke input nama setelah modal muncul
+            setTimeout(() => modalNamaPelanggan.focus(), 300);
         }
         function tutupModalLayanan() { modalLayanan.classList.remove('active'); }
 
@@ -1317,22 +1281,40 @@
             }
         });
 
+        // Reset error saat mengetik
+        modalNamaPelanggan.addEventListener('input', function() {
+            if (modalNamaPelanggan.value.trim()) {
+                modalNamaPelanggan.classList.remove('error');
+                namaError.style.display = 'none';
+            }
+        });
+
         btnOkLayanan.addEventListener('click', function() {
+            // Validasi nama WAJIB
+            const nama = modalNamaPelanggan.value.trim();
+            if (!nama) {
+                modalNamaPelanggan.classList.add('error');
+                namaError.style.display = 'block';
+                modalNamaPelanggan.focus();
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                return;
+            }
+            // Validasi layanan
             if (layananDipilihModal.length === 0) {
                 alert('Pilih minimal 1 layanan.');
                 return;
             }
+
             const layananArr = layananDipilihModal.map(id => {
                 const l = getLayananById(id);
                 return { nama: l.nama, harga: l.harga };
             });
             const total = layananArr.reduce((s, l) => s + l.harga, 0);
-            const nama = modalNamaPelanggan.value.trim() || 'Pelanggan';
 
             const notaBaru = {
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
                 nama: nama,
-                layanan: layananArr,     // array {nama, harga}
+                layanan: layananArr,
                 total: total,
                 jamMulai: sesiAktif.jamMulai,
                 jamSelesai: sesiAktif.jamSelesai,
@@ -1545,9 +1527,7 @@
                         <div class="card-name">${escapeHtml(n.nama)}</div>
                         <div class="row">
                             <span class="lbl">Layanan</span>
-                            <span class="val">
-                                <div class="layanan-list">${layananMobile}</div>
-                            </span>
+                            <span class="val"><div class="layanan-list">${layananMobile}</div></span>
                         </div>
                         <div class="row"><span class="lbl">Total</span><span class="val"><strong>${formatRupiah(n.total)}</strong></span></div>
                         <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
@@ -1587,50 +1567,7 @@
             if (nota) bukaModalCetak(nota);
         };
 
-        // ============ FORM MANUAL ============
-        function updateManualTotal() {
-            const total = hitungTotalLayanan(layananDipilihManual);
-            manualTotal.textContent = formatRupiah(total);
-        }
-        buildLayananCheckboxes(manualLayananGrid, layananDipilihManual, function() {
-            updateManualTotal();
-        });
-
-        btnTambahNota.addEventListener('click', function() {
-            const nama = elNama.value.trim();
-            const jamMulai = elJamMulai.value;
-            const jamSelesai = elJamSelesai.value;
-            const tanggal = elTanggalNota.value;
-
-            if (!nama) { alert('Nama pelanggan harus diisi.'); return; }
-            if (layananDipilihManual.length === 0) { alert('Pilih minimal 1 layanan.'); return; }
-            if (!jamMulai || !jamSelesai) { alert('Jam mulai dan selesai harus diisi.'); return; }
-            if (!tanggal) { alert('Tanggal nota harus diisi.'); return; }
-            if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
-                alert('Jam selesai harus lebih besar dari jam mulai.'); return;
-            }
-
-            const layananArr = layananDipilihManual.map(id => {
-                const l = getLayananById(id);
-                return { nama: l.nama, harga: l.harga };
-            });
-            const total = layananArr.reduce((s, l) => s + l.harga, 0);
-
-            notaList.push({
-                id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama, layanan: layananArr, total, jamMulai, jamSelesai, tanggal
-            });
-
-            // reset
-            elNama.value = '';
-            layananDipilihManual = [];
-            buildLayananCheckboxes(manualLayananGrid, layananDipilihManual, function() {
-                updateManualTotal();
-            });
-            updateManualTotal();
-            renderAll();
-        });
-
+        // ============ TAMBAH CCTV ============
         btnTambahCctv.addEventListener('click', function() {
             const nama = elCctvNama.value.trim();
             const jamMulai = elCctvMulai.value;
@@ -1654,7 +1591,6 @@
 
         // ============ INIT ============
         const today = getTanggalSekarang();
-        elTanggalNota.value = today;
         elCctvTanggal.value = today;
 
         // Seed contoh
@@ -1682,14 +1618,7 @@
 
         loadSesiFromCache();
         updateClockUI();
-        updateManualTotal();
         renderAll();
-
-        // Jam default form manual
-        elJamMulai.value = getJamSekarang();
-        const now = new Date();
-        now.setMinutes(now.getMinutes() + 30);
-        elJamSelesai.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     })();
 </script>
 </body>
