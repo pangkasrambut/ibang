@@ -1414,6 +1414,13 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
 });';
 
     (function() {
+        const LAYANAN_MASTER = [<script>
+    // ============================================================
+    // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
+    // ============================================================
+    const API_URL = 'https://script.google.com/macros/s/AKfycby7bHELLf17LwhYcQEbsDwN4chV8IXLmZZ5eCP0iR4LNH3ZJ2OQnpxU1skI-cr1XGywRQ/exec';
+
+    (function() {
         const LAYANAN_MASTER = [
             { id: 'pr', nama: 'Potong Rambut', harga: 30000 },
             { id: 'srph', nama: 'Semir Rambut Pendek Hitam', harga: 120000 },
@@ -1512,6 +1519,27 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
         const btnResetFilter = document.getElementById('btnResetFilter');
         const rekapBarbermanSection = document.getElementById('rekapBarbermanSection');
         const rekapBarbermanContainer = document.getElementById('rekapBarbermanContainer');
+
+        // ============ TOGGLE PASSWORD (ICON MATA) ============
+        document.querySelectorAll('.toggle-password').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = btn.dataset.target;
+                const input = document.getElementById(targetId);
+                if (!input) return;
+
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.textContent = '🙈';
+                    btn.setAttribute('aria-label', 'Sembunyikan password');
+                } else {
+                    input.type = 'password';
+                    btn.textContent = '👁️';
+                    btn.setAttribute('aria-label', 'Tampilkan password');
+                }
+                input.focus();
+            });
+        });
 
         // ============ API HELPER ============
         function setApiStatus(state) {
@@ -1665,7 +1693,6 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
             }
             loadSesiFromCache();
             updateClockUI();
-            // Sync data dari server
             syncDataFromServer();
         }
 
@@ -1683,12 +1710,11 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
         }
 
         // ============ TAB ============
-                function switchTab(tab) {
+        function switchTab(tab) {
             tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
             if (tab === 'login') {
                 loginFormContainer.style.display = 'block';
                 registerFormContainer.style.display = 'none';
-                // Kalau role sudah dipilih, fokus ke username atau password
                 if (selectedLoginRole) {
                     if (loginUsername.value) {
                         setTimeout(() => loginPassword.focus(), 100);
@@ -1707,19 +1733,17 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
 
         // ============ ROLE SELECTOR ============
         loginRoleSelector.querySelectorAll('.role-option').forEach(opt => {
-    opt.addEventListener('click', function() {
-        loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
-        opt.classList.add('selected');
-        selectedLoginRole = opt.dataset.role;
-        loginFieldsContainer.style.display = 'block';
-        hideAlert();
-        // Kosongkan form, tanpa hint apa pun
-        loginUsername.value = '';
-        loginPassword.value = '';
-        loginUsername.placeholder = 'Masukkan username';
-        loginPassword.placeholder = 'Masukkan password';
-                        validateLoginForm();
-                // Fokus ke USERNAME dulu, bukan password
+            opt.addEventListener('click', function() {
+                loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+                opt.classList.add('selected');
+                selectedLoginRole = opt.dataset.role;
+                loginFieldsContainer.style.display = 'block';
+                hideAlert();
+                loginUsername.value = '';
+                loginPassword.value = '';
+                loginUsername.placeholder = 'Masukkan username';
+                loginPassword.placeholder = 'Masukkan password';
+                validateLoginForm();
                 setTimeout(() => loginUsername.focus(), 200);
             });
         });
@@ -1730,14 +1754,12 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
         }
         loginUsername.addEventListener('input', function() { loginUsername.classList.remove('error'); validateLoginForm(); });
         loginPassword.addEventListener('input', function() { loginPassword.classList.remove('error'); validateLoginForm(); });
-                // Enter di username → pindah ke password
         loginUsername.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 loginPassword.focus();
             }
         });
-        
 
         // ============ LOGIN ============
         btnLogin.addEventListener('click', async function() {
@@ -1753,11 +1775,9 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
             btnLogin.disabled = true;
             btnLogin.innerHTML = '<span>⏳</span> Memproses...';
 
-            // Pastikan API online
             if (!apiOnline) await checkApi();
 
             if (!apiOnline) {
-                // Fallback: login offline (dari cache jika pernah login)
                 showAlert('❌ Server tidak dapat dijangkau. Cek koneksi internet Anda.', 'error');
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = '<span>🔓</span> Login';
@@ -1992,7 +2012,6 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
                 tanggal: sesiAktif.tanggal || getTanggalSekarang()
             };
 
-            // Simpan ke Google Sheets
             btnOkLayanan.disabled = true;
             btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
             let saveOk = true;
@@ -2003,7 +2022,6 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
             btnOkLayanan.disabled = false;
             btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
 
-            // Tetap simpan lokal (untuk preview kalau offline)
             notaList.push(notaBaru);
             if (!saveOk) alert('⚠️ Nota disimpan di perangkat, tapi gagal sync ke server. Cek koneksi.');
 
@@ -2251,7 +2269,7 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
             renderLaporan();
         }
 
-        // ============ DELETE (sync ke server) ============
+        // ============ DELETE ============
         window.deleteNota = async function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin yang bisa menghapus nota.'); return; }
             if (!confirm('Hapus nota ini?')) return;
@@ -2301,30 +2319,6 @@ document.querySelectorAll('.toggle-password').forEach(function(btn) {
             }
         });
 
-
-        // ============ TOGGLE PASSWORD (ICON MATA) ============
-document.querySelectorAll('.toggle-password').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = btn.dataset.target;
-        const input = document.getElementById(targetId);
-        if (!input) return;
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            btn.textContent = '🙈';
-            btn.setAttribute('aria-label', 'Sembunyikan password');
-        } else {
-            input.type = 'password';
-            btn.textContent = '👁️';
-            btn.setAttribute('aria-label', 'Tampilkan password');
-        }
-
-        // Fokuskan kembali ke input agar user tetap bisa lanjut mengetik
-        input.focus();
-    });
-});
-        
         // ============ INIT ============
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
