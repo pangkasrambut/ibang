@@ -1,1540 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="theme-color" content="#1e293b">
-    <title>Barbershop • Login & Pembukuan</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            background: #f4f7fc;
-            padding: 1rem;
-            min-height: 100vh;
-            font-size: 15px;
-            color: #1e293b;
-        }
-        .login-page {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #0f172a 100%);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        .login-page.hidden { display: none; }
-        .login-box {
-            background: white;
-            border-radius: 24px;
-            padding: 2rem 1.75rem;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .login-logo { text-align: center; margin-bottom: 1.5rem; }
-        .login-logo .logo-icon { font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
-        .login-logo h1 { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.25rem; }
-        .login-logo p { font-size: 0.8rem; color: #64748b; }
-
-        .tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-            background: #f1f5f9;
-            border-radius: 14px;
-            padding: 4px;
-            margin-bottom: 1.25rem;
-        }
-        .tab {
-            padding: 10px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.15s;
-            color: #64748b;
-            user-select: none;
-            touch-action: manipulation;
-        }
-        .tab.active {
-            background: white;
-            color: #1e293b;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-        .role-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
-            margin-bottom: 1.25rem;
-        }
-        .role-option {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 0.9rem 0.75rem;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.15s;
-            touch-action: manipulation;
-            user-select: none;
-        }
-        .role-option:hover, .role-option:active {
-            border-color: #f59e0b;
-            background: #fffbeb;
-        }
-        .role-option.selected {
-            border-color: #1e293b;
-            background: #1e293b;
-            color: white;
-        }
-        .role-option .ro-icon { font-size: 1.5rem; margin-bottom: 4px; display: block; }
-        .role-option .ro-name { font-weight: 700; font-size: 0.85rem; }
-        .role-option .ro-desc { font-size: 0.65rem; opacity: 0.7; margin-top: 2px; }
-
-        .form-group { margin-bottom: 1rem; }
-        label {
-            display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: #475569;
-            margin-bottom: 6px;
-        }
-        label .required { color: #dc2626; margin-left: 2px; }
-        input, select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 16px;
-            background: #f8fafc;
-            transition: 0.2s;
-            outline: none;
-            font-family: inherit;
-            color: #1e293b;
-        }
-        input:focus, select:focus {
-            border-color: #f59e0b;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
-        }
-        input.error {
-            border-color: #dc2626;
-            background: #fef2f2;
-            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
-        }
-
-        /* Password wrapper dengan icon mata */
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .password-wrapper input {
-            padding-right: 44px !important;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 6px 8px;
-            line-height: 1;
-            color: #64748b;
-            border-radius: 8px;
-            transition: 0.15s;
-            user-select: none;
-            touch-action: manipulation;
-            z-index: 2;
-        }
-        .toggle-password:hover,
-        .toggle-password:active {
-            background: #f1f5f9;
-            color: #1e293b;
-        }
-
-        input[type="date"], input[type="time"] {
-            -webkit-appearance: none;
-            appearance: none;
-            min-height: 44px;
-        }
-        .row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .btn {
-            border: none;
-            background: #1e293b;
-            color: white;
-            font-weight: 700;
-            padding: 14px 20px;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            margin-top: 0.5rem;
-            font-family: inherit;
-            min-height: 48px;
-            touch-action: manipulation;
-        }
-        .btn:hover, .btn:active { background: #0f172a; transform: scale(0.99); }
-        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
-        .btn-outline {
-            background: white;
-            color: #1e293b;
-            border: 1.5px solid #cbd5e1;
-        }
-        .btn-outline:hover, .btn-outline:active {
-            background: #f1f5f9;
-            border-color: #94a3b8;
-        }
-        .btn-green { background: #16a34a; }
-        .btn-green:hover, .btn-green:active { background: #15803d; }
-        .btn-red { background: #dc2626; }
-        .btn-red:hover, .btn-red:active { background: #b91c1c; }
-        .btn:disabled.btn-red { background: #cbd5e1; }
-        .btn-orange { background: #ea580c; }
-        .btn-orange:hover, .btn-orange:active { background: #c2410c; }
-
-        .alert-box {
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            margin-bottom: 1rem;
-            display: none;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-        .alert-box.show { display: block; }
-        .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-        .alert-success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-        .alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-
-        .app {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.15);
-            padding: 1.5rem;
-        }
-        .app.hidden { display: none; }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.25rem;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .user-info { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
-        .user-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #f59e0b, #ea580c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .user-avatar.admin { background: linear-gradient(135deg, #1e293b, #475569); }
-        .user-detail { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-        .user-detail .user-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #0f172a;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .user-detail .user-role {
-            font-size: 0.7rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            font-weight: 600;
-        }
-        .btn-logout {
-            background: #fee2e2;
-            color: #dc2626;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            cursor: pointer;
-            touch-action: manipulation;
-            white-space: nowrap;
-            font-family: inherit;
-        }
-        .btn-logout:hover, .btn-logout:active { background: #fecaca; }
-
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            color: #1e293b;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-        h1 span {
-            background: #1e293b;
-            color: white;
-            font-size: 0.68rem;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .subhead {
-            color: #64748b;
-            margin-bottom: 1.25rem;
-            border-left: 4px solid #f59e0b;
-            padding-left: 0.85rem;
-            font-weight: 500;
-            font-size: 0.82rem;
-            line-height: 1.5;
-        }
-
-        .card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 1.25rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            margin-bottom: 1.25rem;
-        }
-        .card-title {
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #0f172a;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 0.65rem;
-        }
-
-        .clock-panel {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 20px;
-            padding: 1.25rem;
-            color: white;
-            margin-bottom: 1.25rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            align-items: center;
-        }
-        .clock-info { display: flex; flex-direction: column; gap: 0.6rem; }
-        .clock-status {
-            display: inline-block;
-            background: rgba(255,255,255,0.15);
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            align-self: flex-start;
-        }
-        .clock-status.running { background: #16a34a; }
-        .clock-status.done { background: #f59e0b; }
-        .clock-row {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-        .clock-row .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
-        .clock-row .val {
-            font-size: 1.6rem;
-            font-weight: 800;
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
-        .clock-row .val.active { color: #fbbf24; }
-        .clock-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-        .clock-actions .btn { margin-top: 0; }
-
-        .barber-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(251,191,36,0.2);
-            color: #fbbf24;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            align-self: flex-start;
-        }
-
-        .nota-list, .cctv-list {
-            max-height: 320px;
-            overflow-y: auto;
-            padding-right: 4px;
-            margin-top: 0.5rem;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* ================== TABEL DAFTAR NOTA ================== */
-        .nota-table-wrapper {
-            overflow-x: auto;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            margin-top: 0.75rem;
-            -webkit-overflow-scrolling: touch;
-        }
-        .nota-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            min-width: 720px;
-        }
-        .nota-table th {
-            background: #f1f5f9;
-            text-align: left;
-            padding: 10px 12px;
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            white-space: nowrap;
-        }
-        .nota-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #edf2f7;
-            color: #1e293b;
-            vertical-align: top;
-        }
-        .nota-table tr:last-child td { border-bottom: none; }
-        .nota-table .cell-no {
-            font-weight: 700;
-            color: #64748b;
-            width: 40px;
-            text-align: center;
-        }
-        .nota-table .cell-jam {
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
-            font-weight: 600;
-        }
-        .nota-table .cell-actions {
-            white-space: nowrap;
-            text-align: right;
-        }
-
-        /* ====== KHUSUS HP: SEMUA KOLOM TETAP TAMPIL ====== */
-        @media (max-width: 600px) {
-            .nota-table-wrapper {
-                overflow-x: visible;
-                border: none;
-            }
-            .nota-table {
-                min-width: 0;
-                width: 100%;
-                font-size: 0.75rem;
-            }
-            .nota-table thead { display: none; }
-            .nota-table tbody,
-            .nota-table tr,
-            .nota-table td {
-                display: block;
-                width: 100%;
-            }
-            .nota-table tr {
-                background: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-left: 4px solid #f59e0b;
-                border-radius: 12px;
-                padding: 0.6rem 0.75rem;
-                margin-bottom: 10px;
-                position: relative;
-            }
-            .nota-table td {
-                border: none;
-                padding: 3px 0;
-                color: #1e293b;
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                gap: 10px;
-                font-size: 0.75rem;
-                line-height: 1.4;
-            }
-            .nota-table td::before {
-                content: attr(data-label);
-                font-size: 0.66rem;
-                text-transform: uppercase;
-                letter-spacing: 0.3px;
-                color: #64748b;
-                font-weight: 700;
-                flex-shrink: 0;
-                min-width: 70px;
-            }
-            .nota-table td > * {
-                text-align: right;
-                word-break: break-word;
-            }
-            .nota-table .cell-no {
-                position: absolute;
-                top: 6px;
-                right: 8px;
-                background: #1e293b;
-                color: white;
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.68rem;
-                padding: 0;
-                text-align: center;
-                font-weight: 700;
-            }
-            .nota-table .cell-no::before { content: none; }
-            .nota-table .cell-actions {
-                justify-content: flex-end;
-                padding-top: 6px;
-                border-top: 1px dashed #e2e8f0;
-                margin-top: 4px;
-                gap: 6px;
-            }
-            .nota-table .cell-actions::before { content: none; }
-        }
-
-        .nota-item, .cctv-item {
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 0.85rem 1rem;
-            margin-bottom: 8px;
-            border-left: 5px solid #f59e0b;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-        .cctv-item { border-left-color: #3b82f6; background: #eff6ff; }
-        .nota-item .info, .cctv-item .info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
-            min-width: 0;
-        }
-        .nota-item .name, .cctv-item .name {
-            font-weight: 700;
-            color: #0f172a;
-            word-break: break-word;
-            font-size: 0.9rem;
-        }
-        .nota-item .detail, .cctv-item .detail {
-            color: #475569;
-            font-size: 0.75rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            line-height: 1.4;
-        }
-        .nota-item .layanan-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .nota-item .layanan-tag {
-            background: #fef3c7;
-            color: #92400e;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.68rem;
-            font-weight: 600;
-        }
-        .barber-tag {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            display: inline-block;
-        }
-        .nota-actions { display: flex; gap: 6px; flex-shrink: 0; }
-        .btn-mini {
-            background: #e2e8f0;
-            border: none;
-            color: #1e293b;
-            font-size: 0.75rem;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-weight: 700;
-            touch-action: manipulation;
-            min-width: 36px;
-            min-height: 32px;
-        }
-        .btn-mini:hover, .btn-mini:active { background: #cbd5e1; }
-        .btn-mini.print { background: #1e293b; color: white; }
-        .btn-mini.print:hover { background: #0f172a; }
-        .delete-btn {
-            background: #fee2e2;
-            border: none;
-            color: #dc2626;
-            font-size: 0.9rem;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 10px;
-            line-height: 1;
-            font-weight: 700;
-            flex-shrink: 0;
-            touch-action: manipulation;
-            min-width: 32px;
-            min-height: 32px;
-        }
-        .delete-btn:hover, .delete-btn:active { background: #fecaca; }
-
-        .badge {
-            background: #e2e8f0;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #1e293b;
-            white-space: nowrap;
-        }
-        .badge-blue { background: #dbeafe; color: #1e40af; }
-
-        .filter-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-        }
-        .filter-bar input, .filter-bar select {
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 10px;
-            flex: 1;
-            min-width: 140px;
-        }
-
-        .report-section {
-            margin-top: 1.5rem;
-            border-top: 2px dashed #e2e8f0;
-            padding-top: 1.5rem;
-        }
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            margin: 0.75rem 0;
-            -webkit-overflow-scrolling: touch;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 800px;
-        }
-        th {
-            background: #f1f5f9;
-            text-align: left;
-            padding: 12px 14px;
-            font-weight: 700;
-            color: #1e293b;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            white-space: nowrap;
-        }
-        td {
-            padding: 12px 14px;
-            border-bottom: 1px solid #edf2f7;
-            color: #1e293b;
-            vertical-align: top;
-        }
-        tr:last-child td { border-bottom: none; }
-
-        .laporan-mobile { display: none; }
-        .laporan-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 1rem;
-            margin-bottom: 12px;
-            border-left: 5px solid #f59e0b;
-        }
-        .laporan-card .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 6px 0;
-            border-bottom: 1px dashed #e2e8f0;
-            gap: 12px;
-            font-size: 0.82rem;
-        }
-        .laporan-card .row:last-child { border-bottom: none; }
-        .laporan-card .row .lbl {
-            color: #64748b;
-            font-weight: 600;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-        .laporan-card .row .val {
-            color: #0f172a;
-            font-weight: 600;
-            text-align: right;
-            word-break: break-word;
-        }
-        .laporan-card .card-name {
-            font-weight: 800;
-            font-size: 1rem;
-            color: #0f172a;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .laporan-card .layanan-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            width: 100%;
-        }
-        .laporan-card .layanan-line {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 2px 0;
-            color: #334155;
-        }
-        .laporan-card .layanan-line .price {
-            color: #f59e0b;
-            font-weight: 700;
-        }
-
-        .match-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-        .match-true { background: #dcfce7; color: #15803d; }
-        .match-false { background: #fee2e2; color: #b91c1c; }
-        .match-warning { background: #fef9c3; color: #854d0e; }
-
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-            margin-top: 1.25rem;
-        }
-        .sum-card {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 1rem 1.1rem;
-            border: 1px solid #e2e8f0;
-        }
-        .sum-card .label {
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            color: #64748b;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            margin-bottom: 4px;
-        }
-        .sum-card .value {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.2;
-            word-break: break-word;
-        }
-
-        .rekap-barberman {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-        .rekap-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 0.9rem 1rem;
-            border-left: 5px solid #3b82f6;
-        }
-        .rekap-item .rekap-nama {
-            font-weight: 800;
-            font-size: 0.9rem;
-            color: #0f172a;
-            margin-bottom: 4px;
-        }
-        .rekap-item .rekap-detail {
-            font-size: 0.75rem;
-            color: #475569;
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-        }
-        .rekap-item .rekap-total {
-            font-weight: 800;
-            color: #f59e0b;
-            font-size: 0.85rem;
-        }
-
-        .empty-state {
-            color: #94a3b8;
-            font-style: italic;
-            text-align: center;
-            padding: 1.25rem;
-            font-size: 0.85rem;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .mt-2 { margin-top: 0.75rem; }
-        .text-muted { color: #64748b; font-size: 0.78rem; }
-        .footer-note {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 1rem;
-            line-height: 1.5;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            overflow-y: auto;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal {
-            background: white;
-            border-radius: 20px;
-            max-width: 520px;
-            width: 100%;
-            max-height: 92vh;
-            overflow-y: auto;
-            padding: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
-            animation: slideUp 0.25s ease;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #f1f5f9;
-            position: sticky;
-            top: -1.5rem;
-            background: white;
-            z-index: 2;
-            margin-left: -1.5rem;
-            margin-right: -1.5rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            padding-top: 0.5rem;
-        }
-        .modal-header h2 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .modal-close {
-            background: #f1f5f9;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #64748b;
-            font-weight: 700;
-            line-height: 1;
-            flex-shrink: 0;
-        }
-        .modal-close:hover { background: #e2e8f0; }
-
-        .session-info {
-            background: #eff6ff;
-            border: 1.5px solid #bfdbfe;
-            border-radius: 14px;
-            padding: 0.9rem 1rem;
-            margin-bottom: 1rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            text-align: center;
-        }
-        .session-info .si-box .si-lbl {
-            font-size: 0.62rem;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: #1e40af;
-            font-weight: 700;
-            margin-bottom: 3px;
-        }
-        .session-info .si-box .si-val {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #1e3a8a;
-            font-variant-numeric: tabular-nums;
-        }
-        .barberman-info {
-            background: #fef3c7;
-            border: 1.5px solid #fcd34d;
-            border-radius: 14px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #92400e;
-            font-weight: 700;
-        }
-        .barberman-info .bi-icon { font-size: 1.1rem; }
-
-        .layanan-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .layanan-option {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 0.75rem 0.9rem;
-            cursor: pointer;
-            transition: 0.15s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            touch-action: manipulation;
-            user-select: none;
-        }
-        .layanan-option:hover, .layanan-option:active {
-            border-color: #f59e0b;
-            background: #fffbeb;
-        }
-        .layanan-option.selected {
-            border-color: #1e293b;
-            background: #1e293b;
-            color: white;
-        }
-        .layanan-option .checkbox {
-            width: 22px;
-            height: 22px;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: white;
-            transition: 0.15s;
-            font-weight: 800;
-            font-size: 0.85rem;
-            color: white;
-        }
-        .layanan-option.selected .checkbox {
-            background: #16a34a;
-            border-color: #16a34a;
-        }
-        .layanan-option .lo-info { flex: 1; min-width: 0; }
-        .layanan-option .lo-name {
-            font-weight: 700;
-            font-size: 0.88rem;
-            line-height: 1.3;
-            word-break: break-word;
-        }
-        .layanan-option .lo-price {
-            font-weight: 700;
-            font-size: 0.82rem;
-            color: #f59e0b;
-            white-space: nowrap;
-            margin-left: 6px;
-        }
-        .layanan-option.selected .lo-price { color: #fbbf24; }
-
-        .total-box {
-            background: #1e293b;
-            color: white;
-            border-radius: 14px;
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 1rem 0;
-        }
-        .total-box .tb-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.8;
-            font-weight: 700;
-        }
-        .total-box .tb-value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #fbbf24;
-        }
-
-        .nota-thermal-wrapper {
-            background: #f1f5f9;
-            border-radius: 14px;
-            padding: 1.25rem 1rem;
-            display: flex;
-            justify-content: center;
-            margin: 1rem 0;
-        }
-        .nota-thermal {
-            width: 58mm;
-            background: white;
-            padding: 4mm 3mm;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 9pt;
-            color: #000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            line-height: 1.4;
-        }
-        .nota-thermal .nt-center { text-align: center; }
-        .nota-thermal .nt-bold { font-weight: bold; }
-        .nota-thermal .nt-line {
-            border-top: 1px dashed #000;
-            margin: 4px 0;
-        }
-        .nota-thermal .nt-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 4px;
-        }
-        .nota-thermal .nt-row .nt-label { flex: 1; word-break: break-word; }
-        .nota-thermal .nt-row .nt-value {
-            text-align: right;
-            white-space: nowrap;
-        }
-        .nota-thermal .nt-title {
-            font-size: 12pt;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        .nota-thermal .nt-sub { font-size: 7pt; color: #333; }
-        .nota-thermal .nt-total { font-size: 11pt; font-weight: bold; }
-        .nota-thermal .nt-footer {
-            font-size: 7pt;
-            text-align: center;
-            margin-top: 4px;
-        }
-        .nota-thermal .nt-item-name {
-            font-size: 9pt;
-            word-break: break-word;
-        }
-        .nota-thermal .nt-item-price {
-            font-size: 9pt;
-            text-align: right;
-            white-space: nowrap;
-            padding-left: 4px;
-        }
-        .nota-thermal .nt-barber {
-            font-size: 8pt;
-            text-align: center;
-            margin: 3px 0;
-            font-style: italic;
-        }
-
-        @media print {
-            @page {
-                size: 58mm auto;
-                margin: 0;
-            }
-            body * { visibility: hidden; }
-            .nota-thermal-wrapper,
-            .nota-thermal-wrapper * { visibility: visible; }
-            .nota-thermal-wrapper {
-                position: absolute;
-                left: 0;
-                top: 0;
-                padding: 0;
-                background: white;
-                box-shadow: none;
-                width: 58mm;
-            }
-            .nota-thermal { box-shadow: none; width: 58mm; }
-        }
-
-        .nota-list::-webkit-scrollbar,
-        .cctv-list::-webkit-scrollbar,
-        .table-wrapper::-webkit-scrollbar,
-        .modal::-webkit-scrollbar,
-        .login-page::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .nota-list::-webkit-scrollbar-thumb,
-        .cctv-list::-webkit-scrollbar-thumb,
-        .table-wrapper::-webkit-scrollbar-thumb,
-        .modal::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        /* API status indicator */
-        .api-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        .api-online { background: #dcfce7; color: #15803d; }
-        .api-offline { background: #fee2e2; color: #b91c1c; }
-        .api-loading { background: #fef9c3; color: #854d0e; }
-
-        @media (max-width: 900px) {
-            .summary-cards { grid-template-columns: repeat(2, 1fr); }
-            .clock-panel { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 768px) {
-            body { padding: 0.75rem; font-size: 14px; }
-            .app { padding: 1rem; border-radius: 18px; }
-            h1 { font-size: 1.3rem; }
-            h1 span { font-size: 0.62rem; padding: 3px 10px; }
-            .subhead { font-size: 0.78rem; margin-bottom: 1.25rem; }
-            .card { padding: 1rem; border-radius: 16px; }
-            .card-title { font-size: 0.95rem; margin-bottom: 1rem; }
-            input, select { padding: 11px 12px; font-size: 16px; border-radius: 10px; }
-            label { font-size: 0.68rem; }
-            .btn { padding: 13px 16px; font-size: 0.9rem; min-height: 46px; border-radius: 12px; }
-            .row-2 { gap: 0.6rem; }
-            .nota-list, .cctv-list { max-height: 260px; }
-            .table-wrapper { display: none; }
-            .laporan-mobile { display: block; }
-            .summary-cards { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-            .sum-card { padding: 0.85rem; border-radius: 14px; }
-            .sum-card .value { font-size: 1.15rem; }
-            .sum-card .label { font-size: 0.62rem; }
-            .modal { padding: 1.15rem; border-radius: 16px; }
-            .modal-header h2 { font-size: 1rem; }
-            .clock-row .val { font-size: 1.3rem; }
-            .login-box { padding: 1.5rem 1.25rem; border-radius: 20px; }
-            .login-logo .logo-icon { font-size: 2.5rem; }
-            .login-logo h1 { font-size: 1.3rem; }
-        }
-        @media (max-width: 420px) {
-            body { padding: 0.5rem; }
-            .app { padding: 0.85rem; border-radius: 14px; }
-            h1 { font-size: 1.1rem; }
-            .subhead { font-size: 0.72rem; padding-left: 0.7rem; }
-            .card { padding: 0.85rem; border-radius: 14px; }
-            .card-title { font-size: 0.88rem; }
-            .row-2 { grid-template-columns: 1fr; gap: 0.6rem; }
-            .summary-cards { grid-template-columns: 1fr 1fr; }
-            .sum-card .value { font-size: 1rem; }
-            .nota-item, .cctv-item { padding: 0.75rem 0.85rem; }
-            .nota-item .name, .cctv-item .name { font-size: 0.85rem; }
-            .nota-item .detail, .cctv-item .detail { font-size: 0.7rem; gap: 6px; }
-            .laporan-card { padding: 0.85rem; }
-            .laporan-card .card-name { font-size: 0.92rem; }
-            .laporan-card .row { font-size: 0.78rem; }
-            .laporan-card .row .lbl { font-size: 0.66rem; }
-            .clock-panel { padding: 1rem; }
-            .clock-actions { grid-template-columns: 1fr; }
-            .session-info { grid-template-columns: 1fr 1fr 1fr; padding: 0.75rem; }
-            .session-info .si-box .si-val { font-size: 0.95rem; }
-            .layanan-option { padding: 0.65rem 0.75rem; }
-            .layanan-option .lo-name { font-size: 0.82rem; }
-            .layanan-option .lo-price { font-size: 0.75rem; }
-        }
-    </style>
-</head>
-<body>
-
-<!-- ================= LOGIN / REGISTER ================= -->
-<div class="login-page" id="loginPage">
-    <div class="login-box">
-        <div class="login-logo">
-            <div class="logo-icon">✂️</div>
-            <h1>Barbershop</h1>
-            <p>Sistem Pembukuan & CCTV Sync</p>
-        </div>
-
-        <div class="tabs">
-            <div class="tab active" data-tab="login">🔓 Login</div>
-            <div class="tab" data-tab="register">📝 Register</div>
-        </div>
-
-        <div class="alert-box" id="authAlert"></div>
-
-        <!-- LOGIN -->
-        <div id="loginFormContainer">
-            <label>Pilih Role <span class="required">*</span></label>
-            <div class="role-selector" id="loginRoleSelector">
-                <div class="role-option" data-role="admin">
-                    <span class="ro-icon">👨‍💼</span>
-                    <div class="ro-name">Admin</div>
-                    <div class="ro-desc">Lihat semua laporan</div>
-                </div>
-                <div class="role-option" data-role="barberman">
-                    <span class="ro-icon">💈</span>
-                    <div class="ro-name">Barberman</div>
-                    <div class="ro-desc">Layani & buat nota</div>
-                </div>
-            </div>
-
-            <div id="loginFieldsContainer" style="display:none;">
-                <div class="form-group">
-                    <label>Username <span class="required">*</span></label>
-                    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label>Password <span class="required">*</span></label>
-                    <div class="password-wrapper">
-                        <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
-                        <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Tampilkan password">👁️</button>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-green" id="btnLogin" style="margin-top:1rem;" disabled>
-                <span>🔓</span> Login
-            </button>
-        </div>
-
-        <!-- REGISTER -->
-        <div id="registerFormContainer" style="display:none;">
-            <div class="alert-box alert-info show" style="margin-bottom:1rem;">
-                📝 Khusus <b>Barberman</b>. Admin tidak perlu register.
-            </div>
-
-            <div class="form-group">
-                <label>Username <span class="required">*</span></label>
-                <input type="text" id="regUsername" placeholder="Contoh: ibang" autocomplete="off">
-            </div>
-            <div class="form-group">
-                <label>Password <span class="required">*</span></label>
-                <div class="password-wrapper">
-                    <input type="password" id="regPassword" placeholder="Minimal 4 karakter" autocomplete="off">
-                    <button type="button" class="toggle-password" data-target="regPassword" aria-label="Tampilkan password">👁️</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Nama Operator <span class="required">*</span></label>
-                <input type="text" id="regNamaOperator" placeholder="Contoh: Ibang" autocomplete="off">
-                <div class="text-muted" style="margin-top:4px;">
-                    Nama ini yang akan muncul di nota & laporan.
-                </div>
-            </div>
-
-            <button class="btn btn-orange" id="btnRegister" style="margin-top:1rem;">
-                <span>📝</span> Daftar Sebagai Barberman
-            </button>
-        </div>
-
-        <div class="text-muted" style="text-align:center; margin-top:1rem; font-size:0.72rem;">
-            <span class="api-status api-loading" id="apiStatusLogin">⏳ Cek koneksi...</span>
-        </div>
-    </div>
-</div>
-
-<!-- ================= APP ================= -->
-<div class="app hidden" id="app">
-    <div class="topbar">
-        <div class="user-info">
-            <div class="user-avatar" id="userAvatar">👤</div>
-            <div class="user-detail">
-                <div class="user-name" id="userName">-</div>
-                <div class="user-role" id="userRole">-</div>
-            </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span class="api-status api-loading" id="apiStatusApp">⏳</span>
-            <button class="btn-logout" id="btnLogout">🚪 Logout</button>
-        </div>
-    </div>
-
-    <h1>
-        ✂️ Barbershop Finance
-        <span>CCTV SYNC</span>
-    </h1>
-    <div class="subhead" id="subheadText">
-        Klik <b>MULAI</b> saat pelanggan datang · Klik <b>SELESAI</b> saat selesai → pilih layanan → cetak nota
-    </div>
-
-    <div class="clock-panel">
-        <div class="clock-info">
-            <div class="clock-status" id="clockStatus">⏸️ Menunggu pelanggan</div>
-            <div class="clock-row">
-                <span class="lbl">Mulai</span>
-                <span class="val" id="jamMulaiDisplay">--:--</span>
-            </div>
-            <div class="clock-row">
-                <span class="lbl">Selesai</span>
-                <span class="val" id="jamSelesaiDisplay">--:--</span>
-            </div>
-            <div class="barber-badge" id="barberBadge" style="display:none;">
-                💈 <span id="barberBadgeName">-</span>
-            </div>
-        </div>
-        <div class="clock-actions">
-            <button class="btn btn-green" id="btnMulai"><span>▶️</span> MULAI</button>
-            <button class="btn btn-red" id="btnSelesai" disabled><span>⏹️</span> SELESAI</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-title"><span>📹</span> Rekaman CCTV (Referensi)</div>
-        <div class="form-group">
-            <label>Keterangan / Nama</label>
-            <input type="text" id="cctvNama" placeholder="Contoh: Kursi 2 - Pelanggan A" autocomplete="off">
-        </div>
-        <div class="row-2">
-            <div class="form-group">
-                <label>Jam Mulai</label>
-                <input type="time" id="cctvMulai" value="10:00">
-            </div>
-            <div class="form-group">
-                <label>Jam Selesai</label>
-                <input type="time" id="cctvSelesai" value="10:30">
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Tanggal CCTV</label>
-            <input type="date" id="cctvTanggal">
-        </div>
-        <button class="btn btn-outline" id="btnTambahCctv">
-            <span>📌</span> Tambah Referensi CCTV
-        </button>
-
-        <div class="mt-2">
-            <div class="flex-between">
-                <span class="text-muted">Daftar CCTV</span>
-                <span class="badge" id="cctvCount">0</span>
-            </div>
-            <div class="cctv-list" id="cctvListContainer"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="flex-between">
-            <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-                <span>📋</span> Daftar Nota
-            </div>
-            <span class="badge badge-blue" id="notaCount">0 nota</span>
-        </div>
-        <div class="nota-table-wrapper">
-            <table class="nota-table">
-                <thead>
-                    <tr>
-                        <th class="cell-no">No</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
-                        <th>Pelanggan</th>
-                        <th>Operator</th>
-                        <th>Total</th>
-                        <th>Tanggal</th>
-                        <th style="text-align:right;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="notaListContainer"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="report-section">
-        <div class="card-title" style="border-bottom: none; margin-bottom: 0.75rem;">
-            <span>📊</span> Laporan & Pencocokan CCTV
-        </div>
-
-        <div class="filter-bar" id="filterBar" style="display:none;">
-            <select id="filterBarberman">
-                <option value="">👥 Semua Operator</option>
-            </select>
-            <input type="date" id="filterTanggal" title="Filter tanggal">
-            <button class="btn-mini" id="btnResetFilter" style="padding:8px 12px; font-size:0.75rem;">Reset</button>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Pelanggan</th>
-                        <th>Operator</th>
-                        <th>Layanan</th>
-                        <th>Total</th>
-                        <th>Tanggal</th>
-                        <th>Jam Nota</th>
-                        <th>Jam CCTV</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="laporanBody"></tbody>
-            </table>
-        </div>
-
-        <div class="laporan-mobile" id="laporanMobileContainer"></div>
-
-        <div class="summary-cards">
-            <div class="sum-card">
-                <div class="label">Total Pendapatan</div>
-                <div class="value" id="totalPendapatan">Rp 0</div>
-            </div>
-            <div class="sum-card">
-                <div class="label">Jumlah Transaksi</div>
-                <div class="value" id="totalTransaksi">0</div>
-            </div>
-            <div class="sum-card">
-                <div class="label">Cocok CCTV</div>
-                <div class="value" id="totalCocok">0</div>
-            </div>
-            <div class="sum-card">
-                <div class="label">Tidak Cocok</div>
-                <div class="value" id="totalTidakCocok">0</div>
-            </div>
-        </div>
-
-        <div id="rekapBarbermanSection" style="display:none; margin-top:1.5rem;">
-            <div class="card-title" style="border-bottom: none; margin-bottom: 0.5rem;">
-                <span>💈</span> Rekap per Operator
-            </div>
-            <div class="rekap-barberman" id="rekapBarbermanContainer"></div>
-        </div>
-
-        <div class="footer-note">
-            ⏱️ Pencocokan berdasarkan selisih jam ≤ 10 menit (toleransi).
-        </div>
-    </div>
-</div>
-
-<!-- MODAL PILIH LAYANAN -->
-<div class="modal-overlay" id="modalLayanan">
-    <div class="modal">
-        <div class="modal-header">
-            <h2>✂️ Pilih Layanan</h2>
-            <button class="modal-close" id="modalCloseBtn">✕</button>
-        </div>
-        <div class="session-info">
-            <div class="si-box"><div class="si-lbl">Mulai</div><div class="si-val" id="modalJamMulai">--:--</div></div>
-            <div class="si-box"><div class="si-lbl">Selesai</div><div class="si-val" id="modalJamSelesai">--:--</div></div>
-            <div class="si-box"><div class="si-lbl">Durasi</div><div class="si-val" id="modalDurasi">-- mnt</div></div>
-        </div>
-        <div class="barberman-info" id="modalBarbermanInfo">
-            <span class="bi-icon">💈</span>
-            <span>Operator: <span id="modalBarbermanName">-</span></span>
-        </div>
-        <div class="form-group">
-            <label>Nama Pelanggan <span class="required">*</span></label>
-            <input type="text" id="modalNamaPelanggan" placeholder="Wajib diisi" autocomplete="off">
-            <div class="text-muted" id="namaError" style="color:#dc2626; margin-top:4px; display:none;">
-                ⚠️ Nama pelanggan harus diisi
-            </div>
-        </div>
-        <label>Pilih Layanan (bisa lebih dari 1)</label>
-        <div class="layanan-grid" id="modalLayananGrid"></div>
-        <div class="total-box">
-            <span class="tb-label">Total (<span id="modalJumlahLayanan">0</span> layanan)</span>
-            <span class="tb-value" id="modalTotal">Rp 0</span>
-        </div>
-        <button class="btn btn-orange" id="btnOkLayanan" style="margin-top:1rem;">
-            <span>✅</span> OK — Buat Nota & Siap Cetak
-        </button>
-    </div>
-</div>
-
-<!-- MODAL CETAK -->
-<div class="modal-overlay" id="modalCetak">
-    <div class="modal" style="max-width: 400px;">
-        <div class="modal-header">
-            <h2>🖨️ Nota Siap Cetak</h2>
-            <button class="modal-close" id="modalCetakClose">✕</button>
-        </div>
-        <div class="nota-thermal-wrapper" id="notaPreviewWrapper"></div>
-        <button class="btn btn-print" id="btnPrint" style="background:#0f172a;">
-            <span>🖨️</span> CETAK NOTA (Thermal 58mm)
-        </button>
-        <button class="btn btn-outline" id="btnTutupCetak" style="margin-top:0.5rem;">Tutup</button>
-    </div>
-</div>
-
 <script>
-    // ============================================================
-    // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
-    // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycby7bHELLf17LwhYcQEbsDwN4chV8IXLmZZ5eCP0iR4LNH3ZJ2OQnpxU1skI-cr1XGywRQ/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzmHKAhSuklmm0tfTSQqp8JenbVGXwYVKPmngyQey1rx7vknyOBot8LFC45Twy26gPjDQ/exec';
 
     (function() {
         const LAYANAN_MASTER = [
@@ -1550,21 +15,29 @@
 
         const STORAGE_KEY = 'barbershop_sesi_aktif';
         const AUTH_KEY = 'barbershop_auth';
+        const KEKEUANGAN_KEY = 'barbershop_keuangan';
+        const SHOP_KEY = 'barbershop_profile';
 
         let notaList = [];
         let cctvList = [];
+        let keuanganList = [];
+        let userList = [];
+        let shopProfile = { nama: 'Barbershop', alamat: 'Jl. Contoh No. 123, Kota', hp: '0812-3456-7890' };
         let sesiAktif = null;
         let layananDipilihModal = [];
         let currentUser = null;
         let filterBarbermanValue = '';
         let filterTanggalValue = '';
+        let filterKeuTanggalValue = '';
+        let filterKeuJenisValue = '';
         let selectedLoginRole = '';
         let apiOnline = false;
+        let activeTab = 'nota';
 
         // ELEMEN
         const loginPage = document.getElementById('loginPage');
         const app = document.getElementById('app');
-        const tabs = document.querySelectorAll('.tab');
+        const tabsLogin = document.querySelectorAll('.tab-login');
         const authAlert = document.getElementById('authAlert');
         const loginFormContainer = document.getElementById('loginFormContainer');
         const registerFormContainer = document.getElementById('registerFormContainer');
@@ -1579,6 +52,8 @@
         const btnRegister = document.getElementById('btnRegister');
         const apiStatusLogin = document.getElementById('apiStatusLogin');
         const apiStatusApp = document.getElementById('apiStatusApp');
+        const apiStatusSetting = document.getElementById('apiStatusSetting');
+        const loginShopName = document.getElementById('loginShopName');
 
         const userAvatar = document.getElementById('userAvatar');
         const userName = document.getElementById('userName');
@@ -1636,76 +111,68 @@
         const rekapBarbermanSection = document.getElementById('rekapBarbermanSection');
         const rekapBarbermanContainer = document.getElementById('rekapBarbermanContainer');
 
-        // ============ TOGGLE PASSWORD (ICON MATA) ============
+        // Keuangan
+        const keuJenis = document.getElementById('keuJenis');
+        const keuKategori = document.getElementById('keuKategori');
+        const keuJumlah = document.getElementById('keuJumlah');
+        const keuKeterangan = document.getElementById('keuKeterangan');
+        const keuTanggal = document.getElementById('keuTanggal');
+        const keuMetode = document.getElementById('keuMetode');
+        const btnTambahKeuangan = document.getElementById('btnTambahKeuangan');
+        const keuanganListContainer = document.getElementById('keuanganListContainer');
+        const keuanganCount = document.getElementById('keuanganCount');
+        const saldoKasValue = document.getElementById('saldoKasValue');
+        const saldoMasuk = document.getElementById('saldoMasuk');
+        const saldoKeluar = document.getElementById('saldoKeluar');
+        const filterKeuTanggal = document.getElementById('filterKeuTanggal');
+        const filterKeuJenis = document.getElementById('filterKeuJenis');
+        const btnResetFilterKeu = document.getElementById('btnResetFilterKeu');
+
+        // User management
+        const shopNama = document.getElementById('shopNama');
+        const shopAlamat = document.getElementById('shopAlamat');
+        const shopHP = document.getElementById('shopHP');
+        const btnSimpanShop = document.getElementById('btnSimpanShop');
+        const userListContainer = document.getElementById('userListContainer');
+        const userCount = document.getElementById('userCount');
+        const navUser = document.getElementById('navUser');
+
+        // Setting
+        const setOldPass = document.getElementById('setOldPass');
+        const setNewPass = document.getElementById('setNewPass');
+        const setConfirmPass = document.getElementById('setConfirmPass');
+        const btnGantiPassword = document.getElementById('btnGantiPassword');
+        const settingUserInfo = document.getElementById('settingUserInfo');
+
+        // Dashboard
+        const dashPendapatanHari = document.getElementById('dashPendapatanHari');
+        const dashPendapatanHariCount = document.getElementById('dashPendapatanHariCount');
+        const dashPendapatanBulan = document.getElementById('dashPendapatanBulan');
+        const dashPendapatanBulanCount = document.getElementById('dashPendapatanBulanCount');
+        const dashSaldoKas = document.getElementById('dashSaldoKas');
+        const dashTotalNota = document.getElementById('dashTotalNota');
+        const dashChart7Hari = document.getElementById('dashChart7Hari');
+        const dashTopOperator = document.getElementById('dashTopOperator');
+        const dashNotaTerbaru = document.getElementById('dashNotaTerbaru');
+
+        // ============ TOGGLE PASSWORD ============
         document.querySelectorAll('.toggle-password').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const targetId = btn.dataset.target;
-                const input = document.getElementById(targetId);
+                const input = document.getElementById(btn.dataset.target);
                 if (!input) return;
-
                 if (input.type === 'password') {
-                    input.type = 'text';
-                    btn.textContent = '🙈';
-                    btn.setAttribute('aria-label', 'Sembunyikan password');
+                    input.type = 'text'; btn.textContent = '🙈';
                 } else {
-                    input.type = 'password';
-                    btn.textContent = '👁️';
-                    btn.setAttribute('aria-label', 'Tampilkan password');
+                    input.type = 'password'; btn.textContent = '👁️';
                 }
                 input.focus();
             });
         });
 
-        // ============ API HELPER ============
-        function setApiStatus(state) {
-            const els = [apiStatusLogin, apiStatusApp];
-            els.forEach(el => {
-                if (!el) return;
-                el.className = 'api-status api-' + state;
-                if (state === 'online') el.textContent = '🟢 Online';
-                else if (state === 'offline') el.textContent = '🔴 Offline';
-                else el.textContent = '⏳ Loading...';
-            });
-        }
-
-        async function apiCall(action, params, method) {
-            method = method || 'GET';
-            try {
-                let url = API_URL;
-                let options = { method: method };
-                if (method === 'GET') {
-                    const qs = new URLSearchParams(Object.assign({ action: action }, params || {})).toString();
-                    url += '?' + qs;
-                } else {
-                    options.headers = { 'Content-Type': 'text/plain;charset=utf-8' };
-                    options.body = JSON.stringify(Object.assign({ action: action }, params || {}));
-                }
-                const res = await fetch(url, options);
-                const data = await res.json();
-                return data;
-            } catch (err) {
-                console.error('API error:', err);
-                return { ok: false, message: 'Koneksi ke server gagal: ' + err.message };
-            }
-        }
-
-        async function checkApi() {
-            setApiStatus('loading');
-            const res = await apiCall('ping');
-            if (res && res.ok) {
-                apiOnline = true;
-                setApiStatus('online');
-            } else {
-                apiOnline = false;
-                setApiStatus('offline');
-            }
-            return apiOnline;
-        }
-
         // ============ HELPERS ============
         function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
         }
         function timeToMinutes(t) {
             if (!t) return 0;
@@ -1747,107 +214,152 @@
         function showAlert(message, type) {
             authAlert.className = 'alert-box alert-' + type + ' show';
             authAlert.innerHTML = message;
+            setTimeout(() => { authAlert.className = 'alert-box'; }, 5000);
         }
-        function hideAlert() {
-            authAlert.className = 'alert-box';
-            authAlert.innerHTML = '';
-        }
+        function hideAlert() { authAlert.className = 'alert-box'; authAlert.innerHTML = ''; }
 
-        // ============ AUTH LOCAL ============
+        // ============ STORAGE ============
         function loadAuth() {
-            try {
-                const raw = localStorage.getItem(AUTH_KEY);
-                if (raw) currentUser = JSON.parse(raw);
-            } catch(e) { currentUser = null; }
+            try { const raw = localStorage.getItem(AUTH_KEY); if (raw) currentUser = JSON.parse(raw); } catch(e) { currentUser = null; }
         }
         function saveAuth() {
             if (currentUser) localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser));
             else localStorage.removeItem(AUTH_KEY);
         }
+        function loadKeuangan() {
+            try { const raw = localStorage.getItem(KEKEUANGAN_KEY); if (raw) keuanganList = JSON.parse(raw); } catch(e) { keuanganList = []; }
+        }
+        function saveKeuangan() { localStorage.setItem(KEKEUANGAN_KEY, JSON.stringify(keuanganList)); }
+        function loadShopProfile() {
+            try {
+                const raw = localStorage.getItem(SHOP_KEY);
+                if (raw) shopProfile = JSON.parse(raw);
+            } catch(e) {}
+            applyShopProfile();
+        }
+        function saveShopProfile() {
+            localStorage.setItem(SHOP_KEY, JSON.stringify(shopProfile));
+            applyShopProfile();
+        }
+        function applyShopProfile() {
+            loginShopName.textContent = shopProfile.nama || 'Barbershop';
+            if (shopNama) shopNama.value = shopProfile.nama || '';
+            if (shopAlamat) shopAlamat.value = shopProfile.alamat || '';
+            if (shopHP) shopHP.value = shopProfile.hp || '';
+        }
 
+        // ============ API ============
+        function setApiStatus(state) {
+            [apiStatusLogin, apiStatusApp, apiStatusSetting].forEach(el => {
+                if (!el) return;
+                el.className = 'api-status api-' + state;
+                el.textContent = state === 'online' ? '🟢 Online' : state === 'offline' ? '🔴 Offline' : '⏳ Loading...';
+            });
+        }
+        async function apiCall(action, params, method) {
+            method = method || 'GET';
+            try {
+                let url = API_URL;
+                let options = { method: method };
+                if (method === 'GET') {
+                    const qs = new URLSearchParams(Object.assign({ action: action }, params || {})).toString();
+                    url += '?' + qs;
+                } else {
+                    options.headers = { 'Content-Type': 'text/plain;charset=utf-8' };
+                    options.body = JSON.stringify(Object.assign({ action: action }, params || {}));
+                }
+                const res = await fetch(url, options);
+                return await res.json();
+            } catch (err) {
+                return { ok: false, message: 'Koneksi gagal: ' + err.message };
+            }
+        }
+        async function checkApi() {
+            setApiStatus('loading');
+            const res = await apiCall('ping');
+            apiOnline = !!(res && res.ok);
+            setApiStatus(apiOnline ? 'online' : 'offline');
+            return apiOnline;
+        }
+
+        // ============ LOGIN / REGISTER ============
         function showLoginPage() {
             loginPage.classList.remove('hidden');
             app.classList.add('hidden');
+            document.getElementById('bottomNav').style.display = 'none';
             selectedLoginRole = '';
             document.querySelectorAll('#loginRoleSelector .role-option').forEach(el => el.classList.remove('selected'));
             loginFieldsContainer.style.display = 'none';
-            loginUsername.value = '';
-            loginPassword.value = '';
-            loginUsername.classList.remove('error');
-            loginPassword.classList.remove('error');
+            loginUsername.value = ''; loginPassword.value = '';
             btnLogin.disabled = true;
-            regUsername.value = '';
-            regPassword.value = '';
-            regNamaOperator.value = '';
-            [regUsername, regPassword, regNamaOperator].forEach(el => el.classList.remove('error'));
             hideAlert();
-            switchTab('login');
+            switchLoginTab('login');
         }
-
         function showApp() {
             loginPage.classList.add('hidden');
             app.classList.remove('hidden');
+            document.getElementById('bottomNav').style.display = 'grid';
             if (currentUser.role === 'admin') {
                 userAvatar.textContent = '👨‍💼';
                 userAvatar.classList.add('admin');
                 userName.textContent = 'Admin';
                 userRole.textContent = 'Administrator';
-                subheadText.innerHTML = 'Mode Admin — lihat semua transaksi dari semua operator';
+                subheadText.innerHTML = 'Mode Admin — kelola nota, keuangan, user & setting';
                 barberBadge.style.display = 'none';
                 filterBar.style.display = 'flex';
                 rekapBarbermanSection.style.display = 'block';
+                navUser.style.display = 'flex';
             } else {
                 userAvatar.textContent = '💈';
                 userAvatar.classList.remove('admin');
                 userName.textContent = currentUser.namaOperator;
                 userRole.textContent = 'Barberman · @' + currentUser.username;
-                subheadText.innerHTML = `Login sebagai <b>${escapeHtml(currentUser.namaOperator)}</b> — Klik MULAI saat pelanggan datang`;
+                subheadText.innerHTML = `Login sebagai <b>${escapeHtml(currentUser.namaOperator)}</b>`;
                 barberBadge.style.display = 'inline-flex';
                 barberBadgeName.textContent = currentUser.namaOperator;
                 filterBar.style.display = 'none';
                 rekapBarbermanSection.style.display = 'none';
+                navUser.style.display = 'none';
+            }
+            if (settingUserInfo) {
+                settingUserInfo.textContent = currentUser.role === 'admin' ? 'Admin' : currentUser.namaOperator + ' (@' + currentUser.username + ')';
             }
             loadSesiFromCache();
             updateClockUI();
+            loadKeuangan(); loadShopProfile();
             syncDataFromServer();
+            switchTab('nota');
         }
 
         async function syncDataFromServer() {
-            if (!apiOnline) return;
+            if (!apiOnline) { renderAll(); return; }
             setApiStatus('loading');
-            const [notaRes, cctvRes] = await Promise.all([
+            const [notaRes, cctvRes, userRes] = await Promise.all([
                 apiCall('getNota', {}, 'GET'),
-                apiCall('getCctv', {}, 'GET')
+                apiCall('getCctv', {}, 'GET'),
+                apiCall('getUsers', {}, 'GET')
             ]);
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
+            if (userRes && userRes.ok) userList = userRes.data || [];
             setApiStatus('online');
             renderAll();
         }
 
-        // ============ TAB ============
-        function switchTab(tab) {
-            tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+        // ============ LOGIN TAB ============
+        function switchLoginTab(tab) {
+            tabsLogin.forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
             if (tab === 'login') {
                 loginFormContainer.style.display = 'block';
                 registerFormContainer.style.display = 'none';
-                if (selectedLoginRole) {
-                    if (loginUsername.value) {
-                        setTimeout(() => loginPassword.focus(), 100);
-                    } else {
-                        setTimeout(() => loginUsername.focus(), 100);
-                    }
-                }
             } else {
                 loginFormContainer.style.display = 'none';
                 registerFormContainer.style.display = 'block';
-                setTimeout(() => regUsername.focus(), 100);
             }
             hideAlert();
         }
-        tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+        tabsLogin.forEach(t => t.addEventListener('click', () => switchLoginTab(t.dataset.tab)));
 
-        // ============ ROLE SELECTOR ============
         loginRoleSelector.querySelectorAll('.role-option').forEach(opt => {
             opt.addEventListener('click', function() {
                 loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
@@ -1855,120 +367,76 @@
                 selectedLoginRole = opt.dataset.role;
                 loginFieldsContainer.style.display = 'block';
                 hideAlert();
-                loginUsername.value = '';
-                loginPassword.value = '';
-                loginUsername.placeholder = 'Masukkan username';
-                loginPassword.placeholder = 'Masukkan password';
+                loginUsername.value = ''; loginPassword.value = '';
                 validateLoginForm();
                 setTimeout(() => loginUsername.focus(), 200);
             });
         });
         function validateLoginForm() {
-            const u = loginUsername.value.trim();
-            const p = loginPassword.value;
+            const u = loginUsername.value.trim(); const p = loginPassword.value;
             btnLogin.disabled = !(selectedLoginRole && u && p);
         }
-        loginUsername.addEventListener('input', function() { loginUsername.classList.remove('error'); validateLoginForm(); });
-        loginPassword.addEventListener('input', function() { loginPassword.classList.remove('error'); validateLoginForm(); });
-        loginUsername.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                loginPassword.focus();
-            }
+        loginUsername.addEventListener('input', validateLoginForm);
+        loginPassword.addEventListener('input', validateLoginForm);
+        loginPassword.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click();
         });
 
-        // ============ LOGIN ============
         btnLogin.addEventListener('click', async function() {
             const username = loginUsername.value.trim();
             const password = loginPassword.value;
             if (!selectedLoginRole) { showAlert('⚠️ Pilih role dulu.', 'error'); return; }
-            if (!username || !password) {
-                if (!username) loginUsername.classList.add('error');
-                if (!password) loginPassword.classList.add('error');
-                showAlert('⚠️ Username dan password wajib diisi.', 'error');
-                return;
-            }
+            if (!username || !password) { showAlert('⚠️ Isi username & password.', 'error'); return; }
             btnLogin.disabled = true;
             btnLogin.innerHTML = '<span>⏳</span> Memproses...';
-
             if (!apiOnline) await checkApi();
-
             if (!apiOnline) {
-                showAlert('❌ Server tidak dapat dijangkau. Cek koneksi internet Anda.', 'error');
+                showAlert('❌ Server tidak dapat dijangkau.', 'error');
                 btnLogin.disabled = false;
                 btnLogin.innerHTML = '<span>🔓</span> Login';
                 return;
             }
-
             const res = await apiCall('login', { username, password, role: selectedLoginRole }, 'POST');
             btnLogin.disabled = false;
             btnLogin.innerHTML = '<span>🔓</span> Login';
-
             if (res && res.ok) {
                 currentUser = res.user;
                 saveAuth();
                 showApp();
             } else {
-                loginUsername.classList.add('error');
-                loginPassword.classList.add('error');
                 showAlert('❌ Username atau password salah.', 'error');
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
             }
         });
-        loginPassword.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click();
-        });
 
-        // ============ REGISTER ============
+        // Register
         [regUsername, regPassword, regNamaOperator].forEach(el => {
             el.addEventListener('input', function() { el.classList.remove('error'); hideAlert(); });
         });
-
         btnRegister.addEventListener('click', async function() {
             const username = regUsername.value.trim();
             const password = regPassword.value;
             const namaOperator = regNamaOperator.value.trim();
-
-            let hasError = false;
-            if (!username) { regUsername.classList.add('error'); hasError = true; }
-            if (!password) { regPassword.classList.add('error'); hasError = true; }
-            if (!namaOperator) { regNamaOperator.classList.add('error'); hasError = true; }
-            if (hasError) {
-                showAlert('⚠️ Semua field wajib diisi.', 'error');
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                return;
-            }
-            if (username.length < 3) { regUsername.classList.add('error'); showAlert('⚠️ Username minimal 3 karakter.', 'error'); return; }
-            if (password.length < 4) { regPassword.classList.add('error'); showAlert('⚠️ Password minimal 4 karakter.', 'error'); return; }
-            if (username.toLowerCase() === 'admin') { regUsername.classList.add('error'); showAlert('⚠️ Username admin sudah dipakai.', 'error'); return; }
-
+            if (!username || !password || !namaOperator) { showAlert('⚠️ Semua field wajib diisi.', 'error'); return; }
+            if (username.length < 3) { showAlert('⚠️ Username minimal 3 karakter.', 'error'); return; }
+            if (password.length < 4) { showAlert('⚠️ Password minimal 4 karakter.', 'error'); return; }
             if (!apiOnline) await checkApi();
             if (!apiOnline) { showAlert('❌ Server tidak dapat dijangkau.', 'error'); return; }
-
             btnRegister.disabled = true;
             btnRegister.innerHTML = '<span>⏳</span> Mendaftar...';
             const res = await apiCall('register', { username, password, namaOperator }, 'POST');
             btnRegister.disabled = false;
             btnRegister.innerHTML = '<span>📝</span> Daftar Sebagai Barberman';
-
             if (res && res.ok) {
-                showAlert('✅ <b>Registrasi berhasil!</b> Silakan login dengan username <b>' + escapeHtml(username) + '</b>.', 'success');
+                showAlert('✅ Registrasi berhasil! Silakan login.', 'success');
                 regUsername.value = ''; regPassword.value = ''; regNamaOperator.value = '';
                 setTimeout(() => {
-                    switchTab('login');
-                    loginRoleSelector.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+                    switchLoginTab('login');
                     const b = loginRoleSelector.querySelector('[data-role="barberman"]');
-                    if (b) b.classList.add('selected');
-                    selectedLoginRole = 'barberman';
-                    loginFieldsContainer.style.display = 'block';
+                    if (b) b.click();
                     loginUsername.value = username;
-                    loginPassword.value = '';
-                    loginPassword.focus();
                     validateLoginForm();
-                    showAlert('✅ Silakan login dengan username <b>' + escapeHtml(username) + '</b>.', 'success');
-                }, 1500);
+                }, 1200);
             } else {
-                regUsername.classList.add('error');
                 showAlert('❌ ' + (res.message || 'Registrasi gagal.'), 'error');
             }
         });
@@ -1976,20 +444,39 @@
         // ============ LOGOUT ============
         btnLogout.addEventListener('click', function() {
             if (!confirm('Logout dari aplikasi?')) return;
-            if (sesiAktif && sesiAktif.jamMulai && !sesiAktif.jamSelesai) {
-                if (!confirm('Ada sesi berjalan. Yakin logout?')) return;
-            }
             currentUser = null;
             saveAuth();
             showLoginPage();
         });
 
-        // ============ SESI ============
+        // ============ TAB NAVIGATION ============
+        function switchTab(tabName) {
+            activeTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            const target = document.getElementById('tab-' + tabName);
+            if (target) target.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => {
+                n.classList.toggle('active', n.dataset.tab === tabName);
+            });
+            // Refresh data saat pindah tab
+            if (tabName === 'dashboard') renderDashboard();
+            if (tabName === 'keuangan') { renderKeuangan(); updateSaldo(); }
+            if (tabName === 'user') renderUserList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const tab = item.dataset.tab;
+                if (tab === 'user' && currentUser.role !== 'admin') {
+                    alert('Tab User hanya untuk Admin.'); return;
+                }
+                switchTab(tab);
+            });
+        });
+
+        // ============ SESI NOTA ============
         function loadSesiFromCache() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) sesiAktif = JSON.parse(raw);
-            } catch (e) { sesiAktif = null; }
+            try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) sesiAktif = JSON.parse(raw); } catch(e) { sesiAktif = null; }
             updateClockUI();
         }
         function saveSesiToCache() {
@@ -2005,48 +492,32 @@
                     jamSelesaiDisplay.classList.add('active');
                     clockStatus.textContent = '✅ Sesi selesai — pilih layanan';
                     clockStatus.className = 'clock-status done';
-                    btnMulai.disabled = false;
-                    btnSelesai.disabled = true;
+                    btnMulai.disabled = false; btnSelesai.disabled = true;
                 } else {
                     jamSelesaiDisplay.textContent = '--:--';
                     jamSelesaiDisplay.classList.remove('active');
                     clockStatus.textContent = '🟢 Sedang melayani...';
                     clockStatus.className = 'clock-status running';
-                    btnMulai.disabled = true;
-                    btnSelesai.disabled = false;
+                    btnMulai.disabled = true; btnSelesai.disabled = false;
                 }
             } else {
-                jamMulaiDisplay.textContent = '--:--';
-                jamSelesaiDisplay.textContent = '--:--';
-                jamMulaiDisplay.classList.remove('active');
-                jamSelesaiDisplay.classList.remove('active');
+                jamMulaiDisplay.textContent = '--:--'; jamSelesaiDisplay.textContent = '--:--';
+                jamMulaiDisplay.classList.remove('active'); jamSelesaiDisplay.classList.remove('active');
                 clockStatus.textContent = '⏸️ Menunggu pelanggan';
                 clockStatus.className = 'clock-status';
-                btnMulai.disabled = false;
-                btnSelesai.disabled = true;
+                btnMulai.disabled = false; btnSelesai.disabled = true;
             }
         }
-
         btnMulai.addEventListener('click', function() {
             if (currentUser.role !== 'barberman') { alert('Hanya barberman yang bisa memulai sesi.'); return; }
             if (sesiAktif && sesiAktif.jamMulai && !sesiAktif.jamSelesai) { alert('Sesi sedang berjalan.'); return; }
-            if (sesiAktif && sesiAktif.jamSelesai) {
-                if (!confirm('Masih ada sesi selesai belum dibuat nota. Mulai baru?')) return;
-            }
-            sesiAktif = {
-                jamMulai: getJamSekarang(), jamSelesai: null,
-                tanggal: getTanggalSekarang(), barberman: currentUser.namaOperator
-            };
+            sesiAktif = { jamMulai: getJamSekarang(), jamSelesai: null, tanggal: getTanggalSekarang(), barberman: currentUser.namaOperator };
             saveSesiToCache(); updateClockUI();
-            if (navigator.vibrate) navigator.vibrate(50);
         });
-
         btnSelesai.addEventListener('click', function() {
             if (!sesiAktif || !sesiAktif.jamMulai) { alert('Belum ada sesi.'); return; }
             sesiAktif.jamSelesai = getJamSekarang();
-            if (!sesiAktif.barberman && currentUser.role === 'barberman') sesiAktif.barberman = currentUser.namaOperator;
             saveSesiToCache(); updateClockUI();
-            if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
             bukaModalLayanan();
         });
 
@@ -2054,13 +525,12 @@
         function buildLayananCheckboxes(container, selectedIds, onChange) {
             let html = '';
             LAYANAN_MASTER.forEach(l => {
-                const isSelected = selectedIds.includes(l.id);
-                html += `
-                    <div class="layanan-option ${isSelected ? 'selected' : ''}" data-id="${l.id}">
-                        <div class="checkbox">${isSelected ? '✓' : ''}</div>
-                        <div class="lo-info"><div class="lo-name">${escapeHtml(l.nama)}</div></div>
-                        <div class="lo-price">${formatRupiah(l.harga)}</div>
-                    </div>`;
+                const isSel = selectedIds.includes(l.id);
+                html += `<div class="layanan-option ${isSel ? 'selected' : ''}" data-id="${l.id}">
+                    <div class="checkbox">${isSel ? '✓' : ''}</div>
+                    <div class="lo-info"><div class="lo-name">${escapeHtml(l.nama)}</div></div>
+                    <div class="lo-price">${formatRupiah(l.harga)}</div>
+                </div>`;
             });
             container.innerHTML = html;
             container.querySelectorAll('.layanan-option').forEach(opt => {
@@ -2074,13 +544,12 @@
                 });
             });
         }
-
         function bukaModalLayanan() {
             if (!sesiAktif || !sesiAktif.jamSelesai) { alert('Sesi belum selesai.'); return; }
             modalJamMulai.textContent = sesiAktif.jamMulai;
             modalJamSelesai.textContent = sesiAktif.jamSelesai;
             modalDurasi.textContent = Math.max(0, timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai)) + ' mnt';
-            modalBarbermanName.textContent = sesiAktif.barberman || (currentUser.role === 'barberman' ? currentUser.namaOperator : '-');
+            modalBarbermanName.textContent = sesiAktif.barberman || '-';
             modalNamaPelanggan.value = '';
             modalNamaPelanggan.classList.remove('error');
             namaError.style.display = 'none';
@@ -2097,64 +566,35 @@
         modalCloseBtn.addEventListener('click', function() {
             if (confirm('Batalkan pemilihan layanan?')) tutupModalLayanan();
         });
-        modalLayanan.addEventListener('click', function(e) {
-            if (e.target === modalLayanan) { if (confirm('Batalkan?')) tutupModalLayanan(); }
-        });
         modalNamaPelanggan.addEventListener('input', function() {
             if (modalNamaPelanggan.value.trim()) { modalNamaPelanggan.classList.remove('error'); namaError.style.display = 'none'; }
         });
-
         btnOkLayanan.addEventListener('click', async function() {
             const nama = modalNamaPelanggan.value.trim();
-            if (!nama) {
-                modalNamaPelanggan.classList.add('error');
-                namaError.style.display = 'block';
-                modalNamaPelanggan.focus();
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                return;
-            }
+            if (!nama) { modalNamaPelanggan.classList.add('error'); namaError.style.display = 'block'; return; }
             if (layananDipilihModal.length === 0) { alert('Pilih minimal 1 layanan.'); return; }
-
-            const layananArr = layananDipilihModal.map(id => {
-                const l = getLayananById(id);
-                return { nama: l.nama, harga: l.harga };
-            });
+            const layananArr = layananDipilihModal.map(id => { const l = getLayananById(id); return { nama: l.nama, harga: l.harga }; });
             const total = layananArr.reduce((s, l) => s + l.harga, 0);
-            const barberman = sesiAktif.barberman || (currentUser.role === 'barberman' ? currentUser.namaOperator : '-');
-
-            // Hitung nomor urut nota hari ini
+            const barberman = sesiAktif.barberman || '-';
             const tanggalNota = sesiAktif.tanggal || getTanggalSekarang();
             const notaHariIni = notaList.filter(n => n.tanggal === tanggalNota);
             const urut = String(notaHariIni.length + 1).padStart(3, '0');
             const nomorNota = `INV-${tanggalNota.replace(/-/g, '')}-${urut}`;
-
             const notaBaru = {
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nomorNota: nomorNota,
-                nama, barberman, layanan: layananArr, total,
+                nomorNota, nama, barberman, layanan: layananArr, total,
                 jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai,
                 tanggal: tanggalNota
             };
-
             btnOkLayanan.disabled = true;
             btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
-            let saveOk = true;
-            if (apiOnline) {
-                const res = await apiCall('addNota', notaBaru, 'POST');
-                if (!res || !res.ok) { saveOk = false; console.warn('Gagal simpan ke server:', res); }
-            }
+            if (apiOnline) await apiCall('addNota', notaBaru, 'POST');
             btnOkLayanan.disabled = false;
             btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
-
             notaList.push(notaBaru);
-            if (!saveOk) alert('⚠️ Nota disimpan di perangkat, tapi gagal sync ke server. Cek koneksi.');
-
             sesiAktif = null;
-            saveSesiToCache();
-            updateClockUI();
-            tutupModalLayanan();
-            renderAll();
-            bukaModalCetak(notaBaru);
+            saveSesiToCache(); updateClockUI();
+            tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
         });
 
         // ============ MODAL CETAK ============
@@ -2164,35 +604,30 @@
             const durasi = Math.max(0, timeToMinutes(nota.jamSelesai) - timeToMinutes(nota.jamMulai));
             let itemsHtml = '';
             nota.layanan.forEach(l => {
-                itemsHtml += `
-                    <div class="nt-row nt-bold">
-                        <span class="nt-label nt-item-name">${escapeHtml(l.nama)}</span>
-                        <span class="nt-value nt-item-price">${formatRupiah(l.harga)}</span>
-                    </div>`;
+                itemsHtml += `<div class="nt-row nt-bold"><span class="nt-label">${escapeHtml(l.nama)}</span><span class="nt-value">${formatRupiah(l.harga)}</span></div>`;
             });
-            return `
-                <div class="nota-thermal">
-                    <div class="nt-center nt-bold nt-title">BARBERSHOP</div>
-                    <div class="nt-center nt-sub">Jl. Contoh No. 123, Kota</div>
-                    <div class="nt-center nt-sub">Telp: 0812-3456-7890</div>
-                    <div class="nt-line"></div>
-                    <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
-                    <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
-                    <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
-                    <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
-                    <div class="nt-barber">💈 Operator: ${escapeHtml(nota.barberman || '-')}</div>
-                    <div class="nt-line"></div>
-                    <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${nota.jamMulai}</span></div>
-                    <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
-                    <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
-                    <div class="nt-line"></div>
-                    <div class="nt-bold" style="margin-bottom:4px;">RINCIAN LAYANAN:</div>
-                    ${itemsHtml}
-                    <div class="nt-line"></div>
-                    <div class="nt-row nt-total"><span class="nt-label">TOTAL</span><span class="nt-value">${formatRupiah(nota.total)}</span></div>
-                    <div class="nt-line"></div>
-                    <div class="nt-footer">Terima kasih atas kunjungan Anda<br>Selamat datang kembali 🙏</div>
-                </div>`;
+            return `<div class="nota-thermal">
+                <div class="nt-center nt-bold nt-title">${escapeHtml(shopProfile.nama.toUpperCase())}</div>
+                <div class="nt-center nt-sub">${escapeHtml(shopProfile.alamat)}</div>
+                <div class="nt-center nt-sub">Telp: ${escapeHtml(shopProfile.hp)}</div>
+                <div class="nt-line"></div>
+                <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
+                <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
+                <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
+                <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
+                <div class="nt-barber">💈 Operator: ${escapeHtml(nota.barberman || '-')}</div>
+                <div class="nt-line"></div>
+                <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${nota.jamMulai}</span></div>
+                <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
+                <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
+                <div class="nt-line"></div>
+                <div class="nt-bold">RINCIAN LAYANAN:</div>
+                ${itemsHtml}
+                <div class="nt-line"></div>
+                <div class="nt-row nt-total"><span class="nt-label">TOTAL</span><span class="nt-value">${formatRupiah(nota.total)}</span></div>
+                <div class="nt-line"></div>
+                <div class="nt-footer">Terima kasih 🙏<br>Selamat datang kembali</div>
+            </div>`;
         }
         function bukaModalCetak(nota) {
             notaPreviewWrapper.innerHTML = buatHtmlNota(nota);
@@ -2201,7 +636,6 @@
         function tutupModalCetak() { modalCetak.classList.remove('active'); }
         modalCetakClose.addEventListener('click', tutupModalCetak);
         btnTutupCetak.addEventListener('click', tutupModalCetak);
-        modalCetak.addEventListener('click', function(e) { if (e.target === modalCetak) tutupModalCetak(); });
         btnPrint.addEventListener('click', function() { window.print(); });
 
         // ============ CCTV MATCH ============
@@ -2229,7 +663,7 @@
         // ============ FILTER ============
         function getFilteredNota() {
             return notaList.filter(n => {
-                if (currentUser.role === 'barberman') {
+                if (currentUser && currentUser.role === 'barberman') {
                     if (n.barberman !== currentUser.namaOperator) return false;
                 } else {
                     if (filterBarbermanValue && n.barberman !== filterBarbermanValue) return false;
@@ -2242,11 +676,9 @@
             const set = new Set();
             notaList.forEach(n => { if (n.barberman) set.add(n.barberman); });
             const list = Array.from(set).sort();
-            const cur = filterBarberman.value;
             let html = '<option value="">👥 Semua Operator</option>';
             list.forEach(b => { html += `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`; });
             filterBarberman.innerHTML = html;
-            if (list.includes(cur)) filterBarberman.value = cur;
         }
         filterBarberman.addEventListener('change', function() { filterBarbermanValue = filterBarberman.value; renderLaporan(); renderNotaList(); });
         filterTanggal.addEventListener('change', function() { filterTanggalValue = filterTanggal.value; renderLaporan(); renderNotaList(); });
@@ -2256,68 +688,55 @@
             renderLaporan(); renderNotaList();
         });
 
-        // ============ RENDER NOTA (TABEL) ============
+        // ============ RENDER NOTA ============
         function renderNotaList() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
-                notaListContainer.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota transaksi.</td></tr>';
-                notaCount.textContent = '0 nota';
-                return;
+                notaListContainer.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota.</td></tr>';
+                notaCount.textContent = '0 nota'; return;
             }
             notaCount.textContent = `${filtered.length} nota`;
             let html = '';
-            const reversed = [...filtered].reverse();
-            reversed.forEach((n, idx) => {
-                const nomor = idx + 1;
-                const namaPelanggan = escapeHtml(n.nama);
-                const operator = escapeHtml(n.barberman || '-');
-                const total = formatRupiah(n.total);
-                const tanggal = n.tanggal || '-';
-                html += `
-                    <tr>
-                        <td class="cell-no">${nomor}</td>
-                        <td class="cell-jam" data-label="Jam Mulai">${n.jamMulai}</td>
-                        <td class="cell-jam" data-label="Jam Selesai">${n.jamSelesai}</td>
-                        <td data-label="Pelanggan"><strong>${namaPelanggan}</strong></td>
-                        <td data-label="Operator"><span class="barber-tag">💈 ${operator}</span></td>
-                        <td data-label="Total"><strong>${total}</strong></td>
-                        <td data-label="Tanggal">${tanggal}</td>
-                        <td class="cell-actions">
-                            <button class="btn-mini print" onclick="cetakNotaById('${n.id}')" title="Cetak">🖨️</button>
-                            <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
-                        </td>
-                    </tr>`;
+            [...filtered].reverse().forEach((n, idx) => {
+                html += `<tr>
+                    <td class="cell-no">${idx + 1}</td>
+                    <td class="cell-jam" data-label="Jam Mulai">${n.jamMulai}</td>
+                    <td class="cell-jam" data-label="Jam Selesai">${n.jamSelesai}</td>
+                    <td data-label="Pelanggan"><strong>${escapeHtml(n.nama)}</strong></td>
+                    <td data-label="Operator"><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
+                    <td data-label="Total"><strong>${formatRupiah(n.total)}</strong></td>
+                    <td data-label="Tanggal">${n.tanggal || '-'}</td>
+                    <td class="cell-actions">
+                        <button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
+                        <button class="delete-btn" onclick="deleteNota('${n.id}')">✕</button>
+                    </td>
+                </tr>`;
             });
             notaListContainer.innerHTML = html;
         }
-
         function renderCctvList() {
             if (cctvList.length === 0) {
-                cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
+                cctvListContainer.innerHTML = '<div class="empty-state">Belum ada CCTV.</div>';
                 cctvCount.textContent = '0'; return;
             }
             cctvCount.textContent = cctvList.length;
             let html = '';
             [...cctvList].reverse().forEach(c => {
-                html += `
-                    <div class="cctv-item">
-                        <div class="info">
-                            <span class="name">${escapeHtml(c.nama)}</span>
-                            <div class="detail">
-                                <span>⏰ ${c.jamMulai}-${c.jamSelesai}</span>
-                                <span>📅 ${c.tanggal || '-'}</span>
-                            </div>
-                        </div>
-                        <button class="delete-btn" onclick="deleteCctv('${c.id}')">✕</button>
-                    </div>`;
+                html += `<div class="cctv-item">
+                    <div class="info">
+                        <span class="name">${escapeHtml(c.nama)}</span>
+                        <div class="detail"><span>⏰ ${c.jamMulai}-${c.jamSelesai}</span><span>📅 ${c.tanggal || '-'}</span></div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteCctv('${c.id}')">✕</button>
+                </div>`;
             });
             cctvListContainer.innerHTML = html;
         }
         function renderLaporan() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
-                laporanBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data transaksi</td></tr>`;
-                laporanMobileContainer.innerHTML = '<div class="empty-state">Belum ada data transaksi</div>';
+                laporanBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data</td></tr>`;
+                laporanMobileContainer.innerHTML = '<div class="empty-state">Belum ada data</div>';
                 totalPendapatan.textContent = 'Rp 0'; totalTransaksi.textContent = '0';
                 totalCocok.textContent = '0'; totalTidakCocok.textContent = '0';
                 rekapBarbermanContainer.innerHTML = '<div class="empty-state">Belum ada data</div>';
@@ -2334,39 +753,30 @@
                 else if (m.status === 'mismatch') { tidakCocok++; statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`; }
                 else if (m.status === 'no-cctv') { tidakCocok++; statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`; }
                 else { tidakCocok++; statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`; }
-
                 const b = n.barberman || '-';
                 if (!rekap[b]) rekap[b] = { total: 0, count: 0 };
-                rekap[b].total += Number(n.total) || 0;
-                rekap[b].count += 1;
-
+                rekap[b].total += Number(n.total) || 0; rekap[b].count += 1;
                 const layananStr = n.layanan.map(l => `${l.nama} (${formatRupiah(l.harga)})`).join('<br>');
                 const layananMobile = n.layanan.map(l => `<div class="layanan-line"><span>${escapeHtml(l.nama)}</span><span class="price">${formatRupiah(l.harga)}</span></div>`).join('');
-
-                rows += `
-                    <tr>
-                        <td><strong>${escapeHtml(n.nama)}</strong></td>
-                        <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
-                        <td>${layananStr}</td>
-                        <td><strong>${formatRupiah(n.total)}</strong></td>
-                        <td>${n.tanggal || '-'}</td>
-                        <td>${n.jamMulai}-${n.jamSelesai}</td>
-                        <td>${cctvJam}</td>
-                        <td>${statusHtml}</td>
-                    </tr>`;
-                cards += `
-                    <div class="laporan-card">
-                        <div class="card-name">
-                            <span>${escapeHtml(n.nama)}</span>
-                            <span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span>
-                        </div>
-                        <div class="row"><span class="lbl">Layanan</span><span class="val"><div class="layanan-list">${layananMobile}</div></span></div>
-                        <div class="row"><span class="lbl">Total</span><span class="val"><strong>${formatRupiah(n.total)}</strong></span></div>
-                        <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
-                        <div class="row"><span class="lbl">Jam Nota</span><span class="val">${n.jamMulai}-${n.jamSelesai}</span></div>
-                        <div class="row"><span class="lbl">Jam CCTV</span><span class="val">${cctvJam}</span></div>
-                        <div class="row"><span class="lbl">Status</span><span class="val">${statusHtml}</span></div>
-                    </div>`;
+                rows += `<tr>
+                    <td><strong>${escapeHtml(n.nama)}</strong></td>
+                    <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
+                    <td>${layananStr}</td>
+                    <td><strong>${formatRupiah(n.total)}</strong></td>
+                    <td>${n.tanggal || '-'}</td>
+                    <td>${n.jamMulai}-${n.jamSelesai}</td>
+                    <td>${cctvJam}</td>
+                    <td>${statusHtml}</td>
+                </tr>`;
+                cards += `<div class="laporan-card">
+                    <div class="card-name"><span>${escapeHtml(n.nama)}</span><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></div>
+                    <div class="row"><span class="lbl">Layanan</span><span class="val"><div class="layanan-list">${layananMobile}</div></span></div>
+                    <div class="row"><span class="lbl">Total</span><span class="val"><strong>${formatRupiah(n.total)}</strong></span></div>
+                    <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
+                    <div class="row"><span class="lbl">Jam</span><span class="val">${n.jamMulai}-${n.jamSelesai}</span></div>
+                    <div class="row"><span class="lbl">CCTV</span><span class="val">${cctvJam}</span></div>
+                    <div class="row"><span class="lbl">Status</span><span class="val">${statusHtml}</span></div>
+                </div>`;
             });
             laporanBody.innerHTML = rows;
             laporanMobileContainer.innerHTML = cards;
@@ -2374,92 +784,315 @@
             totalTransaksi.textContent = filtered.length;
             totalCocok.textContent = cocok;
             totalTidakCocok.textContent = tidakCocok;
-
-            if (currentUser.role === 'admin') {
+            if (currentUser && currentUser.role === 'admin') {
                 const entries = Object.entries(rekap).sort((a,b) => b[1].total - a[1].total);
                 rekapBarbermanContainer.innerHTML = entries.length === 0
                     ? '<div class="empty-state">Belum ada data</div>'
                     : entries.map(([nama, d]) => `
-                        <div class="rekap-item">
-                            <div class="rekap-nama">💈 ${escapeHtml(nama)}</div>
-                            <div class="rekap-detail">
+                        <div class="rekap-item" style="background:#f8fafc; border:1px solid #e2e8f0; border-left:5px solid #3b82f6; border-radius:14px; padding:0.9rem 1rem;">
+                            <div style="font-weight:800; font-size:0.9rem; color:#0f172a; margin-bottom:4px;">💈 ${escapeHtml(nama)}</div>
+                            <div style="font-size:0.75rem; color:#475569; display:flex; justify-content:space-between; gap:8px;">
                                 <span>${d.count} transaksi</span>
-                                <span class="rekap-total">${formatRupiah(d.total)}</span>
+                                <span style="font-weight:800; color:#f59e0b;">${formatRupiah(d.total)}</span>
                             </div>
                         </div>`).join('');
             }
         }
-        function renderAll() {
-            updateFilterBarbermanOptions();
-            renderNotaList();
-            renderCctvList();
-            renderLaporan();
+
+        // ============ DASHBOARD ============
+        function renderDashboard() {
+            const today = getTanggalSekarang();
+            const thisMonth = today.substring(0, 7);
+            let totalHari = 0, countHari = 0, totalBulan = 0, countBulan = 0;
+            const rekap7Hari = {};
+            const rekapOperator = {};
+            // Data 7 hari terakhir
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                rekap7Hari[key] = 0;
+            }
+            notaList.forEach(n => {
+                const tgl = n.tanggal || '';
+                const total = Number(n.total) || 0;
+                if (tgl === today) { totalHari += total; countHari++; }
+                if (tgl.startsWith(thisMonth)) { totalBulan += total; countBulan++; }
+                if (rekap7Hari[tgl] !== undefined) rekap7Hari[tgl] += total;
+                const b = n.barberman || '-';
+                if (!rekapOperator[b]) rekapOperator[b] = { total: 0, count: 0 };
+                rekapOperator[b].total += total; rekapOperator[b].count++;
+            });
+            dashPendapatanHari.textContent = formatRupiah(totalHari);
+            dashPendapatanHariCount.textContent = countHari + ' transaksi';
+            dashPendapatanBulan.textContent = formatRupiah(totalBulan);
+            dashPendapatanBulanCount.textContent = countBulan + ' transaksi';
+            dashTotalNota.textContent = notaList.length;
+            // Saldo kas
+            const totalMasuk = keuanganList.filter(k => k.jenis === 'masuk').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const saldo = totalMasuk - totalKeluar + (currentUser && currentUser.role === 'admin' ? 0 : 0);
+            // Saldo juga termasuk pendapatan nota
+            const totalNotaAll = notaList.reduce((s,n) => s + Number(n.total||0), 0);
+            dashSaldoKas.textContent = formatRupiah(totalMasuk + totalNotaAll - totalKeluar);
+
+            // Chart 7 hari
+            const maxVal = Math.max(...Object.values(rekap7Hari), 1);
+            let chartHtml = '';
+            Object.entries(rekap7Hari).forEach(([tgl, val]) => {
+                const hari = getHariFormatted(tgl);
+                const pct = (val / maxVal) * 100;
+                chartHtml += `<div class="chart-bar-row">
+                    <div class="chart-bar-label">${hari}</div>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${pct}%"></div></div>
+                    <div class="chart-bar-value">${formatRupiah(val)}</div>
+                </div>`;
+            });
+            dashChart7Hari.innerHTML = chartHtml || '<div class="empty-state">Belum ada data</div>';
+
+            // Top operator
+            const ops = Object.entries(rekapOperator).sort((a,b) => b[1].total - a[1].total).slice(0, 5);
+            const maxOp = ops.length > 0 ? ops[0][1].total : 1;
+            dashTopOperator.innerHTML = ops.length === 0 ? '<div class="empty-state">Belum ada data</div>' :
+                ops.map(([nama, d]) => {
+                    const pct = (d.total / maxOp) * 100;
+                    return `<div class="chart-bar-row">
+                        <div class="chart-bar-label">💈 ${escapeHtml(nama).slice(0,12)}</div>
+                        <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${pct}%"></div></div>
+                        <div class="chart-bar-value">${formatRupiah(d.total)}</div>
+                    </div>`;
+                }).join('');
+
+            // Nota terbaru
+            const terbaru = [...notaList].reverse().slice(0, 5);
+            dashNotaTerbaru.innerHTML = terbaru.length === 0 ? '<div class="empty-state">Belum ada nota</div>' :
+                terbaru.map(n => `
+                    <div class="cctv-item" style="border-left-color:#f59e0b; background:#fffbeb;">
+                        <div class="info">
+                            <span class="name">${escapeHtml(n.nama)}</span>
+                            <div class="detail">
+                                <span>💈 ${escapeHtml(n.barberman || '-')}</span>
+                                <span>${n.jamMulai}-${n.jamSelesai}</span>
+                                <span>📅 ${n.tanggal}</span>
+                            </div>
+                        </div>
+                        <strong style="color:#f59e0b; white-space:nowrap;">${formatRupiah(n.total)}</strong>
+                    </div>`).join('');
         }
+
+        // ============ KEUANGAN ============
+        function getFilteredKeuangan() {
+            return keuanganList.filter(k => {
+                if (filterKeuTanggalValue && k.tanggal !== filterKeuTanggalValue) return false;
+                if (filterKeuJenisValue && k.jenis !== filterKeuJenisValue) return false;
+                return true;
+            });
+        }
+        function updateSaldo() {
+            const totalMasuk = keuanganList.filter(k => k.jenis === 'masuk').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            saldoMasuk.textContent = formatRupiah(totalMasuk);
+            saldoKeluar.textContent = formatRupiah(totalKeluar);
+            saldoKasValue.textContent = formatRupiah(totalMasuk - totalKeluar);
+        }
+        function renderKeuangan() {
+            const filtered = getFilteredKeuangan();
+            keuanganCount.textContent = `${filtered.length} transaksi`;
+            if (filtered.length === 0) {
+                keuanganListContainer.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada transaksi.</td></tr>';
+                return;
+            }
+            let html = '';
+            [...filtered].reverse().forEach(k => {
+                const isMasuk = k.jenis === 'masuk';
+                html += `<tr>
+                    <td data-label="Tanggal">${k.tanggal || '-'}</td>
+                    <td data-label="Jenis"><span class="badge ${isMasuk ? 'badge-green' : 'badge-red'}">${isMasuk ? '💵 Masuk' : '💸 Keluar'}</span></td>
+                    <td data-label="Kategori">${escapeHtml(k.kategori || '-')}</td>
+                    <td data-label="Keterangan">${escapeHtml(k.keterangan || '-')}</td>
+                    <td data-label="Metode">${escapeHtml(k.metode || '-')}</td>
+                    <td data-label="Jumlah" style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
+                    <td style="text-align:right;"><button class="delete-btn" onclick="deleteKeuangan('${k.id}')">✕</button></td>
+                </tr>`;
+            });
+            keuanganListContainer.innerHTML = html;
+        }
+        btnTambahKeuangan.addEventListener('click', function() {
+            const jenis = keuJenis.value;
+            const kategori = keuKategori.value;
+            const jumlah = parseFloat(keuJumlah.value) || 0;
+            const keterangan = keuKeterangan.value.trim();
+            const tanggal = keuTanggal.value || getTanggalSekarang();
+            const metode = keuMetode.value;
+            if (jumlah <= 0) { alert('Jumlah harus > 0'); keuJumlah.focus(); return; }
+            const transaksi = {
+                id: 'keu_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                jenis, kategori, jumlah, keterangan, tanggal, metode,
+                inputBy: currentUser ? currentUser.namaOperator || currentUser.username : 'unknown'
+            };
+            keuanganList.push(transaksi);
+            saveKeuangan();
+            keuJumlah.value = ''; keuKeterangan.value = '';
+            updateSaldo(); renderKeuangan(); renderDashboard();
+            if (apiOnline) apiCall('addKeuangan', transaksi, 'POST');
+            alert('✅ Transaksi berhasil disimpan!');
+        });
+        window.deleteKeuangan = function(id) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            if (!confirm('Hapus transaksi ini?')) return;
+            keuanganList = keuanganList.filter(k => k.id !== id);
+            saveKeuangan(); updateSaldo(); renderKeuangan(); renderDashboard();
+            if (apiOnline) apiCall('deleteKeuangan', { id }, 'POST');
+        };
+        filterKeuTanggal.addEventListener('change', function() { filterKeuTanggalValue = filterKeuTanggal.value; renderKeuangan(); });
+        filterKeuJenis.addEventListener('change', function() { filterKeuJenisValue = filterKeuJenis.value; renderKeuangan(); });
+        btnResetFilterKeu.addEventListener('click', function() {
+            filterKeuTanggal.value = ''; filterKeuJenis.value = '';
+            filterKeuTanggalValue = ''; filterKeuJenisValue = '';
+            renderKeuangan();
+        });
+
+        // ============ USER MANAGEMENT ============
+        function renderUserList() {
+            if (currentUser.role !== 'admin') return;
+            if (userList.length === 0) {
+                userListContainer.innerHTML = '<div class="empty-state">Belum ada data user.</div>';
+                userCount.textContent = '0 user'; return;
+            }
+            userCount.textContent = userList.length + ' user';
+            let html = '';
+            userList.forEach(u => {
+                const isAktif = u.aktif !== false;
+                const isAdmin = u.role === 'admin';
+                html += `<div class="user-row">
+                    <div class="ur-info">
+                        <div class="ur-name">${isAdmin ? '👨‍💼' : '💈'} ${escapeHtml(u.namaOperator || u.username)}</div>
+                        <div class="ur-detail">@${escapeHtml(u.username)} · ${isAdmin ? 'Admin' : 'Barberman'} · ${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}</div>
+                    </div>
+                    <div class="ur-actions">
+                        <button class="btn-mini" onclick="editNamaUser('${escapeHtml(u.username)}')" title="Ubah nama">✏️</button>
+                        ${isAdmin ? '<span class="badge badge-blue">Admin</span>' :
+                            `<button class="toggle-switch ${isAktif ? 'active' : ''}" onclick="toggleAktifUser('${escapeHtml(u.username)}')" title="${isAktif ? 'Nonaktifkan' : 'Aktifkan'}"></button>`}
+                    </div>
+                </div>`;
+            });
+            userListContainer.innerHTML = html;
+        }
+        window.toggleAktifUser = function(username) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const u = userList.find(x => x.username === username);
+            if (!u) return;
+            u.aktif = u.aktif === false ? true : false;
+            renderUserList();
+            if (apiOnline) apiCall('updateUser', { username: u.username, aktif: u.aktif }, 'POST');
+        };
+        window.editNamaUser = function(username) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const u = userList.find(x => x.username === username);
+            if (!u) return;
+            const newName = prompt('Nama operator baru:', u.namaOperator || u.username);
+            if (newName === null || !newName.trim()) return;
+            u.namaOperator = newName.trim();
+            renderUserList();
+            if (apiOnline) apiCall('updateUser', { username: u.username, namaOperator: u.namaOperator }, 'POST');
+        };
+        btnSimpanShop.addEventListener('click', function() {
+            const nama = shopNama.value.trim();
+            if (!nama) { alert('Nama barbershop wajib diisi.'); return; }
+            shopProfile.nama = nama;
+            shopProfile.alamat = shopAlamat.value.trim();
+            shopProfile.hp = shopHP.value.trim();
+            saveShopProfile();
+            if (apiOnline) apiCall('updateShopProfile', shopProfile, 'POST');
+            alert('✅ Profil barbershop berhasil disimpan!');
+        });
+
+        // ============ SETTING ============
+        btnGantiPassword.addEventListener('click', async function() {
+            const oldPass = setOldPass.value;
+            const newPass = setNewPass.value;
+            const confirmPass = setConfirmPass.value;
+            if (!oldPass || !newPass || !confirmPass) { alert('Semua field wajib diisi.'); return; }
+            if (newPass.length < 4) { alert('Password baru minimal 4 karakter.'); return; }
+            if (newPass !== confirmPass) { alert('Konfirmasi password tidak sama.'); return; }
+            if (!apiOnline) await checkApi();
+            if (!apiOnline) { alert('Server tidak dapat dijangkau.'); return; }
+            btnGantiPassword.disabled = true;
+            btnGantiPassword.innerHTML = '<span>⏳</span> Menyimpan...';
+            const res = await apiCall('changePassword', {
+                username: currentUser.username,
+                oldPassword: oldPass,
+                newPassword: newPass
+            }, 'POST');
+            btnGantiPassword.disabled = false;
+            btnGantiPassword.innerHTML = '<span>🔐</span> Simpan Password Baru';
+            if (res && res.ok) {
+                alert('✅ Password berhasil diubah!');
+                setOldPass.value = ''; setNewPass.value = ''; setConfirmPass.value = '';
+            } else {
+                alert('❌ ' + (res.message || 'Gagal ganti password.'));
+            }
+        });
+
+        // ============ CCTV ============
+        btnTambahCctv.addEventListener('click', async function() {
+            const nama = elCctvNama.value.trim();
+            const jamMulai = elCctvMulai.value;
+            const jamSelesai = elCctvSelesai.value;
+            const tanggal = elCctvTanggal.value;
+            if (!nama || !jamMulai || !jamSelesai || !tanggal) { alert('Semua field CCTV wajib diisi.'); return; }
+            if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) { alert('Jam selesai harus > jam mulai.'); return; }
+            const cctvBaru = { id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6), nama, jamMulai, jamSelesai, tanggal };
+            cctvList.push(cctvBaru);
+            elCctvNama.value = '';
+            renderCctvList(); renderLaporan();
+            if (apiOnline) apiCall('addCctv', cctvBaru, 'POST');
+        });
 
         // ============ DELETE ============
         window.deleteNota = async function(id) {
-            if (currentUser.role !== 'admin') { alert('Hanya admin yang bisa menghapus nota.'); return; }
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             if (!confirm('Hapus nota ini?')) return;
             notaList = notaList.filter(n => n.id !== id);
             renderAll();
-            if (apiOnline) {
-                const res = await apiCall('deleteNota', { id }, 'POST');
-                if (!res || !res.ok) alert('⚠️ Gagal hapus di server. Coba refresh.');
-            }
+            if (apiOnline) apiCall('deleteNota', { id }, 'POST');
         };
         window.deleteCctv = async function(id) {
-            if (!confirm('Hapus referensi CCTV ini?')) return;
+            if (!confirm('Hapus CCTV ini?')) return;
             cctvList = cctvList.filter(c => c.id !== id);
             renderAll();
-            if (apiOnline) {
-                const res = await apiCall('deleteCctv', { id }, 'POST');
-                if (!res || !res.ok) alert('⚠️ Gagal hapus di server.');
-            }
+            if (apiOnline) apiCall('deleteCctv', { id }, 'POST');
         };
         window.cetakNotaById = function(id) {
             const nota = notaList.find(n => n.id === id);
             if (nota) bukaModalCetak(nota);
         };
 
-        // ============ TAMBAH CCTV ============
-        btnTambahCctv.addEventListener('click', async function() {
-            const nama = elCctvNama.value.trim();
-            const jamMulai = elCctvMulai.value;
-            const jamSelesai = elCctvSelesai.value;
-            const tanggal = elCctvTanggal.value;
-            if (!nama) { alert('Nama CCTV harus diisi.'); return; }
-            if (!jamMulai || !jamSelesai) { alert('Jam CCTV harus diisi.'); return; }
-            if (!tanggal) { alert('Tanggal CCTV harus diisi.'); return; }
-            if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) { alert('Jam selesai harus > jam mulai.'); return; }
-
-            const cctvBaru = {
-                id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama, jamMulai, jamSelesai, tanggal
-            };
-            cctvList.push(cctvBaru);
-            elCctvNama.value = '';
-            renderAll();
-
-            if (apiOnline) {
-                const res = await apiCall('addCctv', cctvBaru, 'POST');
-                if (!res || !res.ok) alert('⚠️ Gagal simpan CCTV ke server.');
-            }
-        });
+        // ============ RENDER ALL ============
+        function renderAll() {
+            updateFilterBarbermanOptions();
+            renderNotaList();
+            renderCctvList();
+            renderLaporan();
+            renderDashboard();
+        }
 
         // ============ INIT ============
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
+        keuTanggal.value = today;
 
-        loadAuth();
+        loadAuth(); loadKeuangan(); loadShopProfile();
         checkApi().then(() => {
             if (currentUser) {
+                // Cek user masih aktif
+                if (currentUser.role === 'barberman') {
+                    // akan divalidasi di server saat load
+                }
                 showApp();
             } else {
                 showLoginPage();
             }
         });
-
-        // Re-check API tiap 60 detik
         setInterval(checkApi, 60000);
     })();
 </script>
