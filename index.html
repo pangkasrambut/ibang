@@ -164,6 +164,8 @@
         .btn-red { background: #dc2626; }
         .btn-red:hover, .btn-red:active { background: #b91c1c; }
         .btn:disabled.btn-red { background: #cbd5e1; }
+        .btn-orange { background: #ea580c; }
+        .btn-orange:hover, .btn-orange:active { background: #c2410c; }
 
         /* PANEL JAM */
         .clock-panel {
@@ -177,11 +179,7 @@
             gap: 1rem;
             align-items: center;
         }
-        .clock-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
+        .clock-info { display: flex; flex-direction: column; gap: 0.6rem; }
         .clock-status {
             display: inline-block;
             background: rgba(255,255,255,0.15);
@@ -209,11 +207,7 @@
             line-height: 1;
         }
         .clock-row .val.active { color: #fbbf24; }
-        .clock-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
-        }
+        .clock-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
         .clock-actions .btn { margin-top: 0; }
 
         /* DAFTAR NOTA & CCTV */
@@ -257,6 +251,20 @@
             flex-wrap: wrap;
             gap: 8px;
             line-height: 1.4;
+        }
+        .nota-item .layanan-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .nota-item .layanan-tag {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 600;
         }
         .nota-actions { display: flex; gap: 6px; flex-shrink: 0; }
         .btn-mini {
@@ -321,7 +329,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            min-width: 640px;
+            min-width: 700px;
         }
         th {
             background: #f1f5f9;
@@ -338,7 +346,7 @@
             padding: 12px 14px;
             border-bottom: 1px solid #edf2f7;
             color: #1e293b;
-            vertical-align: middle;
+            vertical-align: top;
         }
         tr:last-child td { border-bottom: none; }
 
@@ -381,6 +389,22 @@
             margin-bottom: 8px;
             padding-bottom: 8px;
             border-bottom: 2px solid #e2e8f0;
+        }
+        .laporan-card .layanan-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .laporan-card .layanan-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 2px 0;
+            color: #334155;
+        }
+        .laporan-card .layanan-line .price {
+            color: #f59e0b;
+            font-weight: 700;
         }
 
         .match-status {
@@ -469,7 +493,7 @@
         .modal {
             background: white;
             border-radius: 20px;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
             max-height: 92vh;
             overflow-y: auto;
@@ -488,6 +512,15 @@
             margin-bottom: 1.25rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid #f1f5f9;
+            position: sticky;
+            top: -1.5rem;
+            background: white;
+            z-index: 2;
+            margin-left: -1.5rem;
+            margin-right: -1.5rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            padding-top: 0.5rem;
         }
         .modal-header h2 {
             font-size: 1.15rem;
@@ -508,6 +541,7 @@
             color: #64748b;
             font-weight: 700;
             line-height: 1;
+            flex-shrink: 0;
         }
         .modal-close:hover { background: #e2e8f0; }
 
@@ -538,25 +572,25 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* Layanan picker */
+        /* Layanan checkbox grid */
         .layanan-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 0.6rem;
+            gap: 0.5rem;
             margin-bottom: 1rem;
         }
         .layanan-option {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
             border-radius: 14px;
-            padding: 0.85rem 1rem;
+            padding: 0.75rem 0.9rem;
             cursor: pointer;
             transition: 0.15s;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             touch-action: manipulation;
+            user-select: none;
         }
         .layanan-option:hover, .layanan-option:active {
             border-color: #f59e0b;
@@ -567,34 +601,67 @@
             background: #1e293b;
             color: white;
         }
+        .layanan-option .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: white;
+            transition: 0.15s;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+        }
+        .layanan-option.selected .checkbox {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+        .layanan-option .lo-info {
+            flex: 1;
+            min-width: 0;
+        }
         .layanan-option .lo-name {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
+            line-height: 1.3;
+            word-break: break-word;
         }
         .layanan-option .lo-price {
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: #f59e0b;
             white-space: nowrap;
+            margin-left: 6px;
         }
         .layanan-option.selected .lo-price { color: #fbbf24; }
-        .layanan-option .lo-range {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            font-weight: 500;
-            display: block;
-            margin-top: 2px;
-        }
-        .layanan-option.selected .lo-range { color: #cbd5e1; }
 
-        .custom-price-box {
-            background: #fffbeb;
-            border: 2px dashed #f59e0b;
+        /* Total box */
+        .total-box {
+            background: #1e293b;
+            color: white;
             border-radius: 14px;
-            padding: 1rem;
-            margin-top: 0.75rem;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
         }
-        .custom-price-box label { color: #92400e; }
+        .total-box .tb-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            font-weight: 700;
+        }
+        .total-box .tb-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fbbf24;
+        }
 
         /* Nota preview thermal 58mm */
         .nota-thermal-wrapper {
@@ -626,7 +693,7 @@
             justify-content: space-between;
             gap: 4px;
         }
-        .nota-thermal .nt-row .nt-label { flex: 1; }
+        .nota-thermal .nt-row .nt-label { flex: 1; word-break: break-word; }
         .nota-thermal .nt-row .nt-value {
             text-align: right;
             white-space: nowrap;
@@ -642,6 +709,16 @@
             font-size: 7pt;
             text-align: center;
             margin-top: 4px;
+        }
+        .nota-thermal .nt-item-name {
+            font-size: 9pt;
+            word-break: break-word;
+        }
+        .nota-thermal .nt-item-price {
+            font-size: 9pt;
+            text-align: right;
+            white-space: nowrap;
+            padding-left: 4px;
         }
 
         /* PRINT */
@@ -731,6 +808,9 @@
             .clock-actions { grid-template-columns: 1fr; }
             .session-info { grid-template-columns: 1fr 1fr 1fr; padding: 0.75rem; }
             .session-info .si-box .si-val { font-size: 0.95rem; }
+            .layanan-option { padding: 0.65rem 0.75rem; }
+            .layanan-option .lo-name { font-size: 0.82rem; }
+            .layanan-option .lo-price { font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -744,7 +824,7 @@
         Klik <b>MULAI</b> saat pelanggan datang · Klik <b>SELESAI</b> saat selesai → pilih layanan → cetak nota
     </div>
 
-    <!-- PANEL JAM (BUKAN TIMER) -->
+    <!-- PANEL JAM -->
     <div class="clock-panel">
         <div class="clock-info">
             <div class="clock-status" id="clockStatus">⏸️ Menunggu pelanggan</div>
@@ -767,7 +847,7 @@
         </div>
     </div>
 
-    <!-- FORM MANUAL (opsional, tetap ada) -->
+    <!-- FORM MANUAL + CCTV -->
     <div class="grid-2">
         <div class="card">
             <div class="card-title">
@@ -777,20 +857,15 @@
                 <label>Nama Pelanggan</label>
                 <input type="text" id="namaPelanggan" placeholder="Contoh: Budi Santoso" autocomplete="off">
             </div>
-            <div class="row-2">
-                <div class="form-group">
-                    <label>Layanan</label>
-                    <select id="layanan">
-                        <option value="Potong Rambut" data-harga="30000">Potong Rambut - Rp 30.000</option>
-                        <option value="Semir Rambut Hitam" data-harga="120000" data-range="true">Semir Rambut Hitam - Rp 120.000+</option>
-                        <option value="Hairlight" data-harga="150000" data-range="true">Hairlight - Rp 150.000+</option>
-                        <option value="Perming" data-harga="200000">Perming - Rp 200.000</option>
-                    </select>
+            <div class="form-group">
+                <label>Layanan (bisa pilih lebih dari 1)</label>
+                <div class="layanan-grid" id="manualLayananGrid">
+                    <!-- diisi JS -->
                 </div>
-                <div class="form-group">
-                    <label>Harga (Rp)</label>
-                    <input type="number" id="harga" placeholder="30000" min="0" step="5000" inputmode="numeric">
-                </div>
+            </div>
+            <div class="total-box">
+                <span class="tb-label">Total</span>
+                <span class="tb-value" id="manualTotal">Rp 0</span>
             </div>
             <div class="row-2">
                 <div class="form-group">
@@ -870,7 +945,7 @@
                     <tr>
                         <th>Pelanggan</th>
                         <th>Layanan</th>
-                        <th>Harga</th>
+                        <th>Total</th>
                         <th>Tanggal</th>
                         <th>Jam Nota</th>
                         <th>Jam CCTV</th>
@@ -935,45 +1010,14 @@
             <input type="text" id="modalNamaPelanggan" placeholder="Kosongkan jika tidak perlu" autocomplete="off">
         </div>
 
-        <label>Pilih Layanan</label>
-        <div class="layanan-grid" id="layananGrid">
-            <div class="layanan-option" data-nama="Potong Rambut" data-harga="30000" data-range="false">
-                <div>
-                    <div class="lo-name">Potong Rambut</div>
-                    <div class="lo-range">Tarif tetap</div>
-                </div>
-                <div class="lo-price">Rp 30.000</div>
-            </div>
-            <div class="layanan-option" data-nama="Semir Rambut Hitam" data-harga="120000" data-range="true">
-                <div>
-                    <div class="lo-name">Semir Rambut Hitam</div>
-                    <div class="lo-range">Rp 120.000 – 150.000</div>
-                </div>
-                <div class="lo-price">Rp 120.000+</div>
-            </div>
-            <div class="layanan-option" data-nama="Hairlight" data-harga="150000" data-range="true">
-                <div>
-                    <div class="lo-name">Hairlight</div>
-                    <div class="lo-range">Rp 150.000 – 200.000</div>
-                </div>
-                <div class="lo-price">Rp 150.000+</div>
-            </div>
-            <div class="layanan-option" data-nama="Perming" data-harga="200000" data-range="false">
-                <div>
-                    <div class="lo-name">Perming</div>
-                    <div class="lo-range">Tarif tetap</div>
-                </div>
-                <div class="lo-price">Rp 200.000</div>
-            </div>
+        <label>Pilih Layanan (bisa lebih dari 1)</label>
+        <div class="layanan-grid" id="modalLayananGrid">
+            <!-- diisi JS -->
         </div>
 
-        <!-- Custom price muncul jika layanan range dipilih -->
-        <div class="custom-price-box" id="customPriceBox" style="display:none;">
-            <label>Masukkan Tarif Custom (Rp)</label>
-            <input type="number" id="customPrice" placeholder="Contoh: 135000" min="0" step="5000" inputmode="numeric">
-            <div class="text-muted" style="margin-top:6px; color:#92400e;">
-                Range: <span id="customRangeHint">Rp 0 – Rp 0</span>
-            </div>
+        <div class="total-box">
+            <span class="tb-label">Total (<span id="modalJumlahLayanan">0</span> layanan)</span>
+            <span class="tb-value" id="modalTotal">Rp 0</span>
         </div>
 
         <button class="btn btn-orange" id="btnOkLayanan" style="margin-top:1rem;">
@@ -994,7 +1038,7 @@
             <!-- diisi JS -->
         </div>
 
-        <button class="btn btn-print" id="btnPrint">
+        <button class="btn btn-print" id="btnPrint" style="background:#0f172a;">
             <span>🖨️</span> CETAK NOTA (Thermal 58mm)
         </button>
         <button class="btn btn-outline" id="btnTutupCetak" style="margin-top:0.5rem;">
@@ -1005,23 +1049,35 @@
 
 <script>
     (function() {
+        // ============ MASTER LAYANAN ============
+        const LAYANAN_MASTER = [
+            { id: 'pr', nama: 'Potong Rambut', harga: 30000 },
+            { id: 'srph', nama: 'Semir Rambut Pendek Hitam', harga: 120000 },
+            { id: 'srph_panjang', nama: 'Semir Rambut Panjang Hitam', harga: 150000 },
+            { id: 'srpw', nama: 'Semir Rambut Pendek Warna', harga: 120000 },
+            { id: 'srpw_panjang', nama: 'Semir Rambut Panjang Warna', harga: 150000 },
+            { id: 'hl_pendek', nama: 'Hairlight Pendek', harga: 150000 },
+            { id: 'hl_panjang', nama: 'Hairlight Panjang', harga: 200000 },
+            { id: 'perming', nama: 'Perming', harga: 200000 }
+        ];
+
         // ============ STATE ============
         let notaList = [];
         let cctvList = [];
-        let sesiAktif = null;          // { jamMulai, tanggal }
-        let layananDipilih = null;     // { nama, harga, range }
-        let notaTerakhir = null;       // nota yang barusan dibuat (untuk cetak)
+        let sesiAktif = null;
+        let layananDipilihModal = [];  // array id layanan
+        let layananDipilihManual = []; // array id layanan (untuk form manual)
 
         const STORAGE_KEY = 'barbershop_sesi_aktif';
 
         // ============ ELEMEN ============
         const elNama = document.getElementById('namaPelanggan');
-        const elLayanan = document.getElementById('layanan');
-        const elHarga = document.getElementById('harga');
         const elJamMulai = document.getElementById('jamMulai');
         const elJamSelesai = document.getElementById('jamSelesai');
         const elTanggalNota = document.getElementById('tanggalNota');
         const btnTambahNota = document.getElementById('btnTambahNota');
+        const manualLayananGrid = document.getElementById('manualLayananGrid');
+        const manualTotal = document.getElementById('manualTotal');
 
         const elCctvNama = document.getElementById('cctvNama');
         const elCctvMulai = document.getElementById('cctvMulai');
@@ -1046,10 +1102,9 @@
         const modalJamSelesai = document.getElementById('modalJamSelesai');
         const modalDurasi = document.getElementById('modalDurasi');
         const modalNamaPelanggan = document.getElementById('modalNamaPelanggan');
-        const layananGrid = document.getElementById('layananGrid');
-        const customPriceBox = document.getElementById('customPriceBox');
-        const customPrice = document.getElementById('customPrice');
-        const customRangeHint = document.getElementById('customRangeHint');
+        const modalLayananGrid = document.getElementById('modalLayananGrid');
+        const modalTotal = document.getElementById('modalTotal');
+        const modalJumlahLayanan = document.getElementById('modalJumlahLayanan');
         const btnOkLayanan = document.getElementById('btnOkLayanan');
 
         const modalCetak = document.getElementById('modalCetak');
@@ -1097,7 +1152,6 @@
             return `${y}-${m}-${day}`;
         }
         function getTanggalFormatted(tgl) {
-            // tgl: YYYY-MM-DD → DD/MM/YYYY
             if (!tgl) return '-';
             const [y, m, d] = tgl.split('-');
             return `${d}/${m}/${y}`;
@@ -1107,17 +1161,56 @@
             const d = new Date(tgl);
             return hari[d.getDay()] || '-';
         }
+        function getLayananById(id) {
+            return LAYANAN_MASTER.find(l => l.id === id);
+        }
+        function hitungTotalLayanan(ids) {
+            return ids.reduce((sum, id) => {
+                const l = getLayananById(id);
+                return sum + (l ? l.harga : 0);
+            }, 0);
+        }
 
-        // ============ SESI (MULAI / SELESAI) ============
+        // ============ BUILD LAYANAN CHECKBOX ============
+        function buildLayananCheckboxes(container, selectedIds, onChange) {
+            let html = '';
+            LAYANAN_MASTER.forEach(l => {
+                const isSelected = selectedIds.includes(l.id);
+                html += `
+                    <div class="layanan-option ${isSelected ? 'selected' : ''}" data-id="${l.id}">
+                        <div class="checkbox">${isSelected ? '✓' : ''}</div>
+                        <div class="lo-info">
+                            <div class="lo-name">${escapeHtml(l.nama)}</div>
+                        </div>
+                        <div class="lo-price">${formatRupiah(l.harga)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            container.querySelectorAll('.layanan-option').forEach(opt => {
+                opt.addEventListener('click', function() {
+                    const id = opt.dataset.id;
+                    const idx = selectedIds.indexOf(id);
+                    if (idx > -1) {
+                        selectedIds.splice(idx, 1);
+                    } else {
+                        selectedIds.push(id);
+                    }
+                    // update UI
+                    opt.classList.toggle('selected');
+                    const cb = opt.querySelector('.checkbox');
+                    cb.textContent = opt.classList.contains('selected') ? '✓' : '';
+                    if (onChange) onChange(selectedIds);
+                });
+            });
+        }
+
+        // ============ SESI ============
         function loadSesiFromCache() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) {
-                    sesiAktif = JSON.parse(raw);
-                }
-            } catch (e) {
-                sesiAktif = null;
-            }
+                if (raw) sesiAktif = JSON.parse(raw);
+            } catch (e) { sesiAktif = null; }
             updateClockUI();
         }
         function saveSesiToCache() {
@@ -1163,11 +1256,8 @@
                 alert('Sesi sedang berjalan. Klik SELESAI dulu.');
                 return;
             }
-            // Kalau ada sesi selesai yang belum dibuat nota, tanya konfirmasi
             if (sesiAktif && sesiAktif.jamSelesai) {
-                if (!confirm('Masih ada sesi selesai yang belum dibuat nota. Mulai sesi baru?')) {
-                    return;
-                }
+                if (!confirm('Masih ada sesi selesai yang belum dibuat nota. Mulai sesi baru?')) return;
             }
             sesiAktif = {
                 jamMulai: getJamSekarang(),
@@ -1176,7 +1266,6 @@
             };
             saveSesiToCache();
             updateClockUI();
-            // getar feedback kalau didukung
             if (navigator.vibrate) navigator.vibrate(50);
         });
 
@@ -1189,12 +1278,10 @@
             saveSesiToCache();
             updateClockUI();
             if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-
-            // Buka modal pilih layanan
             bukaModalLayanan();
         });
 
-        // ============ MODAL PILIH LAYANAN ============
+        // ============ MODAL LAYANAN ============
         function bukaModalLayanan() {
             if (!sesiAktif || !sesiAktif.jamSelesai) {
                 alert('Sesi belum selesai.');
@@ -1202,21 +1289,22 @@
             }
             modalJamMulai.textContent = sesiAktif.jamMulai;
             modalJamSelesai.textContent = sesiAktif.jamSelesai;
-            const durasi = timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai);
-            modalDurasi.textContent = (durasi >= 0 ? durasi : 0) + ' mnt';
+            const durasi = Math.max(0, timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai));
+            modalDurasi.textContent = durasi + ' mnt';
             modalNamaPelanggan.value = '';
 
-            // reset pilihan
-            layananDipilih = null;
-            document.querySelectorAll('.layanan-option').forEach(el => el.classList.remove('selected'));
-            customPriceBox.style.display = 'none';
-            customPrice.value = '';
+            layananDipilihModal = [];
+            buildLayananCheckboxes(modalLayananGrid, layananDipilihModal, function(ids) {
+                const total = hitungTotalLayanan(ids);
+                modalTotal.textContent = formatRupiah(total);
+                modalJumlahLayanan.textContent = ids.length;
+            });
+            modalTotal.textContent = 'Rp 0';
+            modalJumlahLayanan.textContent = '0';
 
             modalLayanan.classList.add('active');
         }
-        function tutupModalLayanan() {
-            modalLayanan.classList.remove('active');
-        }
+        function tutupModalLayanan() { modalLayanan.classList.remove('active'); }
 
         modalCloseBtn.addEventListener('click', function() {
             if (confirm('Batalkan pemilihan layanan? Sesi selesai akan tetap tersimpan.')) {
@@ -1225,86 +1313,39 @@
         });
         modalLayanan.addEventListener('click', function(e) {
             if (e.target === modalLayanan) {
-                if (confirm('Batalkan pemilihan layanan?')) {
-                    tutupModalLayanan();
-                }
+                if (confirm('Batalkan pemilihan layanan?')) tutupModalLayanan();
             }
         });
 
-        // Pilih layanan
-        document.querySelectorAll('.layanan-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                document.querySelectorAll('.layanan-option').forEach(el => el.classList.remove('selected'));
-                opt.classList.add('selected');
-                layananDipilih = {
-                    nama: opt.dataset.nama,
-                    harga: parseInt(opt.dataset.harga),
-                    range: opt.dataset.range === 'true'
-                };
-                if (layananDipilih.range) {
-                    customPriceBox.style.display = 'block';
-                    customPrice.value = layananDipilih.harga;
-                    // hint range
-                    let min, max;
-                    if (layananDipilih.nama === 'Semir Rambut Hitam') { min = 120000; max = 150000; }
-                    else if (layananDipilih.nama === 'Hairlight') { min = 150000; max = 200000; }
-                    else { min = layananDipilih.harga; max = layananDipilih.harga; }
-                    customRangeHint.textContent = `${formatRupiah(min)} – ${formatRupiah(max)}`;
-                    customPrice.focus();
-                } else {
-                    customPriceBox.style.display = 'none';
-                }
-            });
-        });
-
-        // OK → buat nota
         btnOkLayanan.addEventListener('click', function() {
-            if (!layananDipilih) {
-                alert('Pilih layanan dulu.');
+            if (layananDipilihModal.length === 0) {
+                alert('Pilih minimal 1 layanan.');
                 return;
             }
-            let hargaFinal = layananDipilih.harga;
-            if (layananDipilih.range) {
-                const c = parseFloat(customPrice.value);
-                if (isNaN(c) || c <= 0) {
-                    alert('Masukkan tarif custom dengan benar.');
-                    return;
-                }
-                // validasi range
-                let min, max;
-                if (layananDipilih.nama === 'Semir Rambut Hitam') { min = 120000; max = 150000; }
-                else if (layananDipilih.nama === 'Hairlight') { min = 150000; max = 200000; }
-                else { min = 0; max = Infinity; }
-                if (c < min || c > max) {
-                    if (!confirm(`Tarif ${formatRupiah(c)} di luar range ${formatRupiah(min)} – ${formatRupiah(max)}. Lanjutkan?`)) {
-                        return;
-                    }
-                }
-                hargaFinal = c;
-            }
-
+            const layananArr = layananDipilihModal.map(id => {
+                const l = getLayananById(id);
+                return { nama: l.nama, harga: l.harga };
+            });
+            const total = layananArr.reduce((s, l) => s + l.harga, 0);
             const nama = modalNamaPelanggan.value.trim() || 'Pelanggan';
+
             const notaBaru = {
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
                 nama: nama,
-                layanan: layananDipilih.nama,
-                harga: hargaFinal,
+                layanan: layananArr,     // array {nama, harga}
+                total: total,
                 jamMulai: sesiAktif.jamMulai,
                 jamSelesai: sesiAktif.jamSelesai,
                 tanggal: sesiAktif.tanggal || getTanggalSekarang()
             };
             notaList.push(notaBaru);
-            notaTerakhir = notaBaru;
 
-            // hapus sesi aktif dari cache
             sesiAktif = null;
             saveSesiToCache();
             updateClockUI();
 
             tutupModalLayanan();
             renderAll();
-
-            // buka modal cetak
             bukaModalCetak(notaBaru);
         });
 
@@ -1313,6 +1354,17 @@
             const tglFormatted = getTanggalFormatted(nota.tanggal);
             const hariFormatted = getHariFormatted(nota.tanggal);
             const durasi = Math.max(0, timeToMinutes(nota.jamSelesai) - timeToMinutes(nota.jamMulai));
+
+            let itemsHtml = '';
+            nota.layanan.forEach(l => {
+                itemsHtml += `
+                    <div class="nt-row nt-bold">
+                        <span class="nt-label nt-item-name">${escapeHtml(l.nama)}</span>
+                        <span class="nt-value nt-item-price">${formatRupiah(l.harga)}</span>
+                    </div>
+                `;
+            });
+
             return `
                 <div class="nota-thermal" id="notaThermal">
                     <div class="nt-center nt-bold nt-title">BARBERSHOP</div>
@@ -1328,9 +1380,10 @@
                     <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
                     <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
                     <div class="nt-line"></div>
-                    <div class="nt-row nt-bold"><span class="nt-label">${escapeHtml(nota.layanan)}</span><span class="nt-value">${formatRupiah(nota.harga)}</span></div>
+                    <div class="nt-bold" style="margin-bottom:4px;">RINCIAN LAYANAN:</div>
+                    ${itemsHtml}
                     <div class="nt-line"></div>
-                    <div class="nt-row nt-total"><span class="nt-label">TOTAL</span><span class="nt-value">${formatRupiah(nota.harga)}</span></div>
+                    <div class="nt-row nt-total"><span class="nt-label">TOTAL</span><span class="nt-value">${formatRupiah(nota.total)}</span></div>
                     <div class="nt-line"></div>
                     <div class="nt-footer">Terima kasih atas kunjungan Anda<br>Selamat datang kembali 🙏</div>
                 </div>
@@ -1341,19 +1394,14 @@
             notaPreviewWrapper.innerHTML = buatHtmlNota(nota);
             modalCetak.classList.add('active');
         }
-        function tutupModalCetak() {
-            modalCetak.classList.remove('active');
-        }
+        function tutupModalCetak() { modalCetak.classList.remove('active'); }
 
         modalCetakClose.addEventListener('click', tutupModalCetak);
         btnTutupCetak.addEventListener('click', tutupModalCetak);
         modalCetak.addEventListener('click', function(e) {
             if (e.target === modalCetak) tutupModalCetak();
         });
-
-        btnPrint.addEventListener('click', function() {
-            window.print();
-        });
+        btnPrint.addEventListener('click', function() { window.print(); });
 
         // ============ CCTV MATCH ============
         function cariCctvMatch(nota) {
@@ -1382,8 +1430,8 @@
                 );
                 return { status: 'match', matchedCctv: match, selisih };
             }
-            const adaCctvTanggalSama = cctvList.some(c => c.tanggal === nota.tanggal);
-            return { status: adaCctvTanggalSama ? 'mismatch' : 'no-cctv' };
+            const ada = cctvList.some(c => c.tanggal === nota.tanggal);
+            return { status: ada ? 'mismatch' : 'no-cctv' };
         }
 
         // ============ RENDER ============
@@ -1395,18 +1443,20 @@
             }
             notaCount.textContent = `${notaList.length} nota`;
             let html = '';
-            // tampilkan dari yang terbaru
             [...notaList].reverse().forEach(n => {
+                const layananTags = n.layanan.map(l =>
+                    `<span class="layanan-tag">${escapeHtml(l.nama)} · ${formatRupiah(l.harga)}</span>`
+                ).join('');
                 html += `
                     <div class="nota-item">
                         <div class="info">
                             <span class="name">${escapeHtml(n.nama)}</span>
                             <div class="detail">
-                                <span>✂️ ${escapeHtml(n.layanan)}</span>
-                                <span>💰 ${formatRupiah(n.harga)}</span>
+                                <span>💰 Total: ${formatRupiah(n.total)}</span>
                                 <span>⏰ ${n.jamMulai}-${n.jamSelesai}</span>
                                 <span>📅 ${n.tanggal || '-'}</span>
                             </div>
+                            <div class="layanan-tags">${layananTags}</div>
                         </div>
                         <div class="nota-actions">
                             <button class="btn-mini print" onclick="cetakNotaById('${n.id}')" title="Cetak">🖨️</button>
@@ -1455,9 +1505,8 @@
             }
             let total = 0, cocok = 0, tidakCocok = 0;
             let rows = '', cards = '';
-            // urutkan terbaru dulu
             [...notaList].reverse().forEach(n => {
-                total += Number(n.harga) || 0;
+                total += Number(n.total) || 0;
                 const m = getMatchStatus(n);
                 let statusHtml = '', cctvJam = '-';
                 if (m.status === 'match') {
@@ -1474,11 +1523,17 @@
                     tidakCocok++;
                     statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`;
                 }
+
+                const layananStr = n.layanan.map(l => `${l.nama} (${formatRupiah(l.harga)})`).join('<br>');
+                const layananMobile = n.layanan.map(l =>
+                    `<div class="layanan-line"><span>${escapeHtml(l.nama)}</span><span class="price">${formatRupiah(l.harga)}</span></div>`
+                ).join('');
+
                 rows += `
                     <tr>
                         <td><strong>${escapeHtml(n.nama)}</strong></td>
-                        <td>${escapeHtml(n.layanan)}</td>
-                        <td>${formatRupiah(n.harga)}</td>
+                        <td>${layananStr}</td>
+                        <td><strong>${formatRupiah(n.total)}</strong></td>
                         <td>${n.tanggal || '-'}</td>
                         <td>${n.jamMulai}-${n.jamSelesai}</td>
                         <td>${cctvJam}</td>
@@ -1488,8 +1543,13 @@
                 cards += `
                     <div class="laporan-card">
                         <div class="card-name">${escapeHtml(n.nama)}</div>
-                        <div class="row"><span class="lbl">Layanan</span><span class="val">${escapeHtml(n.layanan)}</span></div>
-                        <div class="row"><span class="lbl">Harga</span><span class="val">${formatRupiah(n.harga)}</span></div>
+                        <div class="row">
+                            <span class="lbl">Layanan</span>
+                            <span class="val">
+                                <div class="layanan-list">${layananMobile}</div>
+                            </span>
+                        </div>
+                        <div class="row"><span class="lbl">Total</span><span class="val"><strong>${formatRupiah(n.total)}</strong></span></div>
                         <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
                         <div class="row"><span class="lbl">Jam Nota</span><span class="val">${n.jamMulai}-${n.jamSelesai}</span></div>
                         <div class="row"><span class="lbl">Jam CCTV</span><span class="val">${cctvJam}</span></div>
@@ -1528,39 +1588,46 @@
         };
 
         // ============ FORM MANUAL ============
-        // Auto-isi harga saat pilih layanan di form manual
-        elLayanan.addEventListener('change', function() {
-            const opt = elLayanan.options[elLayanan.selectedIndex];
-            const h = opt.dataset.harga;
-            if (h && elLayanan.value !== 'Semir Rambut Hitam' && elLayanan.value !== 'Hairlight') {
-                elHarga.value = h;
-            } else if (h) {
-                elHarga.value = h;
-            }
+        function updateManualTotal() {
+            const total = hitungTotalLayanan(layananDipilihManual);
+            manualTotal.textContent = formatRupiah(total);
+        }
+        buildLayananCheckboxes(manualLayananGrid, layananDipilihManual, function() {
+            updateManualTotal();
         });
 
         btnTambahNota.addEventListener('click', function() {
             const nama = elNama.value.trim();
-            const layanan = elLayanan.value;
-            const harga = parseFloat(elHarga.value);
             const jamMulai = elJamMulai.value;
             const jamSelesai = elJamSelesai.value;
             const tanggal = elTanggalNota.value;
 
             if (!nama) { alert('Nama pelanggan harus diisi.'); return; }
-            if (isNaN(harga) || harga <= 0) { alert('Harga harus diisi dengan angka positif.'); return; }
+            if (layananDipilihManual.length === 0) { alert('Pilih minimal 1 layanan.'); return; }
             if (!jamMulai || !jamSelesai) { alert('Jam mulai dan selesai harus diisi.'); return; }
             if (!tanggal) { alert('Tanggal nota harus diisi.'); return; }
             if (timeToMinutes(jamMulai) >= timeToMinutes(jamSelesai)) {
                 alert('Jam selesai harus lebih besar dari jam mulai.'); return;
             }
 
+            const layananArr = layananDipilihManual.map(id => {
+                const l = getLayananById(id);
+                return { nama: l.nama, harga: l.harga };
+            });
+            const total = layananArr.reduce((s, l) => s + l.harga, 0);
+
             notaList.push({
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                nama, layanan, harga, jamMulai, jamSelesai, tanggal
+                nama, layanan: layananArr, total, jamMulai, jamSelesai, tanggal
             });
+
+            // reset
             elNama.value = '';
-            elHarga.value = '';
+            layananDipilihManual = [];
+            buildLayananCheckboxes(manualLayananGrid, layananDipilihManual, function() {
+                updateManualTotal();
+            });
+            updateManualTotal();
             renderAll();
         });
 
@@ -1593,9 +1660,18 @@
         // Seed contoh
         (function seed() {
             notaList.push(
-                { id: 'n1', nama: 'Budi Santoso', layanan: 'Potong Rambut', harga: 30000, jamMulai: '10:00', jamSelesai: '10:30', tanggal: today },
-                { id: 'n2', nama: 'Andi Wijaya', layanan: 'Semir Rambut Hitam', harga: 135000, jamMulai: '11:15', jamSelesai: '12:15', tanggal: today },
-                { id: 'n3', nama: 'Rudi Hartono', layanan: 'Perming', harga: 200000, jamMulai: '13:00', jamSelesai: '15:00', tanggal: today }
+                { id: 'n1', nama: 'Budi Santoso',
+                  layanan: [{nama:'Potong Rambut', harga:30000}],
+                  total: 30000, jamMulai: '10:00', jamSelesai: '10:30', tanggal: today },
+                { id: 'n2', nama: 'Andi Wijaya',
+                  layanan: [{nama:'Semir Rambut Pendek Hitam', harga:120000}],
+                  total: 120000, jamMulai: '11:15', jamSelesai: '12:15', tanggal: today },
+                { id: 'n3', nama: 'Rudi Hartono',
+                  layanan: [
+                    {nama:'Potong Rambut', harga:30000},
+                    {nama:'Perming', harga:200000}
+                  ],
+                  total: 230000, jamMulai: '13:00', jamSelesai: '15:00', tanggal: today }
             );
             cctvList.push(
                 { id: 'c1', nama: 'CCTV Kursi 1 - Budi', jamMulai: '10:05', jamSelesai: '10:28', tanggal: today },
@@ -1606,9 +1682,10 @@
 
         loadSesiFromCache();
         updateClockUI();
+        updateManualTotal();
         renderAll();
 
-        // Update tampilan jam mulai form manual sesuai jam sekarang
+        // Jam default form manual
         elJamMulai.value = getJamSekarang();
         const now = new Date();
         now.setMinutes(now.getMinutes() + 30);
