@@ -1112,7 +1112,7 @@
         <!-- REGISTER -->
         <div id="registerFormContainer" style="display:none;">
             <div class="alert-box alert-info show" style="margin-bottom:1rem;">
-                📝 Khusus <b>Barberman</b>. Admin tidak perlu register — langsung pakai <b>admin / admin123</b>.
+                📝 Khusus <b>Barberman</b>. Admin tidak perlu register </b>.
             </div>
 
             <div class="form-group">
@@ -1643,9 +1643,9 @@
                 loginFieldsContainer.style.display = 'block';
                 hideAlert();
                 if (selectedLoginRole === 'admin') {
-                    loginUsername.value = 'admin';
+                    loginUsername.value = '';
                     loginPassword.value = '';
-                    loginPassword.placeholder = 'admin123';
+                    loginPassword.placeholder = '';
                 } else {
                     loginUsername.value = '';
                     loginPassword.value = '';
