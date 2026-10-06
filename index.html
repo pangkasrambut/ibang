@@ -1387,34 +1387,7 @@
 </div>
 
 <script>
-    // ============================================================
-    // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
-    // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycby7bHELLf17LwhYcQEbsDwN4chV8IXLmZZ5eCP0iR4LNH3ZJ2OQnpxU1skI-cr1XGywRQ/exec'
-document.querySelectorAll('.toggle-password').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = btn.dataset.target;
-        const input = document.getElementById(targetId);
-        if (!input) return;
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            btn.textContent = '🙈';
-            btn.setAttribute('aria-label', 'Sembunyikan password');
-        } else {
-            input.type = 'password';
-            btn.textContent = '👁️';
-            btn.setAttribute('aria-label', 'Tampilkan password');
-        }
-
-        // Fokuskan kembali ke input agar user tetap bisa lanjut mengetik
-        input.focus();
-    });
-});';
-
-    (function() {
-        const LAYANAN_MASTER = [<script>
     // ============================================================
     // ⚠️ GANTI URL INI dengan Web App URL dari Google Apps Script
     // ============================================================
