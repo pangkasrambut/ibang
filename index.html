@@ -418,6 +418,79 @@
             margin-top: 0.5rem;
             -webkit-overflow-scrolling: touch;
         }
+
+        /* Tabel Daftar Nota */
+.nota-table-wrapper {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    margin-top: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+}
+.nota-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    min-width: 720px;
+}
+.nota-table th {
+    background: #f1f5f9;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+.nota-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #edf2f7;
+    color: #1e293b;
+    vertical-align: top;
+}
+.nota-table tr:last-child td { border-bottom: none; }
+.nota-table .cell-no {
+    font-weight: 700;
+    color: #64748b;
+    width: 40px;
+    text-align: center;
+}
+.nota-table .cell-jam {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-weight: 600;
+}
+.nota-table .cell-actions {
+    white-space: nowrap;
+    text-align: right;
+}
+.nota-table .cell-layanan {
+    max-width: 260px;
+}
+.nota-table .layanan-line-sm {
+    display: block;
+    font-size: 0.72rem;
+    color: #475569;
+    line-height: 1.5;
+}
+.nota-table .layanan-line-sm .harga {
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+/* Responsive: sembunyikan kolom tanggal & total di HP kecil */
+@media (max-width: 600px) {
+    .nota-table .col-tanggal,
+    .nota-table .col-total {
+        display: none;
+    }
+    .nota-table { min-width: 0; font-size: 0.75rem; }
+    .nota-table th,
+    .nota-table td { padding: 8px 8px; }
+}
+        
         .nota-item, .cctv-item {
             background: #f8fafc;
             border-radius: 14px;
@@ -1262,15 +1335,30 @@
     </div>
 
     <div class="card">
-        <div class="flex-between">
-            <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
-                <span>📋</span> Daftar Nota
-            </div>
-            <span class="badge badge-blue" id="notaCount">0 nota</span>
+    <div class="flex-between">
+        <div class="card-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+            <span>📋</span> Daftar Nota
         </div>
-        <div class="nota-list" id="notaListContainer"></div>
+        <span class="badge badge-blue" id="notaCount">0 nota</span>
     </div>
-
+    <div class="nota-table-wrapper">
+        <table class="nota-table">
+            <thead>
+                <tr>
+                    <th class="cell-no">No</th>
+                    <th>Jam Mulai</th>
+                    <th>Jam Selesai</th>
+                    <th>Pelanggan</th>
+                    <th>Operator</th>
+                    <th class="col-total">Total</th>
+                    <th class="col-tanggal">Tanggal</th>
+                    <th style="text-align:right;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="notaListContainer"></tbody>
+        </table>
+    </div>
+</div>
     <div class="report-section">
         <div class="card-title" style="border-bottom: none; margin-bottom: 0.75rem;">
             <span>📊</span> Laporan & Pencocokan CCTV
@@ -2106,37 +2194,41 @@
         });
 
         // ============ RENDER ============
-        function renderNotaList() {
+                function renderNotaList() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
-                notaListContainer.innerHTML = '<div class="empty-state">Belum ada nota transaksi.</div>';
+                notaListContainer.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota transaksi.</td></tr>';
                 notaCount.textContent = '0 nota';
                 return;
             }
             notaCount.textContent = `${filtered.length} nota`;
             let html = '';
-            [...filtered].reverse().forEach(n => {
-                const tags = n.layanan.map(l => `<span class="layanan-tag">${escapeHtml(l.nama)} · ${formatRupiah(l.harga)}</span>`).join('');
+            const reversed = [...filtered].reverse();
+            reversed.forEach((n, idx) => {
+                const nomor = idx + 1;
+                const namaPelanggan = escapeHtml(n.nama);
+                const operator = escapeHtml(n.barberman || '-');
+                const total = formatRupiah(n.total);
+                const tanggal = n.tanggal || '-';
                 html += `
-                    <div class="nota-item">
-                        <div class="info">
-                            <span class="name">${escapeHtml(n.nama)}</span>
-                            <div class="detail">
-                                <span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span>
-                                <span>💰 Total: ${formatRupiah(n.total)}</span>
-                                <span>⏰ ${n.jamMulai}-${n.jamSelesai}</span>
-                                <span>📅 ${n.tanggal || '-'}</span>
-                            </div>
-                            <div class="layanan-tags">${tags}</div>
-                        </div>
-                        <div class="nota-actions">
-                            <button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
-                            <button class="delete-btn" onclick="deleteNota('${n.id}')">✕</button>
-                        </div>
-                    </div>`;
+                    <tr>
+                        <td class="cell-no">${nomor}</td>
+                        <td class="cell-jam">${n.jamMulai}</td>
+                        <td class="cell-jam">${n.jamSelesai}</td>
+                        <td><strong>${namaPelanggan}</strong></td>
+                        <td><span class="barber-tag">💈 ${operator}</span></td>
+                        <td class="col-total"><strong>${total}</strong></td>
+                        <td class="col-tanggal">${tanggal}</td>
+                        <td class="cell-actions">
+                            <button class="btn-mini print" onclick="cetakNotaById('${n.id}')" title="Cetak">🖨️</button>
+                            <button class="delete-btn" onclick="deleteNota('${n.id}')" title="Hapus">✕</button>
+                        </td>
+                    </tr>`;
             });
             notaListContainer.innerHTML = html;
         }
+
+        
         function renderCctvList() {
             if (cctvList.length === 0) {
                 cctvListContainer.innerHTML = '<div class="empty-state">Belum ada referensi CCTV.</div>';
