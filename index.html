@@ -968,7 +968,7 @@
 
     <!-- ============ TAB: NOTA ============ -->
     <div class="tab-content active" id="tab-nota">
-        <h1 style="font-size:1.4rem; font-weight:800; margin-bottom:0.85rem;">📋 Nota Barbershop</h1>
+        <h1 style="font-size:1.4rem; font-weight:800; margin-bottom:0.85rem;">📋 Nota <span id="headerShopName">Barbershop</span></h1>
         <div class="subhead" id="subheadText" style="color:#64748b; margin-bottom:1.25rem; border-left:4px solid #f59e0b; padding-left:0.85rem; font-size:0.82rem;">
             Klik <b>MULAI</b> saat pelanggan datang · Klik <b>SELESAI</b> saat selesai
         </div>
@@ -1630,11 +1630,13 @@
             applyShopProfile();
         }
         function applyShopProfile() {
-            loginShopName.textContent = shopProfile.nama || 'Barbershop';
-            if (shopNama) shopNama.value = shopProfile.nama || '';
-            if (shopAlamat) shopAlamat.value = shopProfile.alamat || '';
-            if (shopHP) shopHP.value = shopProfile.hp || '';
-        }
+    loginShopName.textContent = shopProfile.nama || 'Barbershop';
+    const headerShop = document.getElementById('headerShopName');
+    if (headerShop) headerShop.textContent = shopProfile.nama || 'Barbershop';
+    if (shopNama) shopNama.value = shopProfile.nama || '';
+    if (shopAlamat) shopAlamat.value = shopProfile.alamat || '';
+    if (shopHP) shopHP.value = shopProfile.hp || '';
+}
 
         // ============ API ============
         function setApiStatus(state) {
@@ -1683,7 +1685,7 @@
             hideAlert();
             switchLoginTab('login');
         }
-        function showApp() {
+                function showApp() {
             loginPage.classList.add('hidden');
             app.classList.remove('hidden');
             document.getElementById('bottomNav').style.display = 'grid';
@@ -1714,24 +1716,37 @@
             }
             loadSesiFromCache();
             updateClockUI();
-            loadKeuangan(); loadShopProfile();
+            loadKeuangan();
+            loadShopProfile();
+            // ⭐ Load settings & keuangan dari server
+            loadSettingsFromServer();
+            loadKeuanganFromServer();
             syncDataFromServer();
             switchTab('nota');
         }
 
-        async function syncDataFromServer() {
-            if (!apiOnline) { renderAll(); return; }
-            setApiStatus('loading');
-            const [notaRes, cctvRes, userRes] = await Promise.all([
-                apiCall('getNota', {}, 'GET'),
-                apiCall('getCctv', {}, 'GET'),
-                apiCall('getUsers', {}, 'GET')
-            ]);
-            if (notaRes && notaRes.ok) notaList = notaRes.data || [];
-            if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
-            if (userRes && userRes.ok) userList = userRes.data || [];
-            setApiStatus('online');
-            renderAll();
+        // ⭐ FUNGSI BARU: Ambil profil barbershop dari server
+        async function loadSettingsFromServer() {
+            if (!apiOnline) return;
+            const res = await apiCall('getSettings', {}, 'GET');
+            if (res && res.ok && res.data) {
+                shopProfile.nama = res.data.shopNama || shopProfile.nama || 'Barbershop';
+                shopProfile.alamat = res.data.shopAlamat || shopProfile.alamat || '-';
+                shopProfile.hp = res.data.shopHP || shopProfile.hp || '-';
+                saveShopProfile();
+            }
+        }
+
+        // ⭐ FUNGSI BARU: Ambil keuangan dari server
+        async function loadKeuanganFromServer() {
+            if (!apiOnline) return;
+            const res = await apiCall('getKeuangan', {}, 'GET');
+            if (res && res.ok && res.data && res.data.length > 0) {
+                keuanganList = res.data;
+                saveKeuangan();
+                updateSaldo();
+                renderKeuangan();
+            }
         }
 
         // ============ LOGIN TAB ============
@@ -1849,7 +1864,13 @@
             // Refresh data saat pindah tab
             if (tabName === 'dashboard') renderDashboard();
             if (tabName === 'keuangan') { renderKeuangan(); updateSaldo(); }
-            if (tabName === 'user') renderUserList();
+            if (tabName === 'user') {
+    renderUserList();
+    // ⭐ Isi form profil dari shopProfile
+    if (shopNama) shopNama.value = shopProfile.nama || '';
+    if (shopAlamat) shopAlamat.value = shopProfile.alamat || '';
+    if (shopHP) shopHP.value = shopProfile.hp || '';
+}
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -1986,18 +2007,22 @@
         });
 
         // ============ MODAL CETAK ============
-        function buatHtmlNota(nota) {
+                function buatHtmlNota(nota) {
             const tglFormatted = getTanggalFormatted(nota.tanggal);
             const hariFormatted = getHariFormatted(nota.tanggal);
             const durasi = Math.max(0, timeToMinutes(nota.jamSelesai) - timeToMinutes(nota.jamMulai));
+            // Ambil dari shopProfile dengan fallback
+            const shopNamaVal = (shopProfile && shopProfile.nama) ? shopProfile.nama : 'Barbershop';
+            const shopAlamatVal = (shopProfile && shopProfile.alamat) ? shopProfile.alamat : '-';
+            const shopHPVal = (shopProfile && shopProfile.hp) ? shopProfile.hp : '-';
             let itemsHtml = '';
             nota.layanan.forEach(l => {
                 itemsHtml += `<div class="nt-row nt-bold"><span class="nt-label">${escapeHtml(l.nama)}</span><span class="nt-value">${formatRupiah(l.harga)}</span></div>`;
             });
             return `<div class="nota-thermal">
-                <div class="nt-center nt-bold nt-title">${escapeHtml(shopProfile.nama.toUpperCase())}</div>
-                <div class="nt-center nt-sub">${escapeHtml(shopProfile.alamat)}</div>
-                <div class="nt-center nt-sub">Telp: ${escapeHtml(shopProfile.hp)}</div>
+                <div class="nt-center nt-bold nt-title">${escapeHtml(shopNamaVal.toUpperCase())}</div>
+                <div class="nt-center nt-sub">${escapeHtml(shopAlamatVal)}</div>
+                <div class="nt-center nt-sub">Telp/WA: ${escapeHtml(shopHPVal)}</div>
                 <div class="nt-line"></div>
                 <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
                 <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
@@ -2383,15 +2408,31 @@
             renderUserList();
             if (apiOnline) apiCall('updateUser', { username: u.username, namaOperator: u.namaOperator }, 'POST');
         };
-        btnSimpanShop.addEventListener('click', function() {
+                btnSimpanShop.addEventListener('click', async function() {
             const nama = shopNama.value.trim();
             if (!nama) { alert('Nama barbershop wajib diisi.'); return; }
             shopProfile.nama = nama;
             shopProfile.alamat = shopAlamat.value.trim();
             shopProfile.hp = shopHP.value.trim();
             saveShopProfile();
-            if (apiOnline) apiCall('updateShopProfile', shopProfile, 'POST');
-            alert('✅ Profil barbershop berhasil disimpan!');
+            if (apiOnline) {
+                btnSimpanShop.disabled = true;
+                btnSimpanShop.innerHTML = '<span>⏳</span> Menyimpan...';
+                const res = await apiCall('updateShopProfile', {
+                    nama: shopProfile.nama,
+                    alamat: shopProfile.alamat,
+                    hp: shopProfile.hp
+                }, 'POST');
+                btnSimpanShop.disabled = false;
+                btnSimpanShop.innerHTML = '<span>💾</span> Simpan Profil Barbershop';
+                if (!res || !res.ok) {
+                    alert('⚠️ Tersimpan lokal, gagal sync ke server: ' + (res.message || 'Error'));
+                } else {
+                    alert('✅ Profil barbershop berhasil disimpan!');
+                }
+            } else {
+                alert('✅ Profil disimpan di perangkat (offline).');
+            }
         });
 
         // ============ SETTING ============
