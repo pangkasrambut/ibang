@@ -1026,7 +1026,8 @@
             }
             if (settingUserInfo) settingUserInfo.textContent = currentUser.role === 'admin' ? 'Admin' : currentUser.namaOperator + ' (@' + currentUser.username + ')';
             loadSesiFromCache(); updateClockUI();
-            loadKeuangan(); loadShopProfile();
+                        loadKeuangan(); loadShopProfile();
+            rebuildKeuanganFromNota();   // ⭐ Jalankan duluan (dari cache lokal)
             loadSettingsFromServer(); loadKeuanganFromServer();
             syncDataFromServer();
             switchTab('nota');
@@ -1043,11 +1044,18 @@
                 saveShopProfile();
             }
         }
-        async function loadKeuanganFromServer() {
+                async function loadKeuanganFromServer() {
             if (!apiOnline) return;
             const res = await apiCall('getKeuangan', {}, 'GET');
-            if (res && res.ok && res.data && res.data.length > 0) {
-                keuanganList = res.data; saveKeuangan(); updateSaldo(); renderKeuangan();
+            if (res && res.ok && res.data && Array.isArray(res.data)) {
+                // Merge: server sebagai source of truth + lokal yang belum ke-sync
+                const serverIds = new Set(res.data.map(k => k.id));
+                const lokalBelumSync = keuanganList.filter(k => !serverIds.has(k.id));
+                keuanganList = res.data.concat(lokalBelumSync);
+                saveKeuangan();
+                rebuildKeuanganFromNota();   // ⭐ Pastikan nota tetap terekam
+                updateSaldo();
+                renderKeuangan();
             }
         }
         async function syncDataFromServer() {
@@ -1061,7 +1069,9 @@
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
             if (userRes && userRes.ok) userList = userRes.data || [];
-            setApiStatus('online');
+                        setApiStatus('online');
+            rebuildKeuanganFromNota();   // ⭐ Auto-import nota lama ke keuangan
+            updateSaldo();
             renderAll();
         }
 
@@ -1270,7 +1280,37 @@
             btnOkLayanan.disabled = true; btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
             if (apiOnline) await apiCall('addNota', notaBaru, 'POST');
             btnOkLayanan.disabled = false; btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
-            notaList.push(notaBaru);
+                        notaList.push(notaBaru);
+
+            // ⭐ AUTO-RECORD PEMASUKAN KE KEUANGAN
+            const ketLayanan = layananArr.map(l => l.nama).join(', ');
+            const ketNota = `Nota ${nomorNota} - ${nama}` +
+                            (noKursi ? ` (Kursi ${noKursi})` : '') +
+                            (ketLayanan ? ` - ${ketLayanan}` : '');
+            const keuNota = {
+                id: 'keu_nota_' + notaBaru.id,        // ← ID unik, terhubung ke nota
+                jenis: 'masuk',
+                kategori: 'Layanan Barbershop',
+                jumlah: total,
+                keterangan: ketNota,
+                tanggal: tanggalNota,
+                metode: 'Cash',
+                inputBy: barberman,
+                refNotaId: notaBaru.id                // ← link ke nota
+            };
+            keuanganList.push(keuNota);
+            saveKeuangan();
+
+            // Kalau online, kirim sekaligus ke server
+            if (apiOnline) {
+                apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
+            }
+
+            // Update tampilan saldo & keuangan
+            updateSaldo();
+            if (typeof renderKeuangan === 'function') renderKeuangan();
+            if (typeof renderDashboard === 'function') renderDashboard();
+
             sesiAktif = null; saveSesiToCache(); updateClockUI();
             tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
         });
@@ -1483,10 +1523,15 @@
             dashPendapatanBulan.textContent = formatRupiah(totalBulan);
             dashPendapatanBulanCount.textContent = countBulan + ' transaksi';
             dashTotalNota.textContent = notaList.length;
-            const totalMasuk = keuanganList.filter(k => k.jenis === 'masuk').reduce((s,k) => s + Number(k.jumlah||0), 0);
+                        // Saldo kas = pemasukan keuangan + nota - pengeluaran
+            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const masukNotaKeu = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const notaBelumKeu = notaList.filter(n => {
+                const keuId = 'keu_nota_' + n.id;
+                return !keuanganList.some(k => k.id === keuId);
+            }).reduce((s,n) => s + Number(n.total||0), 0);
             const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
-            const totalNotaAll = notaList.reduce((s,n) => s + Number(n.total||0), 0);
-            dashSaldoKas.textContent = formatRupiah(totalMasuk + totalNotaAll - totalKeluar);
+            dashSaldoKas.textContent = formatRupiah(masukManual + masukNotaKeu + notaBelumKeu - totalKeluar);
             const maxVal = Math.max(...Object.values(rekap7Hari), 1);
             let chartHtml = '';
             Object.entries(rekap7Hari).forEach(([tgl, val]) => {
@@ -1519,8 +1564,18 @@
                 return true;
             });
         }
-        function updateSaldo() {
-            const totalMasuk = keuanganList.filter(k => k.jenis === 'masuk').reduce((s,k) => s + Number(k.jumlah||0), 0);
+                function updateSaldo() {
+            // Pemasukan dari transaksi keuangan manual
+            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            // Pemasukan dari nota (yang belum di-import ke keuangan)
+            const masukNota = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            // Kalau ada nota lama yang belum masuk keuanganList, hitung manual
+            const notaBelumKeu = notaList.filter(n => {
+                const keuId = 'keu_nota_' + n.id;
+                return !keuanganList.some(k => k.id === keuId);
+            }).reduce((s,n) => s + Number(n.total||0), 0);
+
+            const totalMasuk = masukManual + masukNota + notaBelumKeu;
             const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
             saldoMasuk.textContent = formatRupiah(totalMasuk);
             saldoKeluar.textContent = formatRupiah(totalKeluar);
@@ -1533,14 +1588,22 @@
             let html = '';
             [...filtered].reverse().forEach(k => {
                 const isMasuk = k.jenis === 'masuk';
-                html += `<tr>
+                                const dariNota = !!k.refNotaId;
+                html += `<tr${dariNota ? ' style="background:#f0fdf4;"' : ''}>
                     <td data-label="Tanggal">${k.tanggal || '-'}</td>
-                    <td data-label="Jenis"><span class="badge ${isMasuk ? 'badge-green' : 'badge-red'}">${isMasuk ? '💵 Masuk' : '💸 Keluar'}</span></td>
+                    <td data-label="Jenis">
+                        <span class="badge ${isMasuk ? 'badge-green' : 'badge-red'}">${isMasuk ? '💵 Masuk' : '💸 Keluar'}</span>
+                        ${dariNota ? '<div class="badge badge-blue" style="margin-top:2px; font-size:0.6rem;">📋 dari Nota</div>' : ''}
+                    </td>
                     <td data-label="Kategori">${escapeHtml(k.kategori || '-')}</td>
                     <td data-label="Keterangan">${escapeHtml(k.keterangan || '-')}</td>
                     <td data-label="Metode">${escapeHtml(k.metode || '-')}</td>
                     <td data-label="Jumlah" style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
-                    <td style="text-align:right;"><button class="delete-btn" onclick="deleteKeuangan('${k.id}')">✕</button></td>
+                    <td style="text-align:right;">
+                        ${dariNota
+                            ? '<button class="btn-mini" onclick="cetakNotaById(\'' + k.refNotaId + '\')" title="Lihat nota">📋</button>'
+                            : '<button class="delete-btn" onclick="deleteKeuangan(\'' + k.id + '\')">✕</button>'}
+                    </td>
                 </tr>`;
             });
             keuanganListContainer.innerHTML = html;
@@ -1650,10 +1713,30 @@
             renderCctvList(); renderLaporan();
             if (apiOnline) apiCall('addCctv', cctvBaru, 'POST');
         });
-        window.deleteNota = async function(id) {
+                window.deleteNota = async function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
-            if (!confirm('Hapus nota ini?')) return;
-            notaList = notaList.filter(n => n.id !== id); renderAll();
+            if (!confirm('Hapus nota ini? Pemasukan terkait juga akan dihapus dari Keuangan.')) return;
+
+            // Cari record keuangan terkait
+            const keuTerkait = keuanganList.find(k => k.refNotaId === id || k.id === 'keu_nota_' + id);
+
+            // Hapus nota
+            notaList = notaList.filter(n => n.id !== id);
+
+            // Hapus pemasukan keuangan terkait
+            if (keuTerkait) {
+                keuanganList = keuanganList.filter(k => k.id !== keuTerkait.id);
+                saveKeuangan();
+                if (apiOnline) {
+                    apiCall('deleteKeuangan', { id: keuTerkait.id }, 'POST').catch(() => {});
+                }
+            }
+
+            updateSaldo();
+            renderAll();
+            renderKeuangan();
+            renderDashboard();
+
             if (apiOnline) apiCall('deleteNota', { id }, 'POST');
         };
         window.deleteCctv = async function(id) {
@@ -1668,6 +1751,83 @@
             renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
         }
 
+                // ⭐ Rebuild record keuangan dari nota yang belum punya record
+        function rebuildKeuanganFromNota() {
+            let changed = false;
+            notaList.forEach(n => {
+                const keuId = 'keu_nota_' + n.id;
+                const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
+                if (!exists && n.total > 0) {
+                    const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
+                    const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` +
+                                    (n.noKursi ? ` (Kursi ${n.noKursi})` : '') +
+                                    (ketLayanan ? ` - ${ketLayanan}` : '');
+                    keuanganList.push({
+                        id: keuId,
+                        jenis: 'masuk',
+                        kategori: 'Layanan Barbershop',
+                        jumlah: Number(n.total) || 0,
+                        keterangan: ketNota,
+                        tanggal: n.tanggal,
+                        metode: 'Cash',
+                        inputBy: n.barberman || '',
+                        refNotaId: n.id
+                    });
+                    changed = true;
+                }
+            });
+            if (changed) {
+                saveKeuangan();
+                if (apiOnline) {
+                    keuanganList.forEach(k => {
+                        if (k.refNotaId && !k._synced) {
+                            apiCall('addKeuangan', k, 'POST').catch(() => {});
+                            k._synced = true;
+                        }
+                    });
+                }
+            }
+        }
+
+              // ⭐ Rebuild record keuangan dari nota yang belum punya record
+        function rebuildKeuanganFromNota() {
+            let changed = false;
+            notaList.forEach(n => {
+                const keuId = 'keu_nota_' + n.id;
+                const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
+                if (!exists && n.total > 0) {
+                    const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
+                    const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` +
+                                    (n.noKursi ? ` (Kursi ${n.noKursi})` : '') +
+                                    (ketLayanan ? ` - ${ketLayanan}` : '');
+                    keuanganList.push({
+                        id: keuId,
+                        jenis: 'masuk',
+                        kategori: 'Layanan Barbershop',
+                        jumlah: Number(n.total) || 0,
+                        keterangan: ketNota,
+                        tanggal: n.tanggal,
+                        metode: 'Cash',
+                        inputBy: n.barberman || '',
+                        refNotaId: n.id
+                    });
+                    changed = true;
+                }
+            });
+            if (changed) {
+                saveKeuangan();
+                if (apiOnline) {
+                    keuanganList.forEach(k => {
+                        if (k.refNotaId && !k._synced) {
+                            apiCall('addKeuangan', k, 'POST').catch(() => {});
+                            k._synced = true;
+                        }
+                    });
+                }
+            }
+        }
+
+        // ============ INIT ============      ← baris ini yang sudah ada sebelumnya
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
         keuTanggal.value = today;
@@ -1679,6 +1839,8 @@
         setInterval(checkApi, 60000);
     })();
 </script>
+
+   
 </body>
 </html>
 
