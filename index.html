@@ -1899,14 +1899,12 @@
             btnBatalEditLayanan.style.display = 'none';
         }
 
-                function renderLayananList() {
+                        function renderLayananList() {
             if (currentUser.role !== 'admin') return;
             if (!layananList || layananList.length === 0) {
-                // ⭐ Kalau API online tapi list kosong, coba fetch ulang
                 if (apiOnline) {
                     layananListContainer.innerHTML = '<div class="empty-state">⏳ Memuat data layanan dari server...</div>';
                     layananCount.textContent = '0 layanan';
-                    // Ambil ulang dari server
                     apiCall('getLayanan', {}, 'GET').then(res => {
                         if (res && res.ok && res.data && res.data.length > 0) {
                             layananList = res.data;
@@ -1924,6 +1922,27 @@
                 layananCount.textContent = '0 layanan';
                 return;
             }
+            layananCount.textContent = layananList.length + ' layanan';
+            let html = '';
+            layananList.forEach(l => {
+                const isAktif = l.aktif !== false;
+                html += `<div class="user-row">
+                    <div class="ur-info">
+                        <div class="ur-name">✂️ ${escapeHtml(l.nama)}</div>
+                        <div class="ur-detail">
+                            <strong style="color:#f59e0b;">${formatRupiah(l.harga)}</strong>
+                            · ${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}
+                            · <span style="color:#94a3b8; font-size:0.65rem;">${escapeHtml(l.id)}</span>
+                        </div>
+                    </div>
+                    <div class="ur-actions">
+                        <button class="btn-mini" onclick="editLayanan('${escapeHtml(l.id)}')" title="Edit">✏️</button>
+                        <button class="delete-btn" onclick="hapusLayanan('${escapeHtml(l.id)}')" title="Hapus">✕</button>
+                    </div>
+                </div>`;
+            });
+            layananListContainer.innerHTML = html;
+        }
 
         window.editLayanan = function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
@@ -1996,6 +2015,7 @@
             resetLayananForm();
             renderLayananList();
         });
+
 
         // ============ INIT ============
         const today = getTanggalSekarang();
