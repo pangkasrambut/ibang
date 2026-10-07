@@ -1953,7 +1953,7 @@
             return s;
         }
 
-        function exportNotaExcel() {
+                window.exportNotaExcel = function() {
             if (!currentUser || currentUser.role !== 'admin') {
                 alert('Hanya admin yang bisa ekspor laporan.');
                 return;
@@ -2013,10 +2013,10 @@
             const namaFile = `Laporan_Nota_${tgl}.xlsx`;
             XLSX.writeFile(wb, namaFile);
 
-            console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
-        }
+                        console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+        };
 
-        function exportKeuanganExcel() {
+                window.exportKeuanganExcel = function() {
             if (!currentUser || currentUser.role !== 'admin') {
                 alert('Hanya admin yang bisa ekspor laporan.');
                 return;
@@ -2076,8 +2076,8 @@
             const namaFile = `Laporan_Keuangan_${tgl}.xlsx`;
             XLSX.writeFile(wb, namaFile);
 
-            console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
-        }
+                        console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+        };
 
 
         
