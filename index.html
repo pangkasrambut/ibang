@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#1e293b">
     <title>Barbershop • Finance & CCTV Sync</title>
-       <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #f4f7fc; padding: 1rem; min-height: 100vh; font-size: 15px; color: #1e293b; padding-bottom: 90px; }
@@ -69,7 +69,7 @@
         .user-detail .user-role { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }
         .btn-logout { background: #fee2e2; color: #dc2626; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
         .btn-logout:hover { background: #fecaca; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(5, 1fr); z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); padding-bottom: env(safe-area-inset-bottom, 0); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e2e8f0; display: grid; grid-template-columns: repeat(6, 1fr); z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); padding-bottom: env(safe-area-inset-bottom, 0); }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 8px; cursor: pointer; color: #94a3b8; transition: 0.2s; border: none; background: transparent; font-family: inherit; position: relative; user-select: none; gap: 2px; }
         .nav-item .nav-icon { font-size: 1.5rem; line-height: 1; transition: 0.2s; }
         .nav-item .nav-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2px; text-transform: uppercase; }
@@ -94,7 +94,7 @@
         .barber-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,191,36,0.2); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; align-self: flex-start; }
         .cctv-list { max-height: 320px; overflow-y: auto; padding-right: 4px; margin-top: 0.5rem; }
         .nota-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; -webkit-overflow-scrolling: touch; }
-                .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 850px; }
+        .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 850px; }
         .nota-table th { background: #f1f5f9; text-align: left; padding: 8px 6px; font-weight: 700; color: #1e293b; font-size: 0.68rem; text-transform: uppercase; white-space: nowrap; }
         .nota-table td { padding: 8px 6px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; font-size: 0.78rem; }
         .nota-table tr:last-child td { border-bottom: none; }
@@ -109,7 +109,7 @@
         .nota-table .cell-tanggal { white-space: nowrap; font-size: 0.72rem; color: #64748b; }
         .nota-table .col-tanggal { white-space: nowrap; }
         .nota-table .cell-actions { white-space: nowrap; text-align: right; width: 70px; }
-                @media (max-width: 600px) {
+        @media (max-width: 600px) {
             .nota-table-wrapper { overflow-x: auto; border-radius: 10px; }
             .nota-table { min-width: 800px; font-size: 0.7rem; }
             .nota-table th, .nota-table td { padding: 5px 4px; }
@@ -446,7 +446,6 @@
             </div>
         </div>
 
-        <!-- ⭐ DAFTAR NOTA — PINDAH KE PALING ATAS -->
         <div class="card">
             <div class="flex-between">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
@@ -475,7 +474,6 @@
             </div>
         </div>
 
-        <!-- CCTV -->
         <div class="card">
             <div class="card-title"><span>📹</span> Rekaman CCTV (Referensi)</div>
             <div class="form-group">
@@ -508,7 +506,6 @@
             </div>
         </div>
 
-        <!-- LAPORAN -->
         <div class="report-section">
             <div class="card-title" style="border-bottom:none; margin-bottom:0.75rem;">
                 <span>📊</span> Laporan & Pencocokan CCTV
@@ -707,13 +704,62 @@
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.1 • Fix Jam & Tabel</strong>
+                    <strong>v3.2 • Kelola Layanan</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
                     <strong id="settingUserInfo">-</strong>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- TAB: LAYANAN (Khusus Admin) -->
+    <div class="tab-content" id="tab-layanan">
+        <h1 style="font-size:1.4rem; font-weight:800; margin-bottom:0.85rem;">✂️ Kelola Layanan</h1>
+        <div class="alert-box alert-warning show" style="margin-bottom:1rem;">
+            ⚠️ Tab ini hanya untuk <b>Admin</b>.
+        </div>
+        <div class="card">
+            <div class="card-title"><span>➕</span> <span id="layananFormTitle">Tambah Layanan</span></div>
+            <div class="setting-group">
+                <input type="hidden" id="layananId">
+                <div class="form-group">
+                    <label>Nama Layanan <span class="required">*</span></label>
+                    <input type="text" id="layananNama" placeholder="Contoh: Potong Rambut" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Harga (Rp) <span class="required">*</span></label>
+                    <input type="number" id="layananHarga" placeholder="Contoh: 30000" min="0" step="1000">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="layananAktif">
+                        <option value="true">🟢 Aktif (muncul di form nota)</option>
+                        <option value="false">🔴 Nonaktif (disembunyikan)</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="btn btn-green" id="btnSimpanLayanan" style="flex:1; min-width:150px;">
+                        <span>💾</span> <span id="btnSimpanLayananText">Tambah Layanan</span>
+                    </button>
+                    <button class="btn btn-outline" id="btnBatalEditLayanan" style="flex:0 0 auto; padding:14px 20px; display:none;">
+                        <span>✕</span> Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="flex-between" style="margin-bottom:0.5rem;">
+                <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                    <span>📋</span> Daftar Layanan
+                </div>
+                <span class="badge badge-blue" id="layananCount">0 layanan</span>
+            </div>
+            <div class="text-muted" style="margin-bottom:0.75rem;">
+                Klik ✏️ untuk edit, atau ✕ untuk hapus.
+            </div>
+            <div id="layananListContainer"></div>
         </div>
     </div>
 
@@ -783,6 +829,10 @@
         <span class="nav-icon">⚙️</span>
         <span class="nav-label">Setting</span>
     </button>
+    <button class="nav-item" data-tab="layanan" id="navLayanan" style="display:none;">
+        <span class="nav-icon">✂️</span>
+        <span class="nav-label">Layanan</span>
+    </button>
     <button class="nav-item" data-tab="user" id="navUser" style="display:none;">
         <span class="nav-icon">👥</span>
         <span class="nav-label">User</span>
@@ -842,12 +892,13 @@
         <button class="btn btn-outline" id="btnTutupCetak" style="margin-top:0.5rem;">Tutup</button>
     </div>
 </div>
-    
+
+
     <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwjxaAUNCQwTOv9UuGpnHBrWKFz31F_mDMtBAbq5HmjIBzxrYuUvrZWvPZDpxihqGj-oA/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx8o0RYQbIZGZX0uxMNCyV6wUG7ukKqKsDK8sakPD6WysWpy4eg0PTBAr81puRu6Al5sA/exec';
 
     (function() {
-        const LAYANAN_MASTER = [
+        let LAYANAN_MASTER = [
             { id: 'pr', nama: 'Potong Rambut', harga: 30000 },
             { id: 'srph', nama: 'Semir Rambut Pendek Hitam', harga: 120000 },
             { id: 'srph_panjang', nama: 'Semir Rambut Panjang Hitam', harga: 150000 },
@@ -867,6 +918,7 @@
         let cctvList = [];
         let keuanganList = [];
         let userList = [];
+        let layananList = [];
         let shopProfile = { nama: 'Barbershop', alamat: 'Jl. Contoh No. 123, Kota', hp: '0812-3456-7890', jumlahKursi: 5 };
         let sesiAktif = null;
         let layananDipilihModal = [];
@@ -922,6 +974,11 @@
         const filterKeuTanggal = $('filterKeuTanggal'), filterKeuJenis = $('filterKeuJenis'), btnResetFilterKeu = $('btnResetFilterKeu');
         const shopNama = $('shopNama'), shopAlamat = $('shopAlamat'), shopHP = $('shopHP'), shopJumlahKursi = $('shopJumlahKursi');
         const btnSimpanShop = $('btnSimpanShop'), userListContainer = $('userListContainer'), userCount = $('userCount'), navUser = $('navUser');
+        const navLayanan = $('navLayanan');
+        const layananId = $('layananId'), layananNama = $('layananNama'), layananHarga = $('layananHarga'), layananAktif = $('layananAktif');
+        const btnSimpanLayanan = $('btnSimpanLayanan'), btnSimpanLayananText = $('btnSimpanLayananText'), btnBatalEditLayanan = $('btnBatalEditLayanan');
+        const layananFormTitle = $('layananFormTitle');
+        const layananListContainer = $('layananListContainer'), layananCount = $('layananCount');
         const setOldPass = $('setOldPass'), setNewPass = $('setNewPass'), setConfirmPass = $('setConfirmPass'), btnGantiPassword = $('btnGantiPassword');
         const settingUserInfo = $('settingUserInfo');
         const dashPendapatanHari = $('dashPendapatanHari'), dashPendapatanHariCount = $('dashPendapatanHariCount');
@@ -961,7 +1018,6 @@
             return String(tgl);
         }
 
-        // ⭐ HELPER BARU: Format jam dari GMT ke HH:MM
         function formatJamKeu(jam) {
             if (!jam) return '-';
             const s = String(jam);
@@ -1053,14 +1109,18 @@
                 userName.textContent = 'Admin'; userRole.textContent = 'Administrator';
                 subheadText.innerHTML = 'Mode Admin — kelola semua';
                 barberBadge.style.display = 'none'; filterBar.style.display = 'flex';
-                rekapBarbermanSection.style.display = 'block'; navUser.style.display = 'flex';
+                rekapBarbermanSection.style.display = 'block';
+                navUser.style.display = 'flex';
+                navLayanan.style.display = 'flex';
             } else {
                 userAvatar.textContent = '💈'; userAvatar.classList.remove('admin');
                 userName.textContent = currentUser.namaOperator;
                 userRole.textContent = 'Barberman · @' + currentUser.username;
                 subheadText.innerHTML = `Login sebagai <b>${escapeHtml(currentUser.namaOperator)}</b>`;
                 barberBadge.style.display = 'inline-flex'; barberBadgeName.textContent = currentUser.namaOperator;
-                filterBar.style.display = 'none'; rekapBarbermanSection.style.display = 'none'; navUser.style.display = 'none';
+                filterBar.style.display = 'none'; rekapBarbermanSection.style.display = 'none';
+                navUser.style.display = 'none';
+                navLayanan.style.display = 'none';
             }
             if (settingUserInfo) settingUserInfo.textContent = currentUser.role === 'admin' ? 'Admin' : currentUser.namaOperator + ' (@' + currentUser.username + ')';
             loadSesiFromCache(); updateClockUI();
@@ -1098,14 +1158,19 @@
         async function syncDataFromServer() {
             if (!apiOnline) { renderAll(); return; }
             setApiStatus('loading');
-            const [notaRes, cctvRes, userRes] = await Promise.all([
+            const [notaRes, cctvRes, userRes, layananRes] = await Promise.all([
                 apiCall('getNota', {}, 'GET'),
                 apiCall('getCctv', {}, 'GET'),
-                apiCall('getUsers', {}, 'GET')
+                apiCall('getUsers', {}, 'GET'),
+                apiCall('getLayanan', {}, 'GET')
             ]);
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
             if (userRes && userRes.ok) userList = userRes.data || [];
+            if (layananRes && layananRes.ok && layananRes.data && layananRes.data.length > 0) {
+                layananList = layananRes.data;
+                LAYANAN_MASTER = layananList.filter(l => l.aktif !== false);
+            }
             setApiStatus('online');
             rebuildKeuanganFromNota();
             updateSaldo();
@@ -1186,6 +1251,11 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabName));
             if (tabName === 'dashboard') renderDashboard();
             if (tabName === 'keuangan') { renderKeuangan(); updateSaldo(); }
+            if (tabName === 'layanan') {
+                if (currentUser.role !== 'admin') { alert('Hanya admin.'); switchTab('nota'); return; }
+                renderLayananList();
+                resetLayananForm();
+            }
             if (tabName === 'user') {
                 renderUserList();
                 if (shopNama) shopNama.value = shopProfile.nama || '';
@@ -1199,6 +1269,7 @@
             item.addEventListener('click', function() {
                 const tab = item.dataset.tab;
                 if (tab === 'user' && currentUser.role !== 'admin') { alert('Tab User hanya untuk Admin.'); return; }
+                if (tab === 'layanan' && currentUser.role !== 'admin') { alert('Tab Layanan hanya untuk Admin.'); return; }
                 switchTab(tab);
             });
         });
@@ -1425,7 +1496,7 @@
         filterTanggal.addEventListener('change', function() { filterTanggalValue = filterTanggal.value; renderLaporan(); renderNotaList(); });
         btnResetFilter.addEventListener('click', function() { filterBarberman.value = ''; filterTanggal.value = ''; filterBarbermanValue = ''; filterTanggalValue = ''; renderLaporan(); renderNotaList(); });
 
-                function renderNotaList() {
+        function renderNotaList() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
                 notaListContainer.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota.</td></tr>';
@@ -1793,6 +1864,118 @@
             }
         }
 
+        // ============ LAYANAN (Admin) ============
+        function resetLayananForm() {
+            layananId.value = '';
+            layananNama.value = '';
+            layananHarga.value = '';
+            layananAktif.value = 'true';
+            layananFormTitle.textContent = 'Tambah Layanan';
+            btnSimpanLayananText.textContent = 'Tambah Layanan';
+            btnBatalEditLayanan.style.display = 'none';
+        }
+
+        function renderLayananList() {
+            if (currentUser.role !== 'admin') return;
+            if (!layananList || layananList.length === 0) {
+                layananListContainer.innerHTML = '<div class="empty-state">Belum ada layanan. Tambah di form atas.</div>';
+                layananCount.textContent = '0 layanan';
+                return;
+            }
+            layananCount.textContent = layananList.length + ' layanan';
+            let html = '';
+            layananList.forEach(l => {
+                const isAktif = l.aktif !== false;
+                html += `<div class="user-row">
+                    <div class="ur-info">
+                        <div class="ur-name">✂️ ${escapeHtml(l.nama)}</div>
+                        <div class="ur-detail">
+                            <strong style="color:#f59e0b;">${formatRupiah(l.harga)}</strong>
+                            · ${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}
+                            · <span style="color:#94a3b8; font-size:0.65rem;">${escapeHtml(l.id)}</span>
+                        </div>
+                    </div>
+                    <div class="ur-actions">
+                        <button class="btn-mini" onclick="editLayanan('${escapeHtml(l.id)}')" title="Edit">✏️</button>
+                        <button class="delete-btn" onclick="hapusLayanan('${escapeHtml(l.id)}')" title="Hapus">✕</button>
+                    </div>
+                </div>`;
+            });
+            layananListContainer.innerHTML = html;
+        }
+
+        window.editLayanan = function(id) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const l = layananList.find(x => x.id === id);
+            if (!l) return;
+            layananId.value = l.id;
+            layananNama.value = l.nama;
+            layananHarga.value = l.harga;
+            layananAktif.value = (l.aktif !== false) ? 'true' : 'false';
+            layananFormTitle.textContent = 'Edit Layanan';
+            btnSimpanLayananText.textContent = 'Simpan Perubahan';
+            btnBatalEditLayanan.style.display = 'inline-flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.hapusLayanan = async function(id) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const l = layananList.find(x => x.id === id);
+            if (!l) return;
+            if (!confirm('Hapus layanan "' + l.nama + '"?\n\nNota lama tetap aman, tapi layanan ini tidak akan muncul lagi di form nota baru.')) return;
+            layananList = layananList.filter(x => x.id !== id);
+            LAYANAN_MASTER = layananList.filter(x => x.aktif !== false);
+            renderLayananList();
+            if (apiOnline) {
+                const res = await apiCall('deleteLayanan', { id }, 'POST');
+                if (!res || !res.ok) alert('⚠️ Gagal hapus di server: ' + (res.message || 'Error'));
+            }
+        };
+
+        btnBatalEditLayanan.addEventListener('click', resetLayananForm);
+
+        btnSimpanLayanan.addEventListener('click', async function() {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const id = layananId.value.trim();
+            const nama = layananNama.value.trim();
+            const harga = parseFloat(layananHarga.value) || 0;
+            const aktif = layananAktif.value === 'true';
+
+            if (!nama) { alert('Nama layanan wajib diisi.'); layananNama.focus(); return; }
+            if (harga <= 0) { alert('Harga harus > 0.'); layananHarga.focus(); return; }
+
+            const isEdit = !!id;
+            const payload = { id: id || undefined, nama, harga, aktif };
+
+            btnSimpanLayanan.disabled = true;
+            btnSimpanLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
+
+            if (isEdit) {
+                const idx = layananList.findIndex(x => x.id === id);
+                if (idx > -1) layananList[idx] = { id, nama, harga, aktif };
+                if (apiOnline) {
+                    const res = await apiCall('updateLayanan', payload, 'POST');
+                    if (!res || !res.ok) alert('⚠️ Gagal sync: ' + (res.message || 'Error'));
+                }
+            } else {
+                const newId = 'ly_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                const newLayanan = { id: newId, nama, harga, aktif };
+                layananList.push(newLayanan);
+                if (apiOnline) {
+                    const res = await apiCall('addLayanan', newLayanan, 'POST');
+                    if (!res || !res.ok) alert('⚠️ Gagal sync: ' + (res.message || 'Error'));
+                }
+            }
+
+            LAYANAN_MASTER = layananList.filter(x => x.aktif !== false);
+
+            btnSimpanLayanan.disabled = false;
+            btnSimpanLayanan.innerHTML = '<span>💾</span> <span id="btnSimpanLayananText">' + (isEdit ? 'Simpan Perubahan' : 'Tambah Layanan') + '</span>';
+            alert(isEdit ? '✅ Layanan diperbarui!' : '✅ Layanan ditambahkan!');
+            resetLayananForm();
+            renderLayananList();
+        });
+
         // ============ INIT ============
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
@@ -1806,6 +1989,4 @@
     })();
 </script>
 </body>
-</html>>
-
-    
+</html>
