@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#1e293b">
     <title>Barbershop • Finance & CCTV Sync</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
         <!-- PWA Meta Tags -->
     <link rel="manifest" href="./manifest.json">
@@ -464,12 +466,17 @@
             </div>
         </div>
 
-        <div class="card">
+                <div class="card">
             <div class="flex-between">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
                     <span>📋</span> Daftar Nota
                 </div>
-                <span class="badge badge-blue" id="notaCount">0 nota</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <span class="badge badge-blue" id="notaCount">0 nota</span>
+                    <button class="btn-mini print admin-only" onclick="exportNotaExcel()" title="Ekspor ke Excel" style="padding:6px 12px; background:#16a34a; color:white; font-weight:700;">
+                        📥 Excel
+                    </button>
+                </div>
             </div>
             <div class="nota-table-wrapper">
                 <table class="nota-table">
@@ -639,12 +646,17 @@
                 <span>💾</span> Simpan Transaksi
             </button>
         </div>
-        <div class="card">
+                <div class="card">
             <div class="flex-between" style="margin-bottom:0.5rem;">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
                     <span>📒</span> Riwayat Keuangan
                 </div>
-                <span class="badge badge-blue" id="keuanganCount">0 transaksi</span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <span class="badge badge-blue" id="keuanganCount">0 transaksi</span>
+                    <button class="btn-mini print admin-only" onclick="exportKeuanganExcel()" title="Ekspor ke Excel" style="padding:6px 12px; background:#16a34a; color:white; font-weight:700;">
+                        📥 Excel
+                    </button>
+                </div>
             </div>
             <div class="filter-bar">
                 <input type="date" id="filterKeuTanggal" title="Filter tanggal">
@@ -1930,6 +1942,145 @@
         };
         window.cetakNotaById = function(id) { const nota = notaList.find(n => n.id === id); if (nota) bukaModalCetak(nota); };
 
+                // ============ EKSPOR EXCEL ============
+        function formatTanggalExcel(tgl) {
+            if (!tgl) return '-';
+            const s = String(tgl).substring(0, 10);
+            if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+                const [y, m, d] = s.split('-');
+                return `${d}/${m}/${y}`;
+            }
+            return s;
+        }
+
+        function exportNotaExcel() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                alert('Hanya admin yang bisa ekspor laporan.');
+                return;
+            }
+            const data = getFilteredNota();
+            if (data.length === 0) {
+                alert('Tidak ada data nota untuk diekspor.');
+                return;
+            }
+            // Susun header + rows
+            const rows = [];
+            rows.push(['No', 'Tanggal', 'Nomor Nota', 'Jam Mulai', 'Jam Selesai', 'Durasi (mnt)', 'Pelanggan', 'No Kursi', 'Operator', 'Layanan', 'Total (Rp)']);
+            [...data].reverse().forEach((n, idx) => {
+                const durasi = Math.max(0, timeToMinutes(n.jamSelesai) - timeToMinutes(n.jamMulai));
+                const layanan = (n.layanan || []).map(l => `${l.nama} - ${l.harga}`).join('; ');
+                rows.push([
+                    idx + 1,
+                    formatTanggalExcel(n.tanggal),
+                    n.nomorNota || n.id.slice(-6).toUpperCase(),
+                    formatJamKeu(n.jamMulai),
+                    formatJamKeu(n.jamSelesai),
+                    durasi,
+                    n.nama,
+                    n.noKursi || '-',
+                    n.barberman || '-',
+                    layanan,
+                    Number(n.total) || 0
+                ]);
+            });
+            // Baris total
+            const totalAll = data.reduce((s, n) => s + (Number(n.total) || 0), 0);
+            rows.push([]);
+            rows.push(['', '', '', '', '', '', '', '', '', 'TOTAL', totalAll]);
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+
+            // Set lebar kolom
+            ws['!cols'] = [
+                { wch: 5 },  // No
+                { wch: 12 }, // Tanggal
+                { wch: 18 }, // Nomor Nota
+                { wch: 10 }, // Jam Mulai
+                { wch: 10 }, // Jam Selesai
+                { wch: 12 }, // Durasi
+                { wch: 20 }, // Pelanggan
+                { wch: 8 },  // Kursi
+                { wch: 15 }, // Operator
+                { wch: 40 }, // Layanan
+                { wch: 14 }  // Total
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Nota');
+
+            // Nama file dengan tanggal
+            const tgl = getTanggalSekarang();
+            const namaFile = `Laporan_Nota_${tgl}.xlsx`;
+            XLSX.writeFile(wb, namaFile);
+
+            console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+        }
+
+        function exportKeuanganExcel() {
+            if (!currentUser || currentUser.role !== 'admin') {
+                alert('Hanya admin yang bisa ekspor laporan.');
+                return;
+            }
+            const data = getFilteredKeuangan();
+            if (data.length === 0) {
+                alert('Tidak ada data keuangan untuk diekspor.');
+                return;
+            }
+
+            // Siapkan data
+            const rows = [];
+            rows.push(['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Metode', 'Jumlah (Rp)', 'Input By', 'Dari Nota?']);
+            let totalMasuk = 0, totalKeluar = 0;
+            [...data].reverse().forEach((k, idx) => {
+                const jumlah = Number(k.jumlah) || 0;
+                const isMasuk = k.jenis === 'masuk';
+                if (isMasuk) totalMasuk += jumlah; else totalKeluar += jumlah;
+                rows.push([
+                    idx + 1,
+                    formatTanggalExcel(k.tanggal),
+                    isMasuk ? 'Pemasukan' : 'Pengeluaran',
+                    k.kategori || '-',
+                    k.keterangan || '-',
+                    k.metode || '-',
+                    isMasuk ? jumlah : -jumlah,  // pengeluaran sebagai negatif
+                    k.inputBy || '-',
+                    k.refNotaId ? 'Ya' : 'Tidak'
+                ]);
+            });
+
+            // Summary
+            rows.push([]);
+            rows.push(['', '', '', '', '', '', '', '', '']);
+            rows.push(['', '', '', '', '', 'Total Pemasukan', totalMasuk, '', '']);
+            rows.push(['', '', '', '', '', 'Total Pengeluaran', totalKeluar, '', '']);
+            rows.push(['', '', '', '', '', 'SALDO KAS', totalMasuk - totalKeluar, '', '']);
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(rows);
+
+            ws['!cols'] = [
+                { wch: 5 },  // No
+                { wch: 12 }, // Tanggal
+                { wch: 14 }, // Jenis
+                { wch: 20 }, // Kategori
+                { wch: 35 }, // Keterangan
+                { wch: 10 }, // Metode
+                { wch: 15 }, // Jumlah
+                { wch: 15 }, // Input By
+                { wch: 10 }  // Dari Nota
+            ];
+
+            XLSX.utils.book_append_sheet(wb, ws, 'Keuangan');
+
+            const tgl = getTanggalSekarang();
+            const namaFile = `Laporan_Keuangan_${tgl}.xlsx`;
+            XLSX.writeFile(wb, namaFile);
+
+            console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+        }
+
+
+        
         function renderAll() {
             updateFilterBarbermanOptions();
             renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
