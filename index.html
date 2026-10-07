@@ -94,20 +94,32 @@
         .barber-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,191,36,0.2); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; align-self: flex-start; }
         .cctv-list { max-height: 320px; overflow-y: auto; padding-right: 4px; margin-top: 0.5rem; }
         .nota-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; -webkit-overflow-scrolling: touch; }
-        .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 750px; }
-        .nota-table th { background: #f1f5f9; text-align: left; padding: 10px 12px; font-weight: 700; color: #1e293b; font-size: 0.7rem; text-transform: uppercase; white-space: nowrap; }
-        .nota-table td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; }
+                .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 850px; }
+        .nota-table th { background: #f1f5f9; text-align: left; padding: 8px 6px; font-weight: 700; color: #1e293b; font-size: 0.68rem; text-transform: uppercase; white-space: nowrap; }
+        .nota-table td { padding: 8px 6px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; font-size: 0.78rem; }
         .nota-table tr:last-child td { border-bottom: none; }
-        .nota-table .cell-no { font-weight: 700; color: #64748b; width: 40px; text-align: center; }
-        .nota-table .cell-jam { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
-        .nota-table .cell-actions { white-space: nowrap; text-align: right; }
-        @media (max-width: 600px) {
+        .nota-table .cell-no { font-weight: 700; color: #64748b; width: 32px; text-align: center; }
+        .nota-table .cell-jam { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; width: 55px; text-align: center; }
+        .nota-table .col-jam { width: 55px; text-align: center; }
+        .nota-table .cell-kursi { text-align: center; width: 45px; font-weight: 700; }
+        .nota-table .col-kursi { width: 45px; text-align: center; }
+        .nota-table .cell-layanan { font-size: 0.72rem; color: #475569; line-height: 1.5; max-width: 200px; }
+        .nota-table .cell-total { white-space: nowrap; font-weight: 700; }
+        .nota-table .col-total { white-space: nowrap; }
+        .nota-table .cell-tanggal { white-space: nowrap; font-size: 0.72rem; color: #64748b; }
+        .nota-table .col-tanggal { white-space: nowrap; }
+        .nota-table .cell-actions { white-space: nowrap; text-align: right; width: 70px; }
+                @media (max-width: 600px) {
             .nota-table-wrapper { overflow-x: auto; border-radius: 10px; }
-            .nota-table { min-width: 700px; font-size: 0.72rem; }
-            .nota-table th, .nota-table td { padding: 6px 8px; }
-            .nota-table .cell-no { width: 28px; }
+            .nota-table { min-width: 800px; font-size: 0.7rem; }
+            .nota-table th, .nota-table td { padding: 5px 4px; }
+            .nota-table .cell-no { width: 24px; }
+            .nota-table .cell-jam, .nota-table .col-jam { width: 45px; }
+            .nota-table .cell-kursi, .nota-table .col-kursi { width: 38px; }
+            .nota-table .cell-layanan { font-size: 0.66rem; max-width: 130px; }
+            .nota-table .cell-actions { width: 60px; }
             .nota-table .cell-actions .btn-mini,
-            .nota-table .cell-actions .delete-btn { min-width: 26px; min-height: 26px; padding: 3px 6px; font-size: 0.7rem; }
+            .nota-table .cell-actions .delete-btn { min-width: 24px; min-height: 24px; padding: 2px 5px; font-size: 0.65rem; }
         }
         .cctv-item { background: #eff6ff; border-radius: 14px; padding: 0.85rem 1rem; margin-bottom: 8px; border-left: 5px solid #3b82f6; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; font-size: 0.85rem; }
         .cctv-item .info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
@@ -447,13 +459,14 @@
                     <thead>
                         <tr>
                             <th class="cell-no">No</th>
-                            <th>Jam Mulai</th>
-                            <th>Jam Selesai</th>
+                            <th class="col-jam">Mulai</th>
+                            <th class="col-jam">Selesai</th>
                             <th>Pelanggan</th>
-                            <th>No Kursi</th>
+                            <th class="col-kursi">Kursi</th>
+                            <th>Layanan</th>
                             <th>Operator</th>
-                            <th>Total</th>
-                            <th>Tanggal</th>
+                            <th class="col-total">Total</th>
+                            <th class="col-tanggal">Tanggal</th>
                             <th style="text-align:right;">Aksi</th>
                         </tr>
                     </thead>
@@ -1412,24 +1425,26 @@
         filterTanggal.addEventListener('change', function() { filterTanggalValue = filterTanggal.value; renderLaporan(); renderNotaList(); });
         btnResetFilter.addEventListener('click', function() { filterBarberman.value = ''; filterTanggal.value = ''; filterBarbermanValue = ''; filterTanggalValue = ''; renderLaporan(); renderNotaList(); });
 
-        function renderNotaList() {
+                function renderNotaList() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
-                notaListContainer.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota.</td></tr>';
+                notaListContainer.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">Belum ada nota.</td></tr>';
                 notaCount.textContent = '0 nota'; return;
             }
             notaCount.textContent = `${filtered.length} nota`;
             let html = '';
             [...filtered].reverse().forEach((n, idx) => {
+                const layananStr = (n.layanan || []).map(l => escapeHtml(l.nama)).join('<br>');
                 html += `<tr>
                     <td class="cell-no">${idx + 1}</td>
                     <td class="cell-jam">${formatJamKeu(n.jamMulai)}</td>
                     <td class="cell-jam">${formatJamKeu(n.jamSelesai)}</td>
                     <td><strong>${escapeHtml(n.nama)}</strong></td>
-                    <td>${escapeHtml(n.noKursi || '-')}</td>
+                    <td class="cell-kursi">${escapeHtml(n.noKursi || '-')}</td>
+                    <td class="cell-layanan">${layananStr || '-'}</td>
                     <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
-                    <td><strong>${formatRupiah(n.total)}</strong></td>
-                    <td>${formatTanggalKeu(n.tanggal)}</td>
+                    <td class="cell-total"><strong>${formatRupiah(n.total)}</strong></td>
+                    <td class="cell-tanggal">${formatTanggalKeu(n.tanggal)}</td>
                     <td class="cell-actions">
                         <button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
                         <button class="delete-btn" onclick="deleteNota('${n.id}')">✕</button>
