@@ -92,8 +92,8 @@
         .clock-actions .btn { margin-top: 0; }
         .barber-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,191,36,0.2); color: #fbbf24; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; align-self: flex-start; }
         .cctv-list { max-height: 320px; overflow-y: auto; padding-right: 4px; margin-top: 0.5rem; }
-        .nota-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; }
-        .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 720px; }
+        .nota-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; -webkit-overflow-scrolling: touch; }
+        .nota-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 750px; }
         .nota-table th { background: #f1f5f9; text-align: left; padding: 10px 12px; font-weight: 700; color: #1e293b; font-size: 0.7rem; text-transform: uppercase; white-space: nowrap; }
         .nota-table td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; }
         .nota-table tr:last-child td { border-bottom: none; }
@@ -101,18 +101,12 @@
         .nota-table .cell-jam { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
         .nota-table .cell-actions { white-space: nowrap; text-align: right; }
         @media (max-width: 600px) {
-            .nota-table-wrapper { overflow-x: visible; border: none; }
-            .nota-table { min-width: 0; width: 100%; font-size: 0.75rem; }
-            .nota-table thead { display: none; }
-            .nota-table tbody, .nota-table tr, .nota-table td { display: block; width: 100%; }
-            .nota-table tr { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 0.6rem 0.75rem; margin-bottom: 10px; position: relative; }
-            .nota-table td { border: none; padding: 3px 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; font-size: 0.75rem; line-height: 1.4; }
-            .nota-table td::before { content: attr(data-label); font-size: 0.66rem; text-transform: uppercase; color: #64748b; font-weight: 700; flex-shrink: 0; min-width: 70px; }
-            .nota-table td > * { text-align: right; word-break: break-word; }
-            .nota-table .cell-no { position: absolute; top: 6px; right: 8px; background: #1e293b; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; padding: 0; font-weight: 700; }
-            .nota-table .cell-no::before { content: none; }
-            .nota-table .cell-actions { justify-content: flex-end; padding-top: 6px; border-top: 1px dashed #e2e8f0; margin-top: 4px; gap: 6px; }
-            .nota-table .cell-actions::before { content: none; }
+            .nota-table-wrapper { overflow-x: auto; border-radius: 10px; }
+            .nota-table { min-width: 700px; font-size: 0.72rem; }
+            .nota-table th, .nota-table td { padding: 6px 8px; }
+            .nota-table .cell-no { width: 28px; }
+            .nota-table .cell-actions .btn-mini,
+            .nota-table .cell-actions .delete-btn { min-width: 26px; min-height: 26px; padding: 3px 6px; font-size: 0.7rem; }
         }
         .cctv-item { background: #eff6ff; border-radius: 14px; padding: 0.85rem 1rem; margin-bottom: 8px; border-left: 5px solid #3b82f6; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; font-size: 0.85rem; }
         .cctv-item .info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
@@ -153,20 +147,16 @@
         .saldo-mini .sm-value { font-size: 1rem; font-weight: 800; margin-top: 2px; }
         .sm-value.masuk { color: #4ade80; }
         .sm-value.keluar { color: #f87171; }
-        .keuangan-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; }
-        .keuangan-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 600px; }
+        .keuangan-table-wrapper { overflow-x: auto; border-radius: 14px; border: 1px solid #e2e8f0; margin-top: 0.75rem; -webkit-overflow-scrolling: touch; }
+        .keuangan-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 650px; }
         .keuangan-table th { background: #f1f5f9; text-align: left; padding: 10px 12px; font-weight: 700; color: #1e293b; font-size: 0.7rem; text-transform: uppercase; white-space: nowrap; }
         .keuangan-table td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; }
         .keuangan-table .masuk { color: #15803d; font-weight: 700; }
         .keuangan-table .keluar { color: #b91c1c; font-weight: 700; }
         @media (max-width: 600px) {
-            .keuangan-table-wrapper { overflow-x: visible; border: none; }
-            .keuangan-table { min-width: 0; font-size: 0.75rem; }
-            .keuangan-table thead { display: none; }
-            .keuangan-table tbody, .keuangan-table tr, .keuangan-table td { display: block; width: 100%; }
-            .keuangan-table tr { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; border-radius: 12px; padding: 0.6rem 0.75rem; margin-bottom: 10px; }
-            .keuangan-table td { border: none; padding: 3px 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; font-size: 0.75rem; }
-            .keuangan-table td::before { content: attr(data-label); font-size: 0.66rem; text-transform: uppercase; color: #64748b; font-weight: 700; flex-shrink: 0; min-width: 70px; }
+            .keuangan-table-wrapper { overflow-x: auto; border-radius: 10px; }
+            .keuangan-table { min-width: 700px; font-size: 0.72rem; }
+            .keuangan-table th, .keuangan-table td { padding: 6px 8px; }
         }
         .setting-group { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.1rem; margin-bottom: 1rem; }
         .user-row { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 0.9rem 1rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -179,20 +169,15 @@
         .toggle-switch.active { background: #16a34a; }
         .toggle-switch.active::after { transform: translateX(20px); }
         .report-section { margin-top: 1.5rem; border-top: 2px dashed #e2e8f0; padding-top: 1.5rem; }
-        .table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid #e2e8f0; margin: 0.75rem 0; }
-        table.report { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 800px; }
+        .table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid #e2e8f0; margin: 0.75rem 0; -webkit-overflow-scrolling: touch; }
+        table.report { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 850px; }
         table.report th { background: #f1f5f9; text-align: left; padding: 12px 14px; font-weight: 700; color: #1e293b; font-size: 0.72rem; text-transform: uppercase; white-space: nowrap; }
         table.report td { padding: 12px 14px; border-bottom: 1px solid #edf2f7; color: #1e293b; vertical-align: top; }
-        .laporan-mobile { display: none; }
-        .laporan-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1rem; margin-bottom: 12px; border-left: 5px solid #f59e0b; }
-        .laporan-card .row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; gap: 12px; font-size: 0.82rem; }
-        .laporan-card .row:last-child { border-bottom: none; }
-        .laporan-card .row .lbl { color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; flex-shrink: 0; }
-        .laporan-card .row .val { color: #0f172a; font-weight: 600; text-align: right; word-break: break-word; }
-        .laporan-card .card-name { font-weight: 800; font-size: 1rem; color: #0f172a; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .laporan-card .layanan-list { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-        .laporan-card .layanan-line { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 2px 0; color: #334155; }
-        .laporan-card .layanan-line .price { color: #f59e0b; font-weight: 700; }
+        @media (max-width: 768px) {
+            .table-wrapper { overflow-x: auto; border-radius: 10px; }
+            table.report { min-width: 800px; font-size: 0.7rem; }
+            table.report th, table.report td { padding: 6px 8px; }
+        }
         .match-status { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
         .match-true { background: #dcfce7; color: #15803d; }
         .match-false { background: #fee2e2; color: #b91c1c; }
@@ -248,7 +233,6 @@
         .api-online { background: #dcfce7; color: #15803d; }
         .api-offline { background: #fee2e2; color: #b91c1c; }
         .api-loading { background: #fef9c3; color: #854d0e; }
-        /* Tombol Pilih Kursi */
         .kursi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; margin-bottom: 1rem; }
         .kursi-btn { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 12px; padding: 12px 4px; font-size: 1.05rem; font-weight: 800; color: #475569; cursor: pointer; transition: 0.15s; font-family: inherit; text-align: center; user-select: none; min-height: 50px; display: flex; align-items: center; justify-content: center; }
         .kursi-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -275,8 +259,6 @@
             .card { padding: 1rem; border-radius: 16px; }
             .card-title { font-size: 0.95rem; margin-bottom: 1rem; }
             .modal { padding: 1.15rem; }
-            .table-wrapper { display: none; }
-            .laporan-mobile { display: block; }
             .dash-card .dc-value { font-size: 1.15rem; }
             .saldo-card .sc-value { font-size: 1.6rem; }
         }
@@ -450,6 +432,36 @@
                 <button class="btn btn-red" id="btnSelesai" disabled><span>⏹️</span> SELESAI</button>
             </div>
         </div>
+
+        <!-- ⭐ DAFTAR NOTA — PINDAH KE PALING ATAS -->
+        <div class="card">
+            <div class="flex-between">
+                <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                    <span>📋</span> Daftar Nota
+                </div>
+                <span class="badge badge-blue" id="notaCount">0 nota</span>
+            </div>
+            <div class="nota-table-wrapper">
+                <table class="nota-table">
+                    <thead>
+                        <tr>
+                            <th class="cell-no">No</th>
+                            <th>Jam Mulai</th>
+                            <th>Jam Selesai</th>
+                            <th>Pelanggan</th>
+                            <th>No Kursi</th>
+                            <th>Operator</th>
+                            <th>Total</th>
+                            <th>Tanggal</th>
+                            <th style="text-align:right;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notaListContainer"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CCTV -->
         <div class="card">
             <div class="card-title"><span>📹</span> Rekaman CCTV (Referensi)</div>
             <div class="form-group">
@@ -481,32 +493,8 @@
                 <div class="cctv-list" id="cctvListContainer"></div>
             </div>
         </div>
-        <div class="card">
-            <div class="flex-between">
-                <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
-                    <span>📋</span> Daftar Nota
-                </div>
-                <span class="badge badge-blue" id="notaCount">0 nota</span>
-            </div>
-            <div class="nota-table-wrapper">
-                <table class="nota-table">
-                    <thead>
-                        <tr>
-                            <th class="cell-no">No</th>
-                            <th>Jam Mulai</th>
-                            <th>Jam Selesai</th>
-                            <th>Pelanggan</th>
-                            <th>No Kursi</th>
-                            <th>Operator</th>
-                            <th>Total</th>
-                            <th>Tanggal</th>
-                            <th style="text-align:right;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="notaListContainer"></tbody>
-                </table>
-            </div>
-        </div>
+
+        <!-- LAPORAN -->
         <div class="report-section">
             <div class="card-title" style="border-bottom:none; margin-bottom:0.75rem;">
                 <span>📊</span> Laporan & Pencocokan CCTV
@@ -522,6 +510,7 @@
                 <table class="report">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Pelanggan</th>
                             <th>No Kursi</th>
                             <th>Operator</th>
@@ -536,7 +525,6 @@
                     <tbody id="laporanBody"></tbody>
                 </table>
             </div>
-            <div class="laporan-mobile" id="laporanMobileContainer"></div>
             <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; margin-top:1rem;">
                 <div class="dash-card green">
                     <div class="dc-label">Total Pendapatan</div>
@@ -705,7 +693,7 @@
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.0 • Tab + Kursi</strong>
+                    <strong>v3.1 • Fix Jam & Tabel</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
@@ -839,10 +827,8 @@
         </button>
         <button class="btn btn-outline" id="btnTutupCetak" style="margin-top:0.5rem;">Tutup</button>
     </div>
-</div>
-
-    <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxRAxlPLvEVAG0FUEM-slWP_JsXXtCtTPz7SaZb4AR4ivHVApaDM6nwg5S8rFqmUlh5tg/exec';
+</div<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxOYxXdFdB5srtCp4RDOZbsYMQn74_NzdU8lgAtvcTH-IAUWF-hJxFg5F8rEBezWnH_dA/exec';
 
     (function() {
         const LAYANAN_MASTER = [
@@ -910,7 +896,7 @@
         let selectedKursi = null;
         const modalCetak = $('modalCetak'), modalCetakClose = $('modalCetakClose'), btnPrint = $('btnPrint'), btnTutupCetak = $('btnTutupCetak');
         const notaPreviewWrapper = $('notaPreviewWrapper');
-        const laporanBody = $('laporanBody'), laporanMobileContainer = $('laporanMobileContainer');
+        const laporanBody = $('laporanBody');
         const totalPendapatan = $('totalPendapatan'), totalTransaksi = $('totalTransaksi'), totalCocok = $('totalCocok'), totalTidakCocok = $('totalTidakCocok');
         const filterBar = $('filterBar'), filterBarberman = $('filterBarberman'), filterTanggal = $('filterTanggal'), btnResetFilter = $('btnResetFilter');
         const rekapBarbermanSection = $('rekapBarbermanSection'), rekapBarbermanContainer = $('rekapBarbermanContainer');
@@ -938,9 +924,8 @@
             });
         });
 
-                function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0); }
+        function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0); }
 
-        // ⭐ Helper: format tanggal dari berbagai format ke DD/MM/YYYY
         function formatTanggalKeu(tgl) {
             if (!tgl) return '-';
             if (typeof tgl === 'string' && (tgl.includes('GMT') || tgl.includes('Waktu') || tgl.includes('UTC'))) {
@@ -958,14 +943,30 @@
                 return `${d}/${m}/${y}`;
             }
             return String(tgl);
-        }   
-        
-        function timeToMinutes(t) { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+        }
+
+        // ⭐ HELPER BARU: Format jam dari GMT ke HH:MM
+        function formatJamKeu(jam) {
+            if (!jam) return '-';
+            const s = String(jam);
+            if (s.includes('GMT') || s.includes('Waktu')) {
+                try {
+                    const d = new Date(s);
+                    if (!isNaN(d.getTime())) {
+                        return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+                    }
+                } catch(e) {}
+            }
+            if (/^\d{1,2}:\d{2}/.test(s)) return s.substring(0, 5);
+            return s;
+        }
+
+        function timeToMinutes(t) { if (!t) return 0; const cleanT = formatJamKeu(t); const [h, m] = cleanT.split(':').map(Number); return (h||0) * 60 + (m||0); }
         function hitungSelisihMenit(a, b) { return Math.abs(timeToMinutes(a) - timeToMinutes(b)); }
         function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         function getJamSekarang() { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
         function getTanggalSekarang() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-        function getTanggalFormatted(tgl) { if (!tgl) return '-'; const [y, m, d] = tgl.split('-'); return `${d}/${m}/${y}`; }
+        function getTanggalFormatted(tgl) { if (!tgl) return '-'; const [y, m, d] = String(tgl).substring(0,10).split('-'); return `${d}/${m}/${y}`; }
         function getHariFormatted(tgl) { const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']; const d = new Date(tgl); return hari[d.getDay()] || '-'; }
         function getLayananById(id) { return LAYANAN_MASTER.find(l => l.id === id); }
         function hitungTotalLayanan(ids) { return ids.reduce((sum, id) => { const l = getLayananById(id); return sum + (l ? l.harga : 0); }, 0); }
@@ -1047,8 +1048,8 @@
             }
             if (settingUserInfo) settingUserInfo.textContent = currentUser.role === 'admin' ? 'Admin' : currentUser.namaOperator + ' (@' + currentUser.username + ')';
             loadSesiFromCache(); updateClockUI();
-                        loadKeuangan(); loadShopProfile();
-            rebuildKeuanganFromNota();   // ⭐ Jalankan duluan (dari cache lokal)
+            loadKeuangan(); loadShopProfile();
+            rebuildKeuanganFromNota();
             loadSettingsFromServer(); loadKeuanganFromServer();
             syncDataFromServer();
             switchTab('nota');
@@ -1065,16 +1066,15 @@
                 saveShopProfile();
             }
         }
-                async function loadKeuanganFromServer() {
+        async function loadKeuanganFromServer() {
             if (!apiOnline) return;
             const res = await apiCall('getKeuangan', {}, 'GET');
             if (res && res.ok && res.data && Array.isArray(res.data)) {
-                // Merge: server sebagai source of truth + lokal yang belum ke-sync
                 const serverIds = new Set(res.data.map(k => k.id));
                 const lokalBelumSync = keuanganList.filter(k => !serverIds.has(k.id));
                 keuanganList = res.data.concat(lokalBelumSync);
                 saveKeuangan();
-                rebuildKeuanganFromNota();   // ⭐ Pastikan nota tetap terekam
+                rebuildKeuanganFromNota();
                 updateSaldo();
                 renderKeuangan();
             }
@@ -1090,8 +1090,8 @@
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
             if (userRes && userRes.ok) userList = userRes.data || [];
-                        setApiStatus('online');
-            rebuildKeuanganFromNota();   // ⭐ Auto-import nota lama ke keuangan
+            setApiStatus('online');
+            rebuildKeuanganFromNota();
             updateSaldo();
             renderAll();
         }
@@ -1262,8 +1262,8 @@
         }
         function bukaModalLayanan() {
             if (!sesiAktif || !sesiAktif.jamSelesai) { alert('Sesi belum selesai.'); return; }
-            modalJamMulai.textContent = sesiAktif.jamMulai;
-            modalJamSelesai.textContent = sesiAktif.jamSelesai;
+            modalJamMulai.textContent = formatJamKeu(sesiAktif.jamMulai);
+            modalJamSelesai.textContent = formatJamKeu(sesiAktif.jamSelesai);
             modalDurasi.textContent = Math.max(0, timeToMinutes(sesiAktif.jamSelesai) - timeToMinutes(sesiAktif.jamMulai)) + ' mnt';
             modalBarbermanName.textContent = sesiAktif.barberman || '-';
             modalNamaPelanggan.value = ''; modalNamaPelanggan.classList.remove('error'); namaError.style.display = 'none';
@@ -1301,15 +1301,14 @@
             btnOkLayanan.disabled = true; btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
             if (apiOnline) await apiCall('addNota', notaBaru, 'POST');
             btnOkLayanan.disabled = false; btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
-                        notaList.push(notaBaru);
+            notaList.push(notaBaru);
 
-            // ⭐ AUTO-RECORD PEMASUKAN KE KEUANGAN
             const ketLayanan = layananArr.map(l => l.nama).join(', ');
             const ketNota = `Nota ${nomorNota} - ${nama}` +
                             (noKursi ? ` (Kursi ${noKursi})` : '') +
                             (ketLayanan ? ` - ${ketLayanan}` : '');
             const keuNota = {
-                id: 'keu_nota_' + notaBaru.id,        // ← ID unik, terhubung ke nota
+                id: 'keu_nota_' + notaBaru.id,
                 jenis: 'masuk',
                 kategori: 'Layanan Barbershop',
                 jumlah: total,
@@ -1317,20 +1316,14 @@
                 tanggal: tanggalNota,
                 metode: 'Cash',
                 inputBy: barberman,
-                refNotaId: notaBaru.id                // ← link ke nota
+                refNotaId: notaBaru.id
             };
             keuanganList.push(keuNota);
             saveKeuangan();
-
-            // Kalau online, kirim sekaligus ke server
-            if (apiOnline) {
-                apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
-            }
-
-            // Update tampilan saldo & keuangan
+            if (apiOnline) apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
             updateSaldo();
-            if (typeof renderKeuangan === 'function') renderKeuangan();
-            if (typeof renderDashboard === 'function') renderDashboard();
+            renderKeuangan();
+            renderDashboard();
 
             sesiAktif = null; saveSesiToCache(); updateClockUI();
             tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
@@ -1353,12 +1346,12 @@
                 <div class="nt-row"><span class="nt-label">No.</span><span class="nt-value">${nota.nomorNota || nota.id.slice(-6).toUpperCase()}</span></div>
                 <div class="nt-row"><span class="nt-label">Tanggal</span><span class="nt-value">${tglFormatted}</span></div>
                 <div class="nt-row"><span class="nt-label">Hari</span><span class="nt-value">${hariFormatted}</span></div>
-                                <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
+                <div class="nt-row"><span class="nt-label">Pelanggan</span><span class="nt-value">${escapeHtml(nota.nama)}</span></div>
                 <div class="nt-barber">💈 Operator: ${escapeHtml(nota.barberman || '-')}</div>
                 <div class="nt-line"></div>
                 <div class="nt-row"><span class="nt-label">No Kursi</span><span class="nt-value">${escapeHtml(nota.noKursi || '-')}</span></div>
-                <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${nota.jamMulai}</span></div>
-                <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${nota.jamSelesai}</span></div>
+                <div class="nt-row"><span class="nt-label">Jam Mulai</span><span class="nt-value">${formatJamKeu(nota.jamMulai)}</span></div>
+                <div class="nt-row"><span class="nt-label">Jam Selesai</span><span class="nt-value">${formatJamKeu(nota.jamSelesai)}</span></div>
                 <div class="nt-row"><span class="nt-label">Durasi</span><span class="nt-value">${durasi} menit</span></div>
                 <div class="nt-line"></div>
                 <div class="nt-bold">RINCIAN LAYANAN:</div>
@@ -1427,13 +1420,13 @@
             [...filtered].reverse().forEach((n, idx) => {
                 html += `<tr>
                     <td class="cell-no">${idx + 1}</td>
-                    <td class="cell-jam" data-label="Jam Mulai">${n.jamMulai}</td>
-                    <td class="cell-jam" data-label="Jam Selesai">${n.jamSelesai}</td>
-                    <td data-label="Pelanggan"><strong>${escapeHtml(n.nama)}</strong></td>
-                    <td data-label="No Kursi">${escapeHtml(n.noKursi || '-')}</td>
-                    <td data-label="Operator"><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
-                    <td data-label="Total"><strong>${formatRupiah(n.total)}</strong></td>
-                    <td data-label="Tanggal">${n.tanggal || '-'}</td>
+                    <td class="cell-jam">${formatJamKeu(n.jamMulai)}</td>
+                    <td class="cell-jam">${formatJamKeu(n.jamSelesai)}</td>
+                    <td><strong>${escapeHtml(n.nama)}</strong></td>
+                    <td>${escapeHtml(n.noKursi || '-')}</td>
+                    <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
+                    <td><strong>${formatRupiah(n.total)}</strong></td>
+                    <td>${formatTanggalKeu(n.tanggal)}</td>
                     <td class="cell-actions">
                         <button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
                         <button class="delete-btn" onclick="deleteNota('${n.id}')">✕</button>
@@ -1450,7 +1443,7 @@
                 html += `<div class="cctv-item">
                     <div class="info">
                         <span class="name">${escapeHtml(c.nama)}</span>
-                        <div class="detail"><span>⏰ ${c.jamMulai}-${c.jamSelesai}</span><span>📅 ${c.tanggal || '-'}</span></div>
+                        <div class="detail"><span>⏰ ${formatJamKeu(c.jamMulai)}-${formatJamKeu(c.jamSelesai)}</span><span>📅 ${formatTanggalKeu(c.tanggal)}</span></div>
                     </div>
                     <button class="delete-btn" onclick="deleteCctv('${c.id}')">✕</button>
                 </div>`;
@@ -1460,18 +1453,17 @@
         function renderLaporan() {
             const filtered = getFilteredNota();
             if (filtered.length === 0) {
-                laporanBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data</td></tr>`;
-                laporanMobileContainer.innerHTML = '<div class="empty-state">Belum ada data</div>';
+                laporanBody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data</td></tr>`;
                 totalPendapatan.textContent = 'Rp 0'; totalTransaksi.textContent = '0'; totalCocok.textContent = '0'; totalTidakCocok.textContent = '0';
                 rekapBarbermanContainer.innerHTML = '<div class="empty-state">Belum ada data</div>'; return;
             }
-            let total = 0, cocok = 0, tidakCocok = 0, rows = '', cards = '';
+            let total = 0, cocok = 0, tidakCocok = 0, rows = '';
             const rekap = {};
-            [...filtered].reverse().forEach(n => {
+            [...filtered].reverse().forEach((n, idx) => {
                 total += Number(n.total) || 0;
                 const m = getMatchStatus(n);
                 let statusHtml = '', cctvJam = '-';
-                if (m.status === 'match') { cocok++; statusHtml = `<span class="match-status match-true">✅ Cocok (${m.selisih}m)</span>`; cctvJam = `${m.matchedCctv.jamMulai}-${m.matchedCctv.jamSelesai}`; }
+                if (m.status === 'match') { cocok++; statusHtml = `<span class="match-status match-true">✅ Cocok (${m.selisih}m)</span>`; cctvJam = `${formatJamKeu(m.matchedCctv.jamMulai)}-${formatJamKeu(m.matchedCctv.jamSelesai)}`; }
                 else if (m.status === 'mismatch') { tidakCocok++; statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`; }
                 else if (m.status === 'no-cctv') { tidakCocok++; statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`; }
                 else { tidakCocok++; statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`; }
@@ -1479,31 +1471,20 @@
                 if (!rekap[b]) rekap[b] = { total: 0, count: 0 };
                 rekap[b].total += Number(n.total) || 0; rekap[b].count += 1;
                 const layananStr = n.layanan.map(l => `${l.nama} (${formatRupiah(l.harga)})`).join('<br>');
-                const layananMobile = n.layanan.map(l => `<div class="layanan-line"><span>${escapeHtml(l.nama)}</span><span class="price">${formatRupiah(l.harga)}</span></div>`).join('');
                 rows += `<tr>
+                    <td class="cell-no">${idx + 1}</td>
                     <td><strong>${escapeHtml(n.nama)}</strong></td>
                     <td>${escapeHtml(n.noKursi || '-')}</td>
                     <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
                     <td>${layananStr}</td>
                     <td><strong>${formatRupiah(n.total)}</strong></td>
-                    <td>${n.tanggal || '-'}</td>
-                    <td>${n.jamMulai}-${n.jamSelesai}</td>
+                    <td>${formatTanggalKeu(n.tanggal)}</td>
+                    <td>${formatJamKeu(n.jamMulai)}-${formatJamKeu(n.jamSelesai)}</td>
                     <td>${cctvJam}</td>
                     <td>${statusHtml}</td>
                 </tr>`;
-                cards += `<div class="laporan-card">
-                    <div class="card-name"><span>${escapeHtml(n.nama)}</span><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></div>
-                    <div class="row"><span class="lbl">No Kursi</span><span class="val">${escapeHtml(n.noKursi || '-')}</span></div>
-                    <div class="row"><span class="lbl">Layanan</span><span class="val"><div class="layanan-list">${layananMobile}</div></span></div>
-                    <div class="row"><span class="lbl">Total</span><span class="val"><strong>${formatRupiah(n.total)}</strong></span></div>
-                    <div class="row"><span class="lbl">Tanggal</span><span class="val">${n.tanggal || '-'}</span></div>
-                    <div class="row"><span class="lbl">Jam</span><span class="val">${n.jamMulai}-${n.jamSelesai}</span></div>
-                    <div class="row"><span class="lbl">CCTV</span><span class="val">${cctvJam}</span></div>
-                    <div class="row"><span class="lbl">Status</span><span class="val">${statusHtml}</span></div>
-                </div>`;
             });
             laporanBody.innerHTML = rows;
-            laporanMobileContainer.innerHTML = cards;
             totalPendapatan.textContent = formatRupiah(total);
             totalTransaksi.textContent = filtered.length;
             totalCocok.textContent = cocok; totalTidakCocok.textContent = tidakCocok;
@@ -1544,7 +1525,6 @@
             dashPendapatanBulan.textContent = formatRupiah(totalBulan);
             dashPendapatanBulanCount.textContent = countBulan + ' transaksi';
             dashTotalNota.textContent = notaList.length;
-                        // Saldo kas = pemasukan keuangan + nota - pengeluaran
             const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
             const masukNotaKeu = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
             const notaBelumKeu = notaList.filter(n => {
@@ -1572,7 +1552,7 @@
                 terbaru.map(n => `<div class="cctv-item" style="border-left-color:#f59e0b; background:#fffbeb;">
                     <div class="info">
                         <span class="name">${escapeHtml(n.nama)}${n.noKursi ? ' · 🪑 ' + escapeHtml(n.noKursi) : ''}</span>
-                        <div class="detail"><span>💈 ${escapeHtml(n.barberman || '-')}</span><span>${n.jamMulai}-${n.jamSelesai}</span><span>📅 ${n.tanggal}</span></div>
+                        <div class="detail"><span>💈 ${escapeHtml(n.barberman || '-')}</span><span>${formatJamKeu(n.jamMulai)}-${formatJamKeu(n.jamSelesai)}</span><span>📅 ${formatTanggalKeu(n.tanggal)}</span></div>
                     </div>
                     <strong style="color:#f59e0b; white-space:nowrap;">${formatRupiah(n.total)}</strong>
                 </div>`).join('');
@@ -1585,17 +1565,13 @@
                 return true;
             });
         }
-                function updateSaldo() {
-            // Pemasukan dari transaksi keuangan manual
+        function updateSaldo() {
             const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
-            // Pemasukan dari nota (yang belum di-import ke keuangan)
             const masukNota = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
-            // Kalau ada nota lama yang belum masuk keuanganList, hitung manual
             const notaBelumKeu = notaList.filter(n => {
                 const keuId = 'keu_nota_' + n.id;
                 return !keuanganList.some(k => k.id === keuId);
             }).reduce((s,n) => s + Number(n.total||0), 0);
-
             const totalMasuk = masukManual + masukNota + notaBelumKeu;
             const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
             saldoMasuk.textContent = formatRupiah(totalMasuk);
@@ -1609,17 +1585,17 @@
             let html = '';
             [...filtered].reverse().forEach(k => {
                 const isMasuk = k.jenis === 'masuk';
-                                const dariNota = !!k.refNotaId;
+                const dariNota = !!k.refNotaId;
                 html += `<tr${dariNota ? ' style="background:#f0fdf4;"' : ''}>
-                    <td data-label="Tanggal">${formatTanggalKeu(k.tanggal)}</td>
-                    <td data-label="Jenis">
+                    <td>${formatTanggalKeu(k.tanggal)}</td>
+                    <td>
                         <span class="badge ${isMasuk ? 'badge-green' : 'badge-red'}">${isMasuk ? '💵 Masuk' : '💸 Keluar'}</span>
                         ${dariNota ? '<div class="badge badge-blue" style="margin-top:2px; font-size:0.6rem;">📋 dari Nota</div>' : ''}
                     </td>
-                    <td data-label="Kategori">${escapeHtml(k.kategori || '-')}</td>
-                    <td data-label="Keterangan">${escapeHtml(k.keterangan || '-')}</td>
-                    <td data-label="Metode">${escapeHtml(k.metode || '-')}</td>
-                    <td data-label="Jumlah" style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
+                    <td>${escapeHtml(k.kategori || '-')}</td>
+                    <td>${escapeHtml(k.keterangan || '-')}</td>
+                    <td>${escapeHtml(k.metode || '-')}</td>
+                    <td style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
                     <td style="text-align:right;">
                         ${dariNota
                             ? '<button class="btn-mini" onclick="cetakNotaById(\'' + k.refNotaId + '\')" title="Lihat nota">📋</button>'
@@ -1734,30 +1710,20 @@
             renderCctvList(); renderLaporan();
             if (apiOnline) apiCall('addCctv', cctvBaru, 'POST');
         });
-                window.deleteNota = async function(id) {
+        window.deleteNota = async function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             if (!confirm('Hapus nota ini? Pemasukan terkait juga akan dihapus dari Keuangan.')) return;
-
-            // Cari record keuangan terkait
             const keuTerkait = keuanganList.find(k => k.refNotaId === id || k.id === 'keu_nota_' + id);
-
-            // Hapus nota
             notaList = notaList.filter(n => n.id !== id);
-
-            // Hapus pemasukan keuangan terkait
             if (keuTerkait) {
                 keuanganList = keuanganList.filter(k => k.id !== keuTerkait.id);
                 saveKeuangan();
-                if (apiOnline) {
-                    apiCall('deleteKeuangan', { id: keuTerkait.id }, 'POST').catch(() => {});
-                }
+                if (apiOnline) apiCall('deleteKeuangan', { id: keuTerkait.id }, 'POST').catch(() => {});
             }
-
             updateSaldo();
             renderAll();
             renderKeuangan();
             renderDashboard();
-
             if (apiOnline) apiCall('deleteNota', { id }, 'POST');
         };
         window.deleteCctv = async function(id) {
@@ -1772,7 +1738,6 @@
             renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
         }
 
-                // ⭐ Rebuild record keuangan dari nota yang belum punya record
         function rebuildKeuanganFromNota() {
             let changed = false;
             notaList.forEach(n => {
@@ -1810,45 +1775,7 @@
             }
         }
 
-              // ⭐ Rebuild record keuangan dari nota yang belum punya record
-        function rebuildKeuanganFromNota() {
-            let changed = false;
-            notaList.forEach(n => {
-                const keuId = 'keu_nota_' + n.id;
-                const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
-                if (!exists && n.total > 0) {
-                    const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
-                    const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` +
-                                    (n.noKursi ? ` (Kursi ${n.noKursi})` : '') +
-                                    (ketLayanan ? ` - ${ketLayanan}` : '');
-                    keuanganList.push({
-                        id: keuId,
-                        jenis: 'masuk',
-                        kategori: 'Layanan Barbershop',
-                        jumlah: Number(n.total) || 0,
-                        keterangan: ketNota,
-                        tanggal: n.tanggal,
-                        metode: 'Cash',
-                        inputBy: n.barberman || '',
-                        refNotaId: n.id
-                    });
-                    changed = true;
-                }
-            });
-            if (changed) {
-                saveKeuangan();
-                if (apiOnline) {
-                    keuanganList.forEach(k => {
-                        if (k.refNotaId && !k._synced) {
-                            apiCall('addKeuangan', k, 'POST').catch(() => {});
-                            k._synced = true;
-                        }
-                    });
-                }
-            }
-        }
-
-        // ============ INIT ============      ← baris ini yang sudah ada sebelumnya
+        // ============ INIT ============
         const today = getTanggalSekarang();
         elCctvTanggal.value = today;
         keuTanggal.value = today;
@@ -1860,9 +1787,7 @@
         setInterval(checkApi, 60000);
     })();
 </script>
-
-   
 </body>
-</html>
+</html>>
 
     
