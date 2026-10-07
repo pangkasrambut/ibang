@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#1e293b">
     <title>Barbershop • Finance & CCTV Sync</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
+        <!-- PWA Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Barbershop">
+    <meta name="application-name" content="Barbershop">
+    <meta name="msapplication-TileColor" content="#1e293b">
+    <meta name="theme-color" content="#1e293b">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
+    
+    
+    
+    
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #f4f7fc; padding: 1rem; min-height: 100vh; font-size: 15px; color: #1e293b; padding-bottom: 90px; }
@@ -2178,5 +2194,71 @@
         setInterval(checkApi, 60000);
     })();
 </script>
+
+
+    <script>
+        // ============================================================
+        // REGISTER SERVICE WORKER (PWA)
+        // ============================================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(function(registration) {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(function(err) {
+                        console.warn('[PWA] Service Worker gagal:', err);
+                    });
+            });
+        }
+
+        // ============================================================
+        // INSTALL PROMPT (Tombol "Install App")
+        // ============================================================
+        let deferredPrompt = null;
+        const installBtn = document.createElement('button');
+        installBtn.id = 'pwaInstallBtn';
+        installBtn.innerHTML = '📲 Install Aplikasi';
+        installBtn.style.cssText = `
+            position: fixed;
+            bottom: 90px;
+            right: 15px;
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(245,158,11,0.4);
+            z-index: 9999;
+            display: none;
+            font-family: inherit;
+            animation: slideUp 0.3s ease;
+        `;
+        document.body.appendChild(installBtn);
+
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async function() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] User pilih:', outcome);
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        window.addEventListener('appinstalled', function() {
+            console.log('[PWA] Aplikasi berhasil di-install!');
+            installBtn.style.display = 'none';
+        });
+    </script>
+    
 </body>
 </html>
