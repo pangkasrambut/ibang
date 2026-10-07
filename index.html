@@ -1224,7 +1224,17 @@
         function validateLoginForm() { btnLogin.disabled = !(selectedLoginRole && loginUsername.value.trim() && loginPassword.value); }
         loginUsername.addEventListener('input', validateLoginForm);
         loginPassword.addEventListener('input', validateLoginForm);
-        loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click(); });
+                loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click(); });
+
+        // ⭐ Enter di username → fokus ke password
+        loginUsername.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (loginUsername.value.trim()) {
+                    loginPassword.focus();
+                }
+            }
+        });
 
         btnLogin.addEventListener('click', async function() {
             const username = loginUsername.value.trim(), password = loginPassword.value;
