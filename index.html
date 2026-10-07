@@ -718,15 +718,15 @@
             <div id="kategoriListContainer"></div>
         </div>
 
-        <!-- ⭐ LOG PEMBATALAN (Khusus Admin) -->
-        <div class="card admin-only">
+                <!-- ⭐ LOG PEMBATALAN (Semua Role) -->
+        <div class="card">
             <div class="flex-between" style="margin-bottom:0.5rem;">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
                     <span>🗂️</span> Log Pembatalan
                 </div>
                 <span class="badge badge-red" id="logBatalCount">0 log</span>
             </div>
-            <div class="text-muted" style="margin-bottom:0.75rem;">
+            <div class="text-muted" style="margin-bottom:0.75rem;" id="logBatalInfo">
                 Semua pembatalan nota & keuangan tercatat di sini.
             </div>
             <div id="logBatalContainer"></div>
@@ -1282,11 +1282,11 @@
         function refreshActiveTab() {
             if (activeTab === 'layanan' && currentUser && currentUser.role === 'admin') renderLayananList();
             if (activeTab === 'user' && currentUser && currentUser.role === 'admin') renderUserList();
-            if (activeTab === 'keuangan') {
+                        if (activeTab === 'keuangan') {
                 renderKeuangan(); updateSaldo(); updateKategoriOptions();
+                renderLogPembatalan();
                 if (currentUser && currentUser.role === 'admin') {
                     renderKategoriList();
-                    renderLogPembatalan();
                 }
             }
             if (activeTab === 'dashboard') renderDashboard();
@@ -1374,14 +1374,14 @@
             if (target) target.classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabName));
             if (tabName === 'dashboard') renderDashboard();
-            if (tabName === 'keuangan') {
+                        if (tabName === 'keuangan') {
                 renderKeuangan();
                 updateSaldo();
                 updateKategoriOptions();
+                renderLogPembatalan();   // ⭐ Semua role bisa lihat log
                 if (currentUser && currentUser.role === 'admin') {
                     renderKategoriList();
                     resetKategoriForm();
-                    renderLogPembatalan();
                 }
             }
             if (tabName === 'layanan') {
@@ -1641,11 +1641,13 @@
                     <td><span class="barber-tag">💈 ${escapeHtml(n.barberman || '-')}</span></td>
                     <td class="cell-total"><strong>${formatRupiah(n.total)}</strong></td>
                     <td class="cell-tanggal">${formatTanggalKeu(n.tanggal)}</td>
-                    <td class="cell-actions">
+                                        <td class="cell-actions">
                         ${n.status === 'batal'
                             ? '<span class="badge badge-red" style="font-size:0.6rem;">🚫 BATAL</span>'
                             : `<button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
-                               <button class="delete-btn" onclick="openBatalNota('${n.id}')" title="Batalkan">🚫</button>`}
+                               ${(currentUser.role === 'admin' || n.barberman === currentUser.namaOperator)
+                                   ? `<button class="delete-btn" onclick="openBatalNota('${n.id}')" title="Batalkan">🚫</button>`
+                                   : ''}`}
                     </td>
                 </tr>`;
             });
@@ -1817,11 +1819,19 @@
                     <td>${escapeHtml(k.keterangan || '-')}</td>
                     <td>${escapeHtml(k.metode || '-')}</td>
                     <td style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
-                    <td style="text-align:right;">
-                        ${dariNota
-                            ? `<button class="btn-mini" onclick="cetakNotaById('${k.refNotaId}')" title="Lihat nota">📋</button>
-                               <button class="delete-btn" onclick="openBatalKeuangan('${k.id}')" title="Batalkan">🚫</button>`
-                            : `<button class="delete-btn" onclick="openBatalKeuangan('${k.id}')" title="Batalkan">🚫</button>`}
+                                        <td style="text-align:right;">
+                        ${k.status === 'batal'
+                            ? '<span class="badge badge-red" style="font-size:0.6rem;">🚫 BATAL</span>'
+                            : (() => {
+                                const bisaBatal = (currentUser.role === 'admin') || (k.inputBy === currentUser.namaOperator);
+                                const btnCetak = dariNota
+                                    ? `<button class="btn-mini" onclick="cetakNotaById('${k.refNotaId}')" title="Lihat nota">📋</button>`
+                                    : '';
+                                const btnBatal = bisaBatal
+                                    ? `<button class="delete-btn" onclick="openBatalKeuangan('${k.id}')" title="Batalkan">🚫</button>`
+                                    : '';
+                                return btnCetak + btnBatal;
+                              })()}
                     </td>
                 </tr>`;
             });
@@ -1869,10 +1879,18 @@
         keuJenis.addEventListener('change', function() { updateKategoriOptions(); });
 
         // ⭐ MODAL PEMBATALAN
-        window.openBatalNota = function(id) {
-            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+                window.openBatalNota = function(id) {
             const nota = notaList.find(n => n.id === id);
             if (!nota) return;
+            // Validasi kepemilikan untuk barberman
+            if (currentUser.role !== 'admin' && nota.barberman !== currentUser.namaOperator) {
+                alert('❌ Anda hanya bisa membatalkan nota milik Anda sendiri.');
+                return;
+            }
+            if (nota.status === 'batal') {
+                alert('Nota sudah dibatalkan.');
+                return;
+            }
             batalContext = { jenis: 'nota', id: id, label: `Nota ${nota.nomorNota || nota.id.slice(-6)} - ${nota.nama} (${formatRupiah(nota.total)})` };
             batalRefInfo.textContent = batalContext.label;
             batalAlasan.value = '';
@@ -1882,10 +1900,18 @@
             setTimeout(() => batalAlasan.focus(), 200);
         };
 
-        window.openBatalKeuangan = function(id) {
-            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+                window.openBatalKeuangan = function(id) {
             const k = keuanganList.find(x => x.id === id);
             if (!k) return;
+            // Validasi kepemilikan untuk barberman
+            if (currentUser.role !== 'admin' && k.inputBy !== currentUser.namaOperator) {
+                alert('❌ Anda hanya bisa membatalkan transaksi yang Anda buat sendiri.');
+                return;
+            }
+            if (k.status === 'batal') {
+                alert('Transaksi sudah dibatalkan.');
+                return;
+            }
             batalContext = { jenis: 'keuangan', id: id, label: `${k.jenis === 'masuk' ? '💵' : '💸'} ${k.kategori || '-'} - ${formatRupiah(k.jumlah)} (${k.keterangan || '-'})` };
             batalRefInfo.textContent = batalContext.label;
             batalAlasan.value = '';
@@ -1947,7 +1973,7 @@
                     keuTerkait.olehBatal = oleh;
                     if (apiOnline) await apiCall('cancelKeuangan', { id: keuTerkait.id, alasan: 'Nota terkait dibatalkan', oleh }, 'POST').catch(() => {});
                 }
-                if (apiOnline) res = await apiCall('cancelNota', { id, alasan, oleh }, 'POST');
+                if (apiOnline) res = await apiCall('cancelNota', { id, alasan, oleh, role: currentUser.role }, 'POST');
 
                 logPembatalanList.push({
                     id: 'log_' + Date.now(),
@@ -1966,7 +1992,7 @@
                     k.tglBatal = new Date().toISOString();
                     k.olehBatal = oleh;
                 }
-                if (apiOnline) res = await apiCall('cancelKeuangan', { id, alasan, oleh }, 'POST');
+                if (apiOnline) res = await apiCall('cancelKeuangan', { id, alasan, oleh, role: currentUser.role }, 'POST');
 
                 logPembatalanList.push({
                     id: 'log_' + Date.now(),
@@ -1995,17 +2021,24 @@
             alert('✅ Data berhasil dibatalkan. Saldo & dashboard sudah diperbarui.');
         });
 
-        function renderLogPembatalan() {
-            if (!currentUser || currentUser.role !== 'admin') return;
+                function renderLogPembatalan() {
             if (!logBatalContainer) return;
-            if (logPembatalanList.length === 0) {
+
+            // ⭐ Barberman hanya lihat log yang dia buat
+            let logs = logPembatalanList;
+            if (currentUser.role !== 'admin') {
+                const namaOp = currentUser.namaOperator || currentUser.username;
+                logs = logs.filter(l => l.oleh === namaOp);
+            }
+
+            if (logs.length === 0) {
                 logBatalContainer.innerHTML = '<div class="empty-state">Belum ada pembatalan.</div>';
                 logBatalCount.textContent = '0 log';
                 return;
             }
-            logBatalCount.textContent = logPembatalanList.length + ' log';
+            logBatalCount.textContent = logs.length + ' log';
             let html = '';
-            [...logPembatalanList].reverse().slice(0, 50).forEach(log => {
+            [...logs].reverse().slice(0, 50).forEach(log => {
                 const isNota = log.jenis === 'nota';
                 const icon = isNota ? '📋' : '💰';
                 const label = isNota ? 'Nota' : 'Keuangan';
@@ -2021,6 +2054,16 @@
                 </div>`;
             });
             logBatalContainer.innerHTML = html;
+
+            // Update info text
+            const infoEl = document.getElementById('logBatalInfo');
+            if (infoEl) {
+                if (currentUser.role === 'admin') {
+                    infoEl.textContent = 'Semua pembatalan nota & keuangan tercatat di sini.';
+                } else {
+                    infoEl.textContent = 'Pembatalan yang Anda lakukan tercatat di sini.';
+                }
+            }
         }
 
         function renderUserList() {
