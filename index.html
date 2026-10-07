@@ -78,6 +78,9 @@
         .nav-item.active::before { content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 3px; background: #f59e0b; border-radius: 0 0 4px 4px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+                /* ⭐ Admin-only: hanya tampil untuk admin */
+        .admin-only { display: none !important; }
+        body.admin-mode .admin-only { display: block !important; }
         .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 1.25rem; }
         .card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.65rem; }
         .clock-panel { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-radius: 20px; padding: 1.25rem; color: white; margin-bottom: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center; }
@@ -474,7 +477,7 @@
             </div>
         </div>
 
-        <div class="card">
+       <div class="card admin-only">
             <div class="card-title"><span>📹</span> Rekaman CCTV (Referensi)</div>
             <div class="form-group">
                 <label>Keterangan / Nama</label>
@@ -506,7 +509,7 @@
             </div>
         </div>
 
-        <div class="report-section">
+               <div class="report-section admin-only">
             <div class="card-title" style="border-bottom:none; margin-bottom:0.75rem;">
                 <span>📊</span> Laporan & Pencocokan CCTV
             </div>
@@ -1094,6 +1097,7 @@
         function showLoginPage() {
             loginPage.classList.remove('hidden'); app.classList.add('hidden');
             document.getElementById('bottomNav').style.display = 'none';
+            document.body.classList.remove('admin-mode');    // ⭐ TAMBAH INI
             selectedLoginRole = '';
             document.querySelectorAll('#loginRoleSelector .role-option').forEach(el => el.classList.remove('selected'));
             loginFieldsContainer.style.display = 'none';
@@ -1105,6 +1109,7 @@
             loginPage.classList.add('hidden'); app.classList.remove('hidden');
             document.getElementById('bottomNav').style.display = 'grid';
             if (currentUser.role === 'admin') {
+                document.body.classList.add('admin-mode');       // ⭐ TAMBAH INI
                 userAvatar.textContent = '👨‍💼'; userAvatar.classList.add('admin');
                 userName.textContent = 'Admin'; userRole.textContent = 'Administrator';
                 subheadText.innerHTML = 'Mode Admin — kelola semua';
@@ -1113,6 +1118,7 @@
                 navUser.style.display = 'flex';
                 navLayanan.style.display = 'flex';
             } else {
+                document.body.classList.remove('admin-mode');    // ⭐ TAMBAH INI
                 userAvatar.textContent = '💈'; userAvatar.classList.remove('admin');
                 userName.textContent = currentUser.namaOperator;
                 userRole.textContent = 'Barberman · @' + currentUser.username;
