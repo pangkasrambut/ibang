@@ -78,7 +78,6 @@
         .nav-item.active::before { content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 3px; background: #f59e0b; border-radius: 0 0 4px 4px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-                /* ⭐ Admin-only: hanya tampil untuk admin */
         .admin-only { display: none !important; }
         body.admin-mode .admin-only { display: block !important; }
         .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.25rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 1.25rem; }
@@ -477,7 +476,7 @@
             </div>
         </div>
 
-       <div class="card admin-only">
+        <div class="card admin-only">
             <div class="card-title"><span>📹</span> Rekaman CCTV (Referensi)</div>
             <div class="form-group">
                 <label>Keterangan / Nama</label>
@@ -509,7 +508,7 @@
             </div>
         </div>
 
-               <div class="report-section admin-only">
+        <div class="report-section admin-only">
             <div class="card-title" style="border-bottom:none; margin-bottom:0.75rem;">
                 <span>📊</span> Laporan & Pencocokan CCTV
             </div>
@@ -595,14 +594,7 @@
             <div class="form-group">
                 <label>Kategori <span class="required">*</span></label>
                 <select id="keuKategori">
-                    <option value="Modal">Modal</option>
-                    <option value="Belanja Stok">Belanja Stok (Shampoo, dll)</option>
-                    <option value="Bayar Listrik">Bayar Listrik / Air</option>
-                    <option value="Gaji Barberman">Gaji Barberman</option>
-                    <option value="Sewa Tempat">Sewa Tempat</option>
-                    <option value="Peralatan">Peralatan</option>
-                    <option value="Operasional">Operasional Lain</option>
-                    <option value="Pendapatan Lain">Pendapatan Lain</option>
+                    <option value="">-- Pilih Kategori --</option>
                 </select>
             </div>
             <div class="form-group">
@@ -664,6 +656,52 @@
                 </table>
             </div>
         </div>
+
+        <!-- ⭐ KELOLA KATEGORI (Khusus Admin) -->
+        <div class="card admin-only">
+            <div class="card-title"><span>📂</span> Kelola Kategori Keuangan</div>
+            <div class="alert-box alert-info show" style="margin-bottom:1rem;">
+                💡 Kategori yang <b>Nonaktif</b> tidak akan muncul di form input transaksi.
+            </div>
+
+            <div class="setting-group">
+                <input type="hidden" id="kategoriId">
+                <div class="row-2">
+                    <div class="form-group">
+                        <label>Nama Kategori <span class="required">*</span></label>
+                        <input type="text" id="kategoriNama" placeholder="Contoh: Beli Shampoo" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis <span class="required">*</span></label>
+                        <select id="kategoriJenis">
+                            <option value="masuk">💵 Pemasukan</option>
+                            <option value="keluar" selected>💸 Pengeluaran</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="kategoriAktif">
+                        <option value="true">🟢 Aktif (muncul di form input)</option>
+                        <option value="false">🔴 Nonaktif (disembunyikan)</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="btn btn-green" id="btnSimpanKategori" style="flex:1; min-width:150px;">
+                        <span>💾</span> <span id="btnSimpanKategoriText">Tambah Kategori</span>
+                    </button>
+                    <button class="btn btn-outline" id="btnBatalEditKategori" style="flex:0 0 auto; padding:14px 20px; display:none;">
+                        <span>✕</span> Batal
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-between" style="margin-bottom:0.5rem;">
+                <span class="text-muted" style="font-weight:700;">Daftar Kategori</span>
+                <span class="badge badge-blue" id="kategoriCount">0 kategori</span>
+            </div>
+            <div id="kategoriListContainer"></div>
+        </div>
     </div>
 
     <!-- TAB: SETTING -->
@@ -707,7 +745,7 @@
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.2 • Kelola Layanan</strong>
+                    <strong>v3.3 • Kelola Kategori</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
@@ -896,8 +934,7 @@
     </div>
 </div>
 
-
-    <script>
+<script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbx8o0RYQbIZGZX0uxMNCyV6wUG7ukKqKsDK8sakPD6WysWpy4eg0PTBAr81puRu6Al5sA/exec';
 
     (function() {
@@ -912,6 +949,11 @@
             { id: 'perming', nama: 'Perming', harga: 200000 }
         ];
 
+        const KATEGORI_KEUANGAN = {
+            masuk: ['Pendapatan Lain','Pendapatan Jual Produk','Modal Awal','Tambahan Modal','Pinjaman Masuk','Pendapatan Bunga','Pengembalian','Lain-lain'],
+            keluar: ['Belanja Stok','Bayar Listrik / Air','Gaji Barberman','Sewa Tempat','Peralatan','Perawatan','Operasional','Bayar Pinjaman','Pajak & Iuran','Transportasi','Promosi & Marketing','Lain-lain']
+        };
+
         const STORAGE_KEY = 'barbershop_sesi_aktif';
         const AUTH_KEY = 'barbershop_auth';
         const KEKEUANGAN_KEY = 'barbershop_keuangan';
@@ -922,6 +964,7 @@
         let keuanganList = [];
         let userList = [];
         let layananList = [];
+        let kategoriList = [];
         let shopProfile = { nama: 'Barbershop', alamat: 'Jl. Contoh No. 123, Kota', hp: '0812-3456-7890', jumlahKursi: 5 };
         let sesiAktif = null;
         let layananDipilihModal = [];
@@ -982,6 +1025,9 @@
         const btnSimpanLayanan = $('btnSimpanLayanan'), btnSimpanLayananText = $('btnSimpanLayananText'), btnBatalEditLayanan = $('btnBatalEditLayanan');
         const layananFormTitle = $('layananFormTitle');
         const layananListContainer = $('layananListContainer'), layananCount = $('layananCount');
+        const kategoriId = $('kategoriId'), kategoriNama = $('kategoriNama'), kategoriJenis = $('kategoriJenis'), kategoriAktif = $('kategoriAktif');
+        const btnSimpanKategori = $('btnSimpanKategori'), btnSimpanKategoriText = $('btnSimpanKategoriText'), btnBatalEditKategori = $('btnBatalEditKategori');
+        const kategoriListContainer = $('kategoriListContainer'), kategoriCount = $('kategoriCount');
         const setOldPass = $('setOldPass'), setNewPass = $('setNewPass'), setConfirmPass = $('setConfirmPass'), btnGantiPassword = $('btnGantiPassword');
         const settingUserInfo = $('settingUserInfo');
         const dashPendapatanHari = $('dashPendapatanHari'), dashPendapatanHariCount = $('dashPendapatanHariCount');
@@ -1097,7 +1143,7 @@
         function showLoginPage() {
             loginPage.classList.remove('hidden'); app.classList.add('hidden');
             document.getElementById('bottomNav').style.display = 'none';
-            document.body.classList.remove('admin-mode');    // ⭐ TAMBAH INI
+            document.body.classList.remove('admin-mode');
             selectedLoginRole = '';
             document.querySelectorAll('#loginRoleSelector .role-option').forEach(el => el.classList.remove('selected'));
             loginFieldsContainer.style.display = 'none';
@@ -1109,7 +1155,7 @@
             loginPage.classList.add('hidden'); app.classList.remove('hidden');
             document.getElementById('bottomNav').style.display = 'grid';
             if (currentUser.role === 'admin') {
-                document.body.classList.add('admin-mode');       // ⭐ TAMBAH INI
+                document.body.classList.add('admin-mode');
                 userAvatar.textContent = '👨‍💼'; userAvatar.classList.add('admin');
                 userName.textContent = 'Admin'; userRole.textContent = 'Administrator';
                 subheadText.innerHTML = 'Mode Admin — kelola semua';
@@ -1118,7 +1164,7 @@
                 navUser.style.display = 'flex';
                 navLayanan.style.display = 'flex';
             } else {
-                document.body.classList.remove('admin-mode');    // ⭐ TAMBAH INI
+                document.body.classList.remove('admin-mode');
                 userAvatar.textContent = '💈'; userAvatar.classList.remove('admin');
                 userName.textContent = currentUser.namaOperator;
                 userRole.textContent = 'Barberman · @' + currentUser.username;
@@ -1164,11 +1210,12 @@
         async function syncDataFromServer() {
             if (!apiOnline) { renderAll(); return; }
             setApiStatus('loading');
-            const [notaRes, cctvRes, userRes, layananRes] = await Promise.all([
+            const [notaRes, cctvRes, userRes, layananRes, kategoriRes] = await Promise.all([
                 apiCall('getNota', {}, 'GET'),
                 apiCall('getCctv', {}, 'GET'),
                 apiCall('getUsers', {}, 'GET'),
-                apiCall('getLayanan', {}, 'GET')
+                apiCall('getLayanan', {}, 'GET'),
+                apiCall('getKategori', {}, 'GET')
             ]);
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
@@ -1177,34 +1224,25 @@
                 layananList = layananRes.data;
                 LAYANAN_MASTER = layananList.filter(l => l.aktif !== false);
             }
-                        setApiStatus('online');
+            if (kategoriRes && kategoriRes.ok && kategoriRes.data && kategoriRes.data.length > 0) {
+                kategoriList = kategoriRes.data;
+            }
+            setApiStatus('online');
             rebuildKeuanganFromNota();
             updateSaldo();
             renderAll();
-            // ⭐ Refresh tab yang sedang aktif supaya data server langsung tampil
             refreshActiveTab();
         }
 
-        // ⭐ Fungsi baru: refresh konten tab aktif
         function refreshActiveTab() {
-            if (activeTab === 'layanan' && currentUser && currentUser.role === 'admin') {
-                renderLayananList();
-            }
-            if (activeTab === 'user' && currentUser && currentUser.role === 'admin') {
-                renderUserList();
-            }
+            if (activeTab === 'layanan' && currentUser && currentUser.role === 'admin') renderLayananList();
+            if (activeTab === 'user' && currentUser && currentUser.role === 'admin') renderUserList();
             if (activeTab === 'keuangan') {
-                renderKeuangan();
-                updateSaldo();
+                renderKeuangan(); updateSaldo(); updateKategoriOptions();
+                if (currentUser && currentUser.role === 'admin') renderKategoriList();
             }
-            if (activeTab === 'dashboard') {
-                renderDashboard();
-            }
-            if (activeTab === 'nota') {
-                renderNotaList();
-                renderCctvList();
-                renderLaporan();
-            }
+            if (activeTab === 'dashboard') renderDashboard();
+            if (activeTab === 'nota') { renderNotaList(); renderCctvList(); renderLaporan(); }
         }
 
         function switchLoginTab(tab) {
@@ -1230,7 +1268,7 @@
         function validateLoginForm() { btnLogin.disabled = !(selectedLoginRole && loginUsername.value.trim() && loginPassword.value); }
         loginUsername.addEventListener('input', validateLoginForm);
         loginPassword.addEventListener('input', validateLoginForm);
-                loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click(); });
+        loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click(); });
 
         // ⭐ Enter di username → fokus ke password
         loginUsername.addEventListener('keydown', function(e) {
@@ -1290,7 +1328,15 @@
             if (target) target.classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.tab === tabName));
             if (tabName === 'dashboard') renderDashboard();
-            if (tabName === 'keuangan') { renderKeuangan(); updateSaldo(); }
+            if (tabName === 'keuangan') {
+                renderKeuangan();
+                updateSaldo();
+                updateKategoriOptions();
+                if (currentUser && currentUser.role === 'admin') {
+                    renderKategoriList();
+                    resetKategoriForm();
+                }
+            }
             if (tabName === 'layanan') {
                 if (currentUser.role !== 'admin') { alert('Hanya admin.'); switchTab('nota'); return; }
                 renderLayananList();
@@ -1431,26 +1477,16 @@
             notaList.push(notaBaru);
 
             const ketLayanan = layananArr.map(l => l.nama).join(', ');
-            const ketNota = `Nota ${nomorNota} - ${nama}` +
-                            (noKursi ? ` (Kursi ${noKursi})` : '') +
-                            (ketLayanan ? ` - ${ketLayanan}` : '');
+            const ketNota = `Nota ${nomorNota} - ${nama}` + (noKursi ? ` (Kursi ${noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
             const keuNota = {
-                id: 'keu_nota_' + notaBaru.id,
-                jenis: 'masuk',
-                kategori: 'Layanan Barbershop',
-                jumlah: total,
-                keterangan: ketNota,
-                tanggal: tanggalNota,
-                metode: 'Cash',
-                inputBy: barberman,
-                refNotaId: notaBaru.id
+                id: 'keu_nota_' + notaBaru.id, jenis: 'masuk', kategori: 'Layanan Barbershop',
+                jumlah: total, keterangan: ketNota, tanggal: tanggalNota, metode: 'Cash',
+                inputBy: barberman, refNotaId: notaBaru.id
             };
             keuanganList.push(keuNota);
             saveKeuangan();
             if (apiOnline) apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
-            updateSaldo();
-            renderKeuangan();
-            renderDashboard();
+            updateSaldo(); renderKeuangan(); renderDashboard();
 
             sesiAktif = null; saveSesiToCache(); updateClockUI();
             tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
@@ -1740,6 +1776,7 @@
             const keterangan = keuKeterangan.value.trim();
             const tanggal = keuTanggal.value || getTanggalSekarang();
             const metode = keuMetode.value;
+            if (!kategori) { alert('Pilih kategori dulu.'); keuKategori.focus(); return; }
             if (jumlah <= 0) { alert('Jumlah harus > 0'); keuJumlah.focus(); return; }
             const transaksi = {
                 id: 'keu_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
@@ -1747,7 +1784,7 @@
                 inputBy: currentUser ? (currentUser.namaOperator || currentUser.username) : 'unknown'
             };
             keuanganList.push(transaksi); saveKeuangan();
-            keuJumlah.value = ''; keuKeterangan.value = '';
+            keuJumlah.value = ''; keuKeterangan.value = ''; keuKategori.value = '';
             updateSaldo(); renderKeuangan(); renderDashboard();
             if (apiOnline) apiCall('addKeuangan', transaksi, 'POST');
             alert('✅ Transaksi berhasil disimpan!');
@@ -1762,6 +1799,24 @@
         filterKeuTanggal.addEventListener('change', function() { filterKeuTanggalValue = filterKeuTanggal.value; renderKeuangan(); });
         filterKeuJenis.addEventListener('change', function() { filterKeuJenisValue = filterKeuJenis.value; renderKeuangan(); });
         btnResetFilterKeu.addEventListener('click', function() { filterKeuTanggal.value = ''; filterKeuJenis.value = ''; filterKeuTanggalValue = ''; filterKeuJenisValue = ''; renderKeuangan(); });
+
+        // ⭐ Update kategori dropdown berdasarkan jenis
+        function updateKategoriOptions() {
+            if (!keuKategori || !keuJenis) return;
+            const jenis = keuJenis.value;
+            let list = kategoriList.filter(k => k.jenis === jenis && k.aktif !== false);
+            if (list.length === 0) {
+                const fallback = KATEGORI_KEUANGAN[jenis] || [];
+                let html = '<option value="">-- Pilih Kategori --</option>';
+                fallback.forEach(k => { html += `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`; });
+                keuKategori.innerHTML = html;
+                return;
+            }
+            let html = '<option value="">-- Pilih Kategori --</option>';
+            list.forEach(k => { html += `<option value="${escapeHtml(k.nama)}">${escapeHtml(k.nama)}</option>`; });
+            keuKategori.innerHTML = html;
+        }
+        keuJenis.addEventListener('change', function() { updateKategoriOptions(); });
 
         function renderUserList() {
             if (currentUser.role !== 'admin') return;
@@ -1849,10 +1904,7 @@
                 saveKeuangan();
                 if (apiOnline) apiCall('deleteKeuangan', { id: keuTerkait.id }, 'POST').catch(() => {});
             }
-            updateSaldo();
-            renderAll();
-            renderKeuangan();
-            renderDashboard();
+            updateSaldo(); renderAll(); renderKeuangan(); renderDashboard();
             if (apiOnline) apiCall('deleteNota', { id }, 'POST');
         };
         window.deleteCctv = async function(id) {
@@ -1874,19 +1926,11 @@
                 const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
                 if (!exists && n.total > 0) {
                     const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
-                    const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` +
-                                    (n.noKursi ? ` (Kursi ${n.noKursi})` : '') +
-                                    (ketLayanan ? ` - ${ketLayanan}` : '');
+                    const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` + (n.noKursi ? ` (Kursi ${n.noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
                     keuanganList.push({
-                        id: keuId,
-                        jenis: 'masuk',
-                        kategori: 'Layanan Barbershop',
-                        jumlah: Number(n.total) || 0,
-                        keterangan: ketNota,
-                        tanggal: n.tanggal,
-                        metode: 'Cash',
-                        inputBy: n.barberman || '',
-                        refNotaId: n.id
+                        id: keuId, jenis: 'masuk', kategori: 'Layanan Barbershop',
+                        jumlah: Number(n.total) || 0, keterangan: ketNota, tanggal: n.tanggal,
+                        metode: 'Cash', inputBy: n.barberman || '', refNotaId: n.id
                     });
                     changed = true;
                 }
@@ -1906,16 +1950,13 @@
 
         // ============ LAYANAN (Admin) ============
         function resetLayananForm() {
-            layananId.value = '';
-            layananNama.value = '';
-            layananHarga.value = '';
-            layananAktif.value = 'true';
+            layananId.value = ''; layananNama.value = ''; layananHarga.value = ''; layananAktif.value = 'true';
             layananFormTitle.textContent = 'Tambah Layanan';
             btnSimpanLayananText.textContent = 'Tambah Layanan';
             btnBatalEditLayanan.style.display = 'none';
         }
 
-                        function renderLayananList() {
+        function renderLayananList() {
             if (currentUser.role !== 'admin') return;
             if (!layananList || layananList.length === 0) {
                 if (apiOnline) {
@@ -1964,9 +2005,7 @@
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const l = layananList.find(x => x.id === id);
             if (!l) return;
-            layananId.value = l.id;
-            layananNama.value = l.nama;
-            layananHarga.value = l.harga;
+            layananId.value = l.id; layananNama.value = l.nama; layananHarga.value = l.harga;
             layananAktif.value = (l.aktif !== false) ? 'true' : 'false';
             layananFormTitle.textContent = 'Edit Layanan';
             btnSimpanLayananText.textContent = 'Simpan Perubahan';
@@ -1996,16 +2035,11 @@
             const nama = layananNama.value.trim();
             const harga = parseFloat(layananHarga.value) || 0;
             const aktif = layananAktif.value === 'true';
-
             if (!nama) { alert('Nama layanan wajib diisi.'); layananNama.focus(); return; }
             if (harga <= 0) { alert('Harga harus > 0.'); layananHarga.focus(); return; }
-
             const isEdit = !!id;
             const payload = { id: id || undefined, nama, harga, aktif };
-
-            btnSimpanLayanan.disabled = true;
-            btnSimpanLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
-
+            btnSimpanLayanan.disabled = true; btnSimpanLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
             if (isEdit) {
                 const idx = layananList.findIndex(x => x.id === id);
                 if (idx > -1) layananList[idx] = { id, nama, harga, aktif };
@@ -2022,16 +2056,115 @@
                     if (!res || !res.ok) alert('⚠️ Gagal sync: ' + (res.message || 'Error'));
                 }
             }
-
             LAYANAN_MASTER = layananList.filter(x => x.aktif !== false);
-
             btnSimpanLayanan.disabled = false;
             btnSimpanLayanan.innerHTML = '<span>💾</span> <span id="btnSimpanLayananText">' + (isEdit ? 'Simpan Perubahan' : 'Tambah Layanan') + '</span>';
             alert(isEdit ? '✅ Layanan diperbarui!' : '✅ Layanan ditambahkan!');
-            resetLayananForm();
-            renderLayananList();
+            resetLayananForm(); renderLayananList();
         });
 
+        // ============ KATEGORI KEUANGAN (Admin) ============
+        function resetKategoriForm() {
+            if (!kategoriId) return;
+            kategoriId.value = ''; kategoriNama.value = ''; kategoriJenis.value = 'keluar'; kategoriAktif.value = 'true';
+            btnSimpanKategoriText.textContent = 'Tambah Kategori';
+            btnBatalEditKategori.style.display = 'none';
+        }
+
+        function renderKategoriList() {
+            if (!currentUser || currentUser.role !== 'admin') return;
+            if (!kategoriList || kategoriList.length === 0) {
+                kategoriListContainer.innerHTML = '<div class="empty-state">Belum ada kategori. Tambah di form atas.</div>';
+                kategoriCount.textContent = '0 kategori';
+                return;
+            }
+            kategoriCount.textContent = kategoriList.length + ' kategori';
+            const masuk = kategoriList.filter(k => k.jenis === 'masuk');
+            const keluar = kategoriList.filter(k => k.jenis === 'keluar');
+            let html = '';
+            function renderGroup(title, icon, list, bgColor) {
+                if (list.length === 0) return '';
+                let g = `<div style="margin-bottom:1rem;"><div style="font-weight:800; font-size:0.85rem; color:${bgColor}; margin-bottom:0.5rem; padding:6px 10px; background:${bgColor}15; border-radius:8px;">${icon} ${title} (${list.length})</div>`;
+                list.forEach(k => {
+                    const isAktif = k.aktif !== false;
+                    g += `<div class="user-row" style="margin-bottom:6px;">
+                        <div class="ur-info">
+                            <div class="ur-name" style="font-size:0.85rem;">${escapeHtml(k.nama)}</div>
+                            <div class="ur-detail" style="font-size:0.68rem;">${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'} · <span style="color:#94a3b8;">${escapeHtml(k.id)}</span></div>
+                        </div>
+                        <div class="ur-actions">
+                            <button class="btn-mini" onclick="editKategori('${escapeHtml(k.id)}')" title="Edit">✏️</button>
+                            <button class="delete-btn" onclick="hapusKategori('${escapeHtml(k.id)}')" title="Hapus">✕</button>
+                        </div>
+                    </div>`;
+                });
+                g += '</div>';
+                return g;
+            }
+            html += renderGroup('PEMASUKAN', '💵', masuk, '#16a34a');
+            html += renderGroup('PENGELUARAN', '💸', keluar, '#dc2626');
+            kategoriListContainer.innerHTML = html;
+        }
+
+        window.editKategori = function(id) {
+            if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const k = kategoriList.find(x => x.id === id);
+            if (!k) return;
+            kategoriId.value = k.id; kategoriNama.value = k.nama; kategoriJenis.value = k.jenis;
+            kategoriAktif.value = (k.aktif !== false) ? 'true' : 'false';
+            btnSimpanKategoriText.textContent = 'Simpan Perubahan';
+            btnBatalEditKategori.style.display = 'inline-flex';
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        };
+
+        window.hapusKategori = async function(id) {
+            if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const k = kategoriList.find(x => x.id === id);
+            if (!k) return;
+            if (!confirm('Hapus kategori "' + k.nama + '"?\n\nTransaksi lama tetap aman.')) return;
+            kategoriList = kategoriList.filter(x => x.id !== id);
+            renderKategoriList(); updateKategoriOptions();
+            if (apiOnline) {
+                const res = await apiCall('deleteKategori', { id }, 'POST');
+                if (!res || !res.ok) alert('⚠️ Gagal hapus di server: ' + (res.message || 'Error'));
+            }
+        };
+
+        if (btnBatalEditKategori) btnBatalEditKategori.addEventListener('click', resetKategoriForm);
+
+        if (btnSimpanKategori) btnSimpanKategori.addEventListener('click', async function() {
+            if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const id = kategoriId.value.trim();
+            const nama = kategoriNama.value.trim();
+            const jenis = kategoriJenis.value;
+            const aktif = kategoriAktif.value === 'true';
+            if (!nama) { alert('Nama kategori wajib diisi.'); kategoriNama.focus(); return; }
+            if (jenis !== 'masuk' && jenis !== 'keluar') { alert('Jenis tidak valid.'); return; }
+            const isEdit = !!id;
+            const payload = { id: id || undefined, nama, jenis, aktif };
+            btnSimpanKategori.disabled = true;
+            btnSimpanKategori.innerHTML = '<span>⏳</span> Menyimpan...';
+            if (isEdit) {
+                const idx = kategoriList.findIndex(x => x.id === id);
+                if (idx > -1) kategoriList[idx] = { id, nama, jenis, aktif };
+                if (apiOnline) {
+                    const res = await apiCall('updateKategori', payload, 'POST');
+                    if (!res || !res.ok) alert('⚠️ Gagal sync: ' + (res.message || 'Error'));
+                }
+            } else {
+                const newId = 'kat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                const newKat = { id: newId, nama, jenis, aktif };
+                kategoriList.push(newKat);
+                if (apiOnline) {
+                    const res = await apiCall('addKategori', newKat, 'POST');
+                    if (!res || !res.ok) alert('⚠️ Gagal sync: ' + (res.message || 'Error'));
+                }
+            }
+            btnSimpanKategori.disabled = false;
+            btnSimpanKategori.innerHTML = '<span>💾</span> <span id="btnSimpanKategoriText">' + (isEdit ? 'Simpan Perubahan' : 'Tambah Kategori') + '</span>';
+            alert(isEdit ? '✅ Kategori diperbarui!' : '✅ Kategori ditambahkan!');
+            resetKategoriForm(); renderKategoriList(); updateKategoriOptions();
+        });
 
         // ============ INIT ============
         const today = getTanggalSekarang();
