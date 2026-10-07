@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#1e293b">
     <title>Barbershop • Finance & CCTV Sync</title>
-
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
-        <!-- PWA Meta Tags -->
     <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,13 +14,8 @@
     <meta name="apple-mobile-web-app-title" content="Barbershop">
     <meta name="application-name" content="Barbershop">
     <meta name="msapplication-TileColor" content="#1e293b">
-    <meta name="theme-color" content="#1e293b">
     <link rel="apple-touch-icon" href="./icon-192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png">
-    
-    
-    
-    
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #f4f7fc; padding: 1rem; min-height: 100vh; font-size: 15px; color: #1e293b; padding-bottom: 90px; }
@@ -321,7 +313,6 @@
             <div class="tab-login" data-tab="register">📝 Register</div>
         </div>
         <div class="alert-box" id="authAlert"></div>
-
         <div id="loginFormContainer">
             <label>Pilih Role <span class="required">*</span></label>
             <div class="role-selector" id="loginRoleSelector">
@@ -353,7 +344,6 @@
                 <span>🔓</span> Login
             </button>
         </div>
-
         <div id="registerFormContainer" style="display:none;">
             <div class="alert-box alert-info show" style="margin-bottom:1rem;">
                 📝 Khusus <b>Barberman</b>. Admin tidak perlu register.
@@ -377,7 +367,6 @@
                 <span>📝</span> Daftar Sebagai Barberman
             </button>
         </div>
-
         <div class="text-muted" style="text-align:center; margin-top:1rem; font-size:0.72rem;">
             <span class="api-status api-loading" id="apiStatusLogin">⏳ Cek koneksi...</span>
         </div>
@@ -466,7 +455,7 @@
             </div>
         </div>
 
-                <div class="card">
+        <div class="card">
             <div class="flex-between">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
                     <span>📋</span> Daftar Nota
@@ -646,7 +635,7 @@
                 <span>💾</span> Simpan Transaksi
             </button>
         </div>
-                <div class="card">
+        <div class="card">
             <div class="flex-between" style="margin-bottom:0.5rem;">
                 <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
                     <span>📒</span> Riwayat Keuangan
@@ -691,7 +680,6 @@
             <div class="alert-box alert-info show" style="margin-bottom:1rem;">
                 💡 Kategori yang <b>Nonaktif</b> tidak akan muncul di form input transaksi.
             </div>
-
             <div class="setting-group">
                 <input type="hidden" id="kategoriId">
                 <div class="row-2">
@@ -723,12 +711,25 @@
                     </button>
                 </div>
             </div>
-
             <div class="flex-between" style="margin-bottom:0.5rem;">
                 <span class="text-muted" style="font-weight:700;">Daftar Kategori</span>
                 <span class="badge badge-blue" id="kategoriCount">0 kategori</span>
             </div>
             <div id="kategoriListContainer"></div>
+        </div>
+
+        <!-- ⭐ LOG PEMBATALAN (Khusus Admin) -->
+        <div class="card admin-only">
+            <div class="flex-between" style="margin-bottom:0.5rem;">
+                <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                    <span>🗂️</span> Log Pembatalan
+                </div>
+                <span class="badge badge-red" id="logBatalCount">0 log</span>
+            </div>
+            <div class="text-muted" style="margin-bottom:0.75rem;">
+                Semua pembatalan nota & keuangan tercatat di sini.
+            </div>
+            <div id="logBatalContainer"></div>
         </div>
     </div>
 
@@ -773,7 +774,7 @@
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.3 • Kelola Kategori</strong>
+                    <strong>v3.4 • Pembatalan & Log</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
@@ -856,9 +857,6 @@
                 <div class="form-group">
                     <label>Jumlah Kursi <span class="required">*</span></label>
                     <input type="number" id="shopJumlahKursi" placeholder="Contoh: 5" min="1" max="20" value="5" inputmode="numeric">
-                    <div class="text-muted" style="margin-top:4px;">
-                        Jumlah kursi akan muncul sebagai tombol pilihan di form nota.
-                    </div>
                 </div>
                 <button class="btn btn-green" id="btnSimpanShop">
                     <span>💾</span> Simpan Profil Barbershop
@@ -872,9 +870,6 @@
                 </div>
                 <span class="badge badge-blue" id="userCount">0 user</span>
             </div>
-            <div class="text-muted" style="margin-bottom:0.75rem;">
-                Aktif/nonaktifkan barberman atau ubah nama operator.
-            </div>
             <div id="userListContainer"></div>
         </div>
     </div>
@@ -882,30 +877,12 @@
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottomNav" style="display:none;">
-    <button class="nav-item" data-tab="dashboard">
-        <span class="nav-icon">📊</span>
-        <span class="nav-label">Dashboard</span>
-    </button>
-    <button class="nav-item active" data-tab="nota">
-        <span class="nav-icon">📋</span>
-        <span class="nav-label">Nota</span>
-    </button>
-    <button class="nav-item" data-tab="keuangan">
-        <span class="nav-icon">💰</span>
-        <span class="nav-label">Keuangan</span>
-    </button>
-    <button class="nav-item" data-tab="setting">
-        <span class="nav-icon">⚙️</span>
-        <span class="nav-label">Setting</span>
-    </button>
-    <button class="nav-item" data-tab="layanan" id="navLayanan" style="display:none;">
-        <span class="nav-icon">✂️</span>
-        <span class="nav-label">Layanan</span>
-    </button>
-    <button class="nav-item" data-tab="user" id="navUser" style="display:none;">
-        <span class="nav-icon">👥</span>
-        <span class="nav-label">User</span>
-    </button>
+    <button class="nav-item" data-tab="dashboard"><span class="nav-icon">📊</span><span class="nav-label">Dashboard</span></button>
+    <button class="nav-item active" data-tab="nota"><span class="nav-icon">📋</span><span class="nav-label">Nota</span></button>
+    <button class="nav-item" data-tab="keuangan"><span class="nav-icon">💰</span><span class="nav-label">Keuangan</span></button>
+    <button class="nav-item" data-tab="setting"><span class="nav-icon">⚙️</span><span class="nav-label">Setting</span></button>
+    <button class="nav-item" data-tab="layanan" id="navLayanan" style="display:none;"><span class="nav-icon">✂️</span><span class="nav-label">Layanan</span></button>
+    <button class="nav-item" data-tab="user" id="navUser" style="display:none;"><span class="nav-icon">👥</span><span class="nav-label">User</span></button>
 </div>
 
 <!-- MODAL PILIH LAYANAN -->
@@ -962,7 +939,38 @@
     </div>
 </div>
 
-<script>
+<!-- MODAL PEMBATALAN -->
+<div class="modal-overlay" id="modalBatal">
+    <div class="modal" style="max-width:440px;">
+        <div class="modal-header">
+            <h2>🚫 Konfirmasi Pembatalan</h2>
+            <button class="modal-close" id="modalBatalClose">✕</button>
+        </div>
+        <div class="alert-box alert-warning show" style="margin-bottom:1rem;">
+            ⚠️ Pembatalan <b>tidak bisa di-undo</b>. Data asli tetap tersimpan sebagai riwayat.
+        </div>
+        <div class="form-group">
+            <label>Yang dibatalkan</label>
+            <div id="batalRefInfo" style="padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; font-size:0.82rem; color:#475569;">
+                -
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Alasan Pembatalan <span class="required">*</span></label>
+            <textarea id="batalAlasan" placeholder="Contoh: Salah input layanan, pelanggan batal, nota duplikat, dll" style="min-height:80px;"></textarea>
+            <div class="text-muted" id="batalAlasanError" style="color:#dc2626; margin-top:4px; display:none;">
+                ⚠️ Alasan wajib diisi
+            </div>
+        </div>
+        <button class="btn btn-red" id="btnKonfirmasiBatal" style="margin-top:0.75rem;">
+            <span>🚫</span> Konfirmasi Pembatalan
+        </button>
+        <button class="btn btn-outline" id="btnBatalPembatalan" style="margin-top:0.5rem;">Batal</button>
+    </div>
+</div>
+
+
+    <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbxXGMkb0q7F83It6E6d71BHTnb5OJ_hRZPdbSSrHVG0D4T0sZVf4-kBqBgjpAsaxySsyA/exec';
 
     (function() {
@@ -993,6 +1001,8 @@
         let userList = [];
         let layananList = [];
         let kategoriList = [];
+        let logPembatalanList = [];
+        let batalContext = { jenis: '', id: '', label: '' };
         let shopProfile = { nama: 'Barbershop', alamat: 'Jl. Contoh No. 123, Kota', hp: '0812-3456-7890', jumlahKursi: 5 };
         let sesiAktif = null;
         let layananDipilihModal = [];
@@ -1038,6 +1048,8 @@
         let selectedKursi = null;
         const modalCetak = $('modalCetak'), modalCetakClose = $('modalCetakClose'), btnPrint = $('btnPrint'), btnTutupCetak = $('btnTutupCetak');
         const notaPreviewWrapper = $('notaPreviewWrapper');
+        const modalBatal = $('modalBatal'), modalBatalClose = $('modalBatalClose'), btnKonfirmasiBatal = $('btnKonfirmasiBatal'), btnBatalPembatalan = $('btnBatalPembatalan');
+        const batalRefInfo = $('batalRefInfo'), batalAlasan = $('batalAlasan'), batalAlasanError = $('batalAlasanError');
         const laporanBody = $('laporanBody');
         const totalPendapatan = $('totalPendapatan'), totalTransaksi = $('totalTransaksi'), totalCocok = $('totalCocok'), totalTidakCocok = $('totalTidakCocok');
         const filterBar = $('filterBar'), filterBarberman = $('filterBarberman'), filterTanggal = $('filterTanggal'), btnResetFilter = $('btnResetFilter');
@@ -1056,6 +1068,7 @@
         const kategoriId = $('kategoriId'), kategoriNama = $('kategoriNama'), kategoriJenis = $('kategoriJenis'), kategoriAktif = $('kategoriAktif');
         const btnSimpanKategori = $('btnSimpanKategori'), btnSimpanKategoriText = $('btnSimpanKategoriText'), btnBatalEditKategori = $('btnBatalEditKategori');
         const kategoriListContainer = $('kategoriListContainer'), kategoriCount = $('kategoriCount');
+        const logBatalContainer = $('logBatalContainer'), logBatalCount = $('logBatalCount');
         const setOldPass = $('setOldPass'), setNewPass = $('setNewPass'), setConfirmPass = $('setConfirmPass'), btnGantiPassword = $('btnGantiPassword');
         const settingUserInfo = $('settingUserInfo');
         const dashPendapatanHari = $('dashPendapatanHari'), dashPendapatanHariCount = $('dashPendapatanHariCount');
@@ -1238,12 +1251,13 @@
         async function syncDataFromServer() {
             if (!apiOnline) { renderAll(); return; }
             setApiStatus('loading');
-            const [notaRes, cctvRes, userRes, layananRes, kategoriRes] = await Promise.all([
+            const [notaRes, cctvRes, userRes, layananRes, kategoriRes, logRes] = await Promise.all([
                 apiCall('getNota', {}, 'GET'),
                 apiCall('getCctv', {}, 'GET'),
                 apiCall('getUsers', {}, 'GET'),
                 apiCall('getLayanan', {}, 'GET'),
-                apiCall('getKategori', {}, 'GET')
+                apiCall('getKategori', {}, 'GET'),
+                apiCall('getLogPembatalan', {}, 'GET')
             ]);
             if (notaRes && notaRes.ok) notaList = notaRes.data || [];
             if (cctvRes && cctvRes.ok) cctvList = cctvRes.data || [];
@@ -1254,6 +1268,9 @@
             }
             if (kategoriRes && kategoriRes.ok && kategoriRes.data && kategoriRes.data.length > 0) {
                 kategoriList = kategoriRes.data;
+            }
+            if (logRes && logRes.ok && logRes.data) {
+                logPembatalanList = logRes.data;
             }
             setApiStatus('online');
             rebuildKeuanganFromNota();
@@ -1267,7 +1284,10 @@
             if (activeTab === 'user' && currentUser && currentUser.role === 'admin') renderUserList();
             if (activeTab === 'keuangan') {
                 renderKeuangan(); updateSaldo(); updateKategoriOptions();
-                if (currentUser && currentUser.role === 'admin') renderKategoriList();
+                if (currentUser && currentUser.role === 'admin') {
+                    renderKategoriList();
+                    renderLogPembatalan();
+                }
             }
             if (activeTab === 'dashboard') renderDashboard();
             if (activeTab === 'nota') { renderNotaList(); renderCctvList(); renderLaporan(); }
@@ -1297,8 +1317,6 @@
         loginUsername.addEventListener('input', validateLoginForm);
         loginPassword.addEventListener('input', validateLoginForm);
         loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !btnLogin.disabled) btnLogin.click(); });
-
-        // ⭐ Enter di username → fokus ke password
         loginUsername.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1363,6 +1381,7 @@
                 if (currentUser && currentUser.role === 'admin') {
                     renderKategoriList();
                     resetKategoriForm();
+                    renderLogPembatalan();
                 }
             }
             if (tabName === 'layanan') {
@@ -1497,7 +1516,8 @@
             const notaBaru = {
                 id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
                 nomorNota, nama, noKursi, barberman, layanan: layananArr, total,
-                jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai, tanggal: tanggalNota
+                jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai, tanggal: tanggalNota,
+                status: 'aktif'
             };
             btnOkLayanan.disabled = true; btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
             if (apiOnline) await apiCall('addNota', notaBaru, 'POST');
@@ -1509,7 +1529,7 @@
             const keuNota = {
                 id: 'keu_nota_' + notaBaru.id, jenis: 'masuk', kategori: 'Layanan Barbershop',
                 jumlah: total, keterangan: ketNota, tanggal: tanggalNota, metode: 'Cash',
-                inputBy: barberman, refNotaId: notaBaru.id
+                inputBy: barberman, refNotaId: notaBaru.id, status: 'aktif'
             };
             keuanganList.push(keuNota);
             saveKeuangan();
@@ -1582,6 +1602,7 @@
 
         function getFilteredNota() {
             return notaList.filter(n => {
+                if (n.status === 'batal') return false;
                 if (currentUser && currentUser.role === 'barberman') { if (n.barberman !== currentUser.namaOperator) return false; }
                 else { if (filterBarbermanValue && n.barberman !== filterBarbermanValue) return false; }
                 if (filterTanggalValue && n.tanggal !== filterTanggalValue) return false;
@@ -1590,7 +1611,7 @@
         }
         function updateFilterBarbermanOptions() {
             const set = new Set();
-            notaList.forEach(n => { if (n.barberman) set.add(n.barberman); });
+            notaList.forEach(n => { if (n.status !== 'batal' && n.barberman) set.add(n.barberman); });
             const list = Array.from(set).sort();
             let html = '<option value="">👥 Semua Operator</option>';
             list.forEach(b => { html += `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`; });
@@ -1621,8 +1642,10 @@
                     <td class="cell-total"><strong>${formatRupiah(n.total)}</strong></td>
                     <td class="cell-tanggal">${formatTanggalKeu(n.tanggal)}</td>
                     <td class="cell-actions">
-                        <button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
-                        <button class="delete-btn" onclick="deleteNota('${n.id}')">✕</button>
+                        ${n.status === 'batal'
+                            ? '<span class="badge badge-red" style="font-size:0.6rem;">🚫 BATAL</span>'
+                            : `<button class="btn-mini print" onclick="cetakNotaById('${n.id}')">🖨️</button>
+                               <button class="delete-btn" onclick="openBatalNota('${n.id}')" title="Batalkan">🚫</button>`}
                     </td>
                 </tr>`;
             });
@@ -1705,6 +1728,7 @@
                 rekap7Hari[key] = 0;
             }
             notaList.forEach(n => {
+                if (n.status === 'batal') return;
                 const tgl = n.tanggal || '', total = Number(n.total) || 0;
                 if (tgl === today) { totalHari += total; countHari++; }
                 if (tgl.startsWith(thisMonth)) { totalBulan += total; countBulan++; }
@@ -1713,18 +1737,20 @@
                 if (!rekapOperator[b]) rekapOperator[b] = { total: 0, count: 0 };
                 rekapOperator[b].total += total; rekapOperator[b].count++;
             });
+            const notaAktif = notaList.filter(n => n.status !== 'batal');
             dashPendapatanHari.textContent = formatRupiah(totalHari);
             dashPendapatanHariCount.textContent = countHari + ' transaksi';
             dashPendapatanBulan.textContent = formatRupiah(totalBulan);
             dashPendapatanBulanCount.textContent = countBulan + ' transaksi';
-            dashTotalNota.textContent = notaList.length;
-            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
-            const masukNotaKeu = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            dashTotalNota.textContent = notaAktif.length;
+            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const masukNotaKeu = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
             const notaBelumKeu = notaList.filter(n => {
+                if (n.status === 'batal') return false;
                 const keuId = 'keu_nota_' + n.id;
-                return !keuanganList.some(k => k.id === keuId);
+                return !keuanganList.some(k => k.id === keuId && k.status !== 'batal');
             }).reduce((s,n) => s + Number(n.total||0), 0);
-            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar' && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
             dashSaldoKas.textContent = formatRupiah(masukManual + masukNotaKeu + notaBelumKeu - totalKeluar);
             const maxVal = Math.max(...Object.values(rekap7Hari), 1);
             let chartHtml = '';
@@ -1740,7 +1766,7 @@
                     const pct = (d.total / maxOp) * 100;
                     return `<div class="chart-bar-row"><div class="chart-bar-label">💈 ${escapeHtml(nama).slice(0,12)}</div><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${pct}%"></div></div><div class="chart-bar-value">${formatRupiah(d.total)}</div></div>`;
                 }).join('');
-            const terbaru = [...notaList].reverse().slice(0, 5);
+            const terbaru = [...notaAktif].reverse().slice(0, 5);
             dashNotaTerbaru.innerHTML = terbaru.length === 0 ? '<div class="empty-state">Belum ada nota</div>' :
                 terbaru.map(n => `<div class="cctv-item" style="border-left-color:#f59e0b; background:#fffbeb;">
                     <div class="info">
@@ -1753,20 +1779,22 @@
 
         function getFilteredKeuangan() {
             return keuanganList.filter(k => {
+                if (k.status === 'batal') return false;
                 if (filterKeuTanggalValue && k.tanggal !== filterKeuTanggalValue) return false;
                 if (filterKeuJenisValue && k.jenis !== filterKeuJenisValue) return false;
                 return true;
             });
         }
         function updateSaldo() {
-            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
-            const masukNota = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId).reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const masukManual = keuanganList.filter(k => k.jenis === 'masuk' && !k.refNotaId && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const masukNota = keuanganList.filter(k => k.jenis === 'masuk' && k.refNotaId && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
             const notaBelumKeu = notaList.filter(n => {
+                if (n.status === 'batal') return false;
                 const keuId = 'keu_nota_' + n.id;
-                return !keuanganList.some(k => k.id === keuId);
+                return !keuanganList.some(k => k.id === keuId && k.status !== 'batal');
             }).reduce((s,n) => s + Number(n.total||0), 0);
             const totalMasuk = masukManual + masukNota + notaBelumKeu;
-            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar').reduce((s,k) => s + Number(k.jumlah||0), 0);
+            const totalKeluar = keuanganList.filter(k => k.jenis === 'keluar' && k.status !== 'batal').reduce((s,k) => s + Number(k.jumlah||0), 0);
             saldoMasuk.textContent = formatRupiah(totalMasuk);
             saldoKeluar.textContent = formatRupiah(totalKeluar);
             saldoKasValue.textContent = formatRupiah(totalMasuk - totalKeluar);
@@ -1791,8 +1819,9 @@
                     <td style="text-align:right;" class="${isMasuk ? 'masuk' : 'keluar'}">${isMasuk ? '+' : '-'} ${formatRupiah(k.jumlah)}</td>
                     <td style="text-align:right;">
                         ${dariNota
-                            ? '<button class="btn-mini" onclick="cetakNotaById(\'' + k.refNotaId + '\')" title="Lihat nota">📋</button>'
-                            : '<button class="delete-btn" onclick="deleteKeuangan(\'' + k.id + '\')">✕</button>'}
+                            ? `<button class="btn-mini" onclick="cetakNotaById('${k.refNotaId}')" title="Lihat nota">📋</button>
+                               <button class="delete-btn" onclick="openBatalKeuangan('${k.id}')" title="Batalkan">🚫</button>`
+                            : `<button class="delete-btn" onclick="openBatalKeuangan('${k.id}')" title="Batalkan">🚫</button>`}
                     </td>
                 </tr>`;
             });
@@ -1809,7 +1838,8 @@
             const transaksi = {
                 id: 'keu_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
                 jenis, kategori, jumlah, keterangan, tanggal, metode,
-                inputBy: currentUser ? (currentUser.namaOperator || currentUser.username) : 'unknown'
+                inputBy: currentUser ? (currentUser.namaOperator || currentUser.username) : 'unknown',
+                status: 'aktif'
             };
             keuanganList.push(transaksi); saveKeuangan();
             keuJumlah.value = ''; keuKeterangan.value = ''; keuKategori.value = '';
@@ -1817,18 +1847,10 @@
             if (apiOnline) apiCall('addKeuangan', transaksi, 'POST');
             alert('✅ Transaksi berhasil disimpan!');
         });
-        window.deleteKeuangan = function(id) {
-            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
-            if (!confirm('Hapus transaksi ini?')) return;
-            keuanganList = keuanganList.filter(k => k.id !== id);
-            saveKeuangan(); updateSaldo(); renderKeuangan(); renderDashboard();
-            if (apiOnline) apiCall('deleteKeuangan', { id }, 'POST');
-        };
         filterKeuTanggal.addEventListener('change', function() { filterKeuTanggalValue = filterKeuTanggal.value; renderKeuangan(); });
         filterKeuJenis.addEventListener('change', function() { filterKeuJenisValue = filterKeuJenis.value; renderKeuangan(); });
         btnResetFilterKeu.addEventListener('click', function() { filterKeuTanggal.value = ''; filterKeuJenis.value = ''; filterKeuTanggalValue = ''; filterKeuJenisValue = ''; renderKeuangan(); });
 
-        // ⭐ Update kategori dropdown berdasarkan jenis
         function updateKategoriOptions() {
             if (!keuKategori || !keuJenis) return;
             const jenis = keuJenis.value;
@@ -1845,6 +1867,161 @@
             keuKategori.innerHTML = html;
         }
         keuJenis.addEventListener('change', function() { updateKategoriOptions(); });
+
+        // ⭐ MODAL PEMBATALAN
+        window.openBatalNota = function(id) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const nota = notaList.find(n => n.id === id);
+            if (!nota) return;
+            batalContext = { jenis: 'nota', id: id, label: `Nota ${nota.nomorNota || nota.id.slice(-6)} - ${nota.nama} (${formatRupiah(nota.total)})` };
+            batalRefInfo.textContent = batalContext.label;
+            batalAlasan.value = '';
+            batalAlasan.classList.remove('error');
+            batalAlasanError.style.display = 'none';
+            modalBatal.classList.add('active');
+            setTimeout(() => batalAlasan.focus(), 200);
+        };
+
+        window.openBatalKeuangan = function(id) {
+            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+            const k = keuanganList.find(x => x.id === id);
+            if (!k) return;
+            batalContext = { jenis: 'keuangan', id: id, label: `${k.jenis === 'masuk' ? '💵' : '💸'} ${k.kategori || '-'} - ${formatRupiah(k.jumlah)} (${k.keterangan || '-'})` };
+            batalRefInfo.textContent = batalContext.label;
+            batalAlasan.value = '';
+            batalAlasan.classList.remove('error');
+            batalAlasanError.style.display = 'none';
+            modalBatal.classList.add('active');
+            setTimeout(() => batalAlasan.focus(), 200);
+        };
+
+        function tutupModalBatal() {
+            modalBatal.classList.remove('active');
+            batalContext = { jenis: '', id: '', label: '' };
+        }
+
+        modalBatalClose.addEventListener('click', tutupModalBatal);
+        btnBatalPembatalan.addEventListener('click', tutupModalBatal);
+        modalBatal.addEventListener('click', function(e) {
+            if (e.target === modalBatal) tutupModalBatal();
+        });
+
+        batalAlasan.addEventListener('input', function() {
+            if (batalAlasan.value.trim()) {
+                batalAlasan.classList.remove('error');
+                batalAlasanError.style.display = 'none';
+            }
+        });
+
+        btnKonfirmasiBatal.addEventListener('click', async function() {
+            const alasan = batalAlasan.value.trim();
+            if (!alasan) {
+                batalAlasan.classList.add('error');
+                batalAlasanError.style.display = 'block';
+                batalAlasan.focus();
+                return;
+            }
+
+            const { jenis, id } = batalContext;
+            if (!jenis || !id) { alert('Konteks tidak valid.'); return; }
+
+            btnKonfirmasiBatal.disabled = true;
+            btnKonfirmasiBatal.innerHTML = '<span>⏳</span> Memproses...';
+
+            const oleh = currentUser.namaOperator || currentUser.username;
+            let res;
+
+            if (jenis === 'nota') {
+                const nota = notaList.find(n => n.id === id);
+                if (nota) {
+                    nota.status = 'batal';
+                    nota.alasanBatal = alasan;
+                    nota.tglBatal = new Date().toISOString();
+                    nota.olehBatal = oleh;
+                }
+                const keuTerkait = keuanganList.find(k => k.refNotaId === id && k.status !== 'batal');
+                if (keuTerkait) {
+                    keuTerkait.status = 'batal';
+                    keuTerkait.alasanBatal = 'Nota terkait dibatalkan';
+                    keuTerkait.tglBatal = new Date().toISOString();
+                    keuTerkait.olehBatal = oleh;
+                    if (apiOnline) await apiCall('cancelKeuangan', { id: keuTerkait.id, alasan: 'Nota terkait dibatalkan', oleh }, 'POST').catch(() => {});
+                }
+                if (apiOnline) res = await apiCall('cancelNota', { id, alasan, oleh }, 'POST');
+
+                logPembatalanList.push({
+                    id: 'log_' + Date.now(),
+                    jenis: 'nota',
+                    refId: id,
+                    nomorNota: nota ? (nota.nomorNota || '') : '',
+                    alasan: alasan,
+                    oleh: oleh,
+                    tglBatal: new Date().toISOString()
+                });
+            } else {
+                const k = keuanganList.find(x => x.id === id);
+                if (k) {
+                    k.status = 'batal';
+                    k.alasanBatal = alasan;
+                    k.tglBatal = new Date().toISOString();
+                    k.olehBatal = oleh;
+                }
+                if (apiOnline) res = await apiCall('cancelKeuangan', { id, alasan, oleh }, 'POST');
+
+                logPembatalanList.push({
+                    id: 'log_' + Date.now(),
+                    jenis: 'keuangan',
+                    refId: id,
+                    nomorNota: k ? (k.keterangan || '') : '',
+                    alasan: alasan,
+                    oleh: oleh,
+                    tglBatal: new Date().toISOString()
+                });
+            }
+
+            saveKeuangan();
+            btnKonfirmasiBatal.disabled = false;
+            btnKonfirmasiBatal.innerHTML = '<span>🚫</span> Konfirmasi Pembatalan';
+
+            if (!res || !res.ok) {
+                alert('⚠️ Pembatalan tersimpan lokal, gagal sync ke server: ' + (res.message || 'Error'));
+            }
+
+            tutupModalBatal();
+            renderAll();
+            renderKeuangan();
+            renderDashboard();
+            renderLogPembatalan();
+            alert('✅ Data berhasil dibatalkan. Saldo & dashboard sudah diperbarui.');
+        });
+
+        function renderLogPembatalan() {
+            if (!currentUser || currentUser.role !== 'admin') return;
+            if (!logBatalContainer) return;
+            if (logPembatalanList.length === 0) {
+                logBatalContainer.innerHTML = '<div class="empty-state">Belum ada pembatalan.</div>';
+                logBatalCount.textContent = '0 log';
+                return;
+            }
+            logBatalCount.textContent = logPembatalanList.length + ' log';
+            let html = '';
+            [...logPembatalanList].reverse().slice(0, 50).forEach(log => {
+                const isNota = log.jenis === 'nota';
+                const icon = isNota ? '📋' : '💰';
+                const label = isNota ? 'Nota' : 'Keuangan';
+                const tgl = formatTanggalKeu(log.tglBatal) + ' ' + (log.tglBatal || '').substring(11, 16);
+                html += `<div class="user-row" style="border-left:4px solid #dc2626; align-items:flex-start;">
+                    <div class="ur-info">
+                        <div class="ur-name" style="font-size:0.85rem;">${icon} ${label} — ${escapeHtml(log.nomorNota || log.refId.slice(-8))}</div>
+                        <div class="ur-detail" style="font-size:0.72rem; line-height:1.5;">
+                            <div><b>Alasan:</b> ${escapeHtml(log.alasan)}</div>
+                            <div><b>Oleh:</b> ${escapeHtml(log.oleh)} · <b>Waktu:</b> ${tgl}</div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            logBatalContainer.innerHTML = html;
+        }
 
         function renderUserList() {
             if (currentUser.role !== 'admin') return;
@@ -1922,19 +2099,6 @@
             renderCctvList(); renderLaporan();
             if (apiOnline) apiCall('addCctv', cctvBaru, 'POST');
         });
-        window.deleteNota = async function(id) {
-            if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
-            if (!confirm('Hapus nota ini? Pemasukan terkait juga akan dihapus dari Keuangan.')) return;
-            const keuTerkait = keuanganList.find(k => k.refNotaId === id || k.id === 'keu_nota_' + id);
-            notaList = notaList.filter(n => n.id !== id);
-            if (keuTerkait) {
-                keuanganList = keuanganList.filter(k => k.id !== keuTerkait.id);
-                saveKeuangan();
-                if (apiOnline) apiCall('deleteKeuangan', { id: keuTerkait.id }, 'POST').catch(() => {});
-            }
-            updateSaldo(); renderAll(); renderKeuangan(); renderDashboard();
-            if (apiOnline) apiCall('deleteNota', { id }, 'POST');
-        };
         window.deleteCctv = async function(id) {
             if (!confirm('Hapus CCTV ini?')) return;
             cctvList = cctvList.filter(c => c.id !== id); renderAll();
@@ -1942,7 +2106,7 @@
         };
         window.cetakNotaById = function(id) { const nota = notaList.find(n => n.id === id); if (nota) bukaModalCetak(nota); };
 
-                // ============ EKSPOR EXCEL ============
+        // ============ EKSPOR EXCEL ============
         function formatTanggalExcel(tgl) {
             if (!tgl) return '-';
             const s = String(tgl).substring(0, 10);
@@ -1952,82 +2116,30 @@
             }
             return s;
         }
-
-                window.exportNotaExcel = function() {
-            if (!currentUser || currentUser.role !== 'admin') {
-                alert('Hanya admin yang bisa ekspor laporan.');
-                return;
-            }
+        window.exportNotaExcel = function() {
+            if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa ekspor laporan.'); return; }
             const data = getFilteredNota();
-            if (data.length === 0) {
-                alert('Tidak ada data nota untuk diekspor.');
-                return;
-            }
-            // Susun header + rows
+            if (data.length === 0) { alert('Tidak ada data nota untuk diekspor.'); return; }
             const rows = [];
             rows.push(['No', 'Tanggal', 'Nomor Nota', 'Jam Mulai', 'Jam Selesai', 'Durasi (mnt)', 'Pelanggan', 'No Kursi', 'Operator', 'Layanan', 'Total (Rp)']);
             [...data].reverse().forEach((n, idx) => {
                 const durasi = Math.max(0, timeToMinutes(n.jamSelesai) - timeToMinutes(n.jamMulai));
                 const layanan = (n.layanan || []).map(l => `${l.nama} - ${l.harga}`).join('; ');
-                rows.push([
-                    idx + 1,
-                    formatTanggalExcel(n.tanggal),
-                    n.nomorNota || n.id.slice(-6).toUpperCase(),
-                    formatJamKeu(n.jamMulai),
-                    formatJamKeu(n.jamSelesai),
-                    durasi,
-                    n.nama,
-                    n.noKursi || '-',
-                    n.barberman || '-',
-                    layanan,
-                    Number(n.total) || 0
-                ]);
+                rows.push([idx + 1, formatTanggalExcel(n.tanggal), n.nomorNota || n.id.slice(-6).toUpperCase(), formatJamKeu(n.jamMulai), formatJamKeu(n.jamSelesai), durasi, n.nama, n.noKursi || '-', n.barberman || '-', layanan, Number(n.total) || 0]);
             });
-            // Baris total
             const totalAll = data.reduce((s, n) => s + (Number(n.total) || 0), 0);
             rows.push([]);
             rows.push(['', '', '', '', '', '', '', '', '', 'TOTAL', totalAll]);
-
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(rows);
-
-            // Set lebar kolom
-            ws['!cols'] = [
-                { wch: 5 },  // No
-                { wch: 12 }, // Tanggal
-                { wch: 18 }, // Nomor Nota
-                { wch: 10 }, // Jam Mulai
-                { wch: 10 }, // Jam Selesai
-                { wch: 12 }, // Durasi
-                { wch: 20 }, // Pelanggan
-                { wch: 8 },  // Kursi
-                { wch: 15 }, // Operator
-                { wch: 40 }, // Layanan
-                { wch: 14 }  // Total
-            ];
-
+            ws['!cols'] = [{ wch: 5 }, { wch: 12 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 20 }, { wch: 8 }, { wch: 15 }, { wch: 40 }, { wch: 14 }];
             XLSX.utils.book_append_sheet(wb, ws, 'Nota');
-
-            // Nama file dengan tanggal
-            const tgl = getTanggalSekarang();
-            const namaFile = `Laporan_Nota_${tgl}.xlsx`;
-            XLSX.writeFile(wb, namaFile);
-
-                        console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+            XLSX.writeFile(wb, `Laporan_Nota_${getTanggalSekarang()}.xlsx`);
         };
-
-                window.exportKeuanganExcel = function() {
-            if (!currentUser || currentUser.role !== 'admin') {
-                alert('Hanya admin yang bisa ekspor laporan.');
-                return;
-            }
+        window.exportKeuanganExcel = function() {
+            if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin yang bisa ekspor laporan.'); return; }
             const data = getFilteredKeuangan();
-            if (data.length === 0) {
-                alert('Tidak ada data keuangan untuk diekspor.');
-                return;
-            }
-
-            // Siapkan data
+            if (data.length === 0) { alert('Tidak ada data keuangan untuk diekspor.'); return; }
             const rows = [];
             rows.push(['No', 'Tanggal', 'Jenis', 'Kategori', 'Keterangan', 'Metode', 'Jumlah (Rp)', 'Input By', 'Dari Nota?']);
             let totalMasuk = 0, totalKeluar = 0;
@@ -2035,52 +2147,19 @@
                 const jumlah = Number(k.jumlah) || 0;
                 const isMasuk = k.jenis === 'masuk';
                 if (isMasuk) totalMasuk += jumlah; else totalKeluar += jumlah;
-                rows.push([
-                    idx + 1,
-                    formatTanggalExcel(k.tanggal),
-                    isMasuk ? 'Pemasukan' : 'Pengeluaran',
-                    k.kategori || '-',
-                    k.keterangan || '-',
-                    k.metode || '-',
-                    isMasuk ? jumlah : -jumlah,  // pengeluaran sebagai negatif
-                    k.inputBy || '-',
-                    k.refNotaId ? 'Ya' : 'Tidak'
-                ]);
+                rows.push([idx + 1, formatTanggalExcel(k.tanggal), isMasuk ? 'Pemasukan' : 'Pengeluaran', k.kategori || '-', k.keterangan || '-', k.metode || '-', isMasuk ? jumlah : -jumlah, k.inputBy || '-', k.refNotaId ? 'Ya' : 'Tidak']);
             });
-
-            // Summary
             rows.push([]);
-            rows.push(['', '', '', '', '', '', '', '', '']);
             rows.push(['', '', '', '', '', 'Total Pemasukan', totalMasuk, '', '']);
             rows.push(['', '', '', '', '', 'Total Pengeluaran', totalKeluar, '', '']);
             rows.push(['', '', '', '', '', 'SALDO KAS', totalMasuk - totalKeluar, '', '']);
-
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(rows);
-
-            ws['!cols'] = [
-                { wch: 5 },  // No
-                { wch: 12 }, // Tanggal
-                { wch: 14 }, // Jenis
-                { wch: 20 }, // Kategori
-                { wch: 35 }, // Keterangan
-                { wch: 10 }, // Metode
-                { wch: 15 }, // Jumlah
-                { wch: 15 }, // Input By
-                { wch: 10 }  // Dari Nota
-            ];
-
+            ws['!cols'] = [{ wch: 5 }, { wch: 12 }, { wch: 14 }, { wch: 20 }, { wch: 35 }, { wch: 10 }, { wch: 15 }, { wch: 15 }, { wch: 10 }];
             XLSX.utils.book_append_sheet(wb, ws, 'Keuangan');
-
-            const tgl = getTanggalSekarang();
-            const namaFile = `Laporan_Keuangan_${tgl}.xlsx`;
-            XLSX.writeFile(wb, namaFile);
-
-                        console.log('[Excel] Diekspor:', namaFile, '—', data.length, 'baris');
+            XLSX.writeFile(wb, `Laporan_Keuangan_${getTanggalSekarang()}.xlsx`);
         };
 
-
-        
         function renderAll() {
             updateFilterBarbermanOptions();
             renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
@@ -2089,6 +2168,7 @@
         function rebuildKeuanganFromNota() {
             let changed = false;
             notaList.forEach(n => {
+                if (n.status === 'batal') return;
                 const keuId = 'keu_nota_' + n.id;
                 const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
                 if (!exists && n.total > 0) {
@@ -2097,7 +2177,7 @@
                     keuanganList.push({
                         id: keuId, jenis: 'masuk', kategori: 'Layanan Barbershop',
                         jumlah: Number(n.total) || 0, keterangan: ketNota, tanggal: n.tanggal,
-                        metode: 'Cash', inputBy: n.barberman || '', refNotaId: n.id
+                        metode: 'Cash', inputBy: n.barberman || '', refNotaId: n.id, status: 'aktif'
                     });
                     changed = true;
                 }
@@ -2115,14 +2195,13 @@
             }
         }
 
-        // ============ LAYANAN (Admin) ============
+        // ============ LAYANAN ============
         function resetLayananForm() {
             layananId.value = ''; layananNama.value = ''; layananHarga.value = ''; layananAktif.value = 'true';
             layananFormTitle.textContent = 'Tambah Layanan';
             btnSimpanLayananText.textContent = 'Tambah Layanan';
             btnBatalEditLayanan.style.display = 'none';
         }
-
         function renderLayananList() {
             if (currentUser.role !== 'admin') return;
             if (!layananList || layananList.length === 0) {
@@ -2167,7 +2246,6 @@
             });
             layananListContainer.innerHTML = html;
         }
-
         window.editLayanan = function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const l = layananList.find(x => x.id === id);
@@ -2179,12 +2257,11 @@
             btnBatalEditLayanan.style.display = 'inline-flex';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
-
         window.hapusLayanan = async function(id) {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const l = layananList.find(x => x.id === id);
             if (!l) return;
-            if (!confirm('Hapus layanan "' + l.nama + '"?\n\nNota lama tetap aman, tapi layanan ini tidak akan muncul lagi di form nota baru.')) return;
+            if (!confirm('Hapus layanan "' + l.nama + '"?')) return;
             layananList = layananList.filter(x => x.id !== id);
             LAYANAN_MASTER = layananList.filter(x => x.aktif !== false);
             renderLayananList();
@@ -2193,9 +2270,7 @@
                 if (!res || !res.ok) alert('⚠️ Gagal hapus di server: ' + (res.message || 'Error'));
             }
         };
-
         btnBatalEditLayanan.addEventListener('click', resetLayananForm);
-
         btnSimpanLayanan.addEventListener('click', async function() {
             if (currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const id = layananId.value.trim();
@@ -2230,14 +2305,13 @@
             resetLayananForm(); renderLayananList();
         });
 
-        // ============ KATEGORI KEUANGAN (Admin) ============
+        // ============ KATEGORI ============
         function resetKategoriForm() {
             if (!kategoriId) return;
             kategoriId.value = ''; kategoriNama.value = ''; kategoriJenis.value = 'keluar'; kategoriAktif.value = 'true';
             btnSimpanKategoriText.textContent = 'Tambah Kategori';
             btnBatalEditKategori.style.display = 'none';
         }
-
         function renderKategoriList() {
             if (!currentUser || currentUser.role !== 'admin') return;
             if (!kategoriList || kategoriList.length === 0) {
@@ -2272,7 +2346,6 @@
             html += renderGroup('PENGELUARAN', '💸', keluar, '#dc2626');
             kategoriListContainer.innerHTML = html;
         }
-
         window.editKategori = function(id) {
             if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const k = kategoriList.find(x => x.id === id);
@@ -2283,12 +2356,11 @@
             btnBatalEditKategori.style.display = 'inline-flex';
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         };
-
         window.hapusKategori = async function(id) {
             if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const k = kategoriList.find(x => x.id === id);
             if (!k) return;
-            if (!confirm('Hapus kategori "' + k.nama + '"?\n\nTransaksi lama tetap aman.')) return;
+            if (!confirm('Hapus kategori "' + k.nama + '"?')) return;
             kategoriList = kategoriList.filter(x => x.id !== id);
             renderKategoriList(); updateKategoriOptions();
             if (apiOnline) {
@@ -2296,9 +2368,7 @@
                 if (!res || !res.ok) alert('⚠️ Gagal hapus di server: ' + (res.message || 'Error'));
             }
         };
-
         if (btnBatalEditKategori) btnBatalEditKategori.addEventListener('click', resetKategoriForm);
-
         if (btnSimpanKategori) btnSimpanKategori.addEventListener('click', async function() {
             if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
             const id = kategoriId.value.trim();
@@ -2345,71 +2415,28 @@
         setInterval(checkApi, 60000);
     })();
 </script>
-
-
-    <script>
-        // ============================================================
-        // REGISTER SERVICE WORKER (PWA)
-        // ============================================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(function(registration) {
-                        console.log('[PWA] Service Worker registered:', registration.scope);
-                    })
-                    .catch(function(err) {
-                        console.warn('[PWA] Service Worker gagal:', err);
-                    });
-            });
-        }
-
-        // ============================================================
-        // INSTALL PROMPT (Tombol "Install App")
-        // ============================================================
-        let deferredPrompt = null;
-        const installBtn = document.createElement('button');
-        installBtn.id = 'pwaInstallBtn';
-        installBtn.innerHTML = '📲 Install Aplikasi';
-        installBtn.style.cssText = `
-            position: fixed;
-            bottom: 90px;
-            right: 15px;
-            background: linear-gradient(135deg, #f59e0b, #ea580c);
-            color: white;
-            border: none;
-            padding: 12px 18px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(245,158,11,0.4);
-            z-index: 9999;
-            display: none;
-            font-family: inherit;
-            animation: slideUp 0.3s ease;
-        `;
-        document.body.appendChild(installBtn);
-
-        window.addEventListener('beforeinstallprompt', function(e) {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'block';
+<script>
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('./sw.js')
+                .then(function(registration) {
+                    console.log('[PWA] Service Worker registered:', registration.scope);
+                })
+                .catch(function(err) {
+                    console.warn('[PWA] Service Worker gagal:', err);
+                });
         });
-
-        installBtn.addEventListener('click', async function() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log('[PWA] User pilih:', outcome);
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-        });
-
-        window.addEventListener('appinstalled', function() {
-            console.log('[PWA] Aplikasi berhasil di-install!');
-            installBtn.style.display = 'none';
-        });
-    </script>
-    
+    }
+    let deferredPrompt = null;
+    const installBtn = document.createElement('button');
+    installBtn.id = 'pwaInstallBtn';
+    installBtn.innerHTML = '📲 Install Aplikasi';
+    installBtn.style.cssText = `position: fixed; bottom: 90px; right: 15px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; border: none; padding: 12px 18px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; cursor: pointer; box-shadow: 0 8px 20px rgba(245,158,11,0.4); z-index: 9999; display: none; font-family: inherit;`;
+    document.body.appendChild(installBtn);
+    window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'block'; });
+    installBtn.addEventListener('click', async function() { if (!deferredPrompt) return; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; installBtn.style.display = 'none'; });
+    window.addEventListener('appinstalled', function() { installBtn.style.display = 'none'; });
+</script>
 </body>
 </html>
