@@ -510,12 +510,39 @@
             <button class="btn btn-outline" id="btnTambahCctv">
                 <span>📌</span> Tambah Referensi CCTV
             </button>
-            <div class="mt-2">
+                        <div class="mt-2">
                 <div class="flex-between">
                     <span class="text-muted">Daftar CCTV</span>
                     <span class="badge" id="cctvCount">0</span>
                 </div>
                 <div class="cctv-list" id="cctvListContainer"></div>
+            </div>
+        </div>
+
+        <!-- ⭐ CCTV TANPA NOTA (Admin Only) -->
+        <div class="card admin-only">
+            <div class="flex-between" style="margin-bottom:0.5rem;">
+                <div class="card-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+                    <span>🚨</span> CCTV Tanpa Nota
+                </div>
+                <span class="badge badge-red" id="cctvTanpaNotaCount">0</span>
+            </div>
+            <div class="alert-box alert-warning show" style="margin-bottom:1rem;">
+                ⚠️ Referensi CCTV yang <b>jam pertengahan duduk</b>-nya <b>TIDAK ada</b> di dalam range jam nota manapun pada tanggal yang sama. Kemungkinan ada pelanggan yang tidak dibuatkan nota.
+            </div>
+            <div class="table-wrapper">
+                <table class="report" style="min-width:600px;">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Ciri / Nama</th>
+                            <th>Kursi</th>
+                            <th>Jam CCTV</th>
+                            <th style="text-align:right;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cctvTanpaNotaBody"></tbody>
+                </table>
             </div>
         </div>
 
@@ -549,7 +576,7 @@
                     <tbody id="laporanBody"></tbody>
                 </table>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; margin-top:1rem;">
+                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; margin-top:1rem;">
                 <div class="dash-card green">
                     <div class="dc-label">Total Pendapatan</div>
                     <div class="dc-value" id="totalPendapatan">Rp 0</div>
@@ -565,6 +592,10 @@
                 <div class="dash-card red">
                     <div class="dc-label">Tidak Cocok</div>
                     <div class="dc-value" id="totalTidakCocok">0</div>
+                </div>
+                <div class="dash-card purple">
+                    <div class="dc-label">CCTV Tanpa Nota</div>
+                    <div class="dc-value" id="totalCctvTanpaNota">0</div>
                 </div>
             </div>
             <div id="rekapBarbermanSection" style="display:none; margin-top:1.5rem;">
@@ -1069,6 +1100,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     const btnSimpanKategori = $('btnSimpanKategori'), btnSimpanKategoriText = $('btnSimpanKategoriText'), btnBatalEditKategori = $('btnBatalEditKategori');
     const kategoriListContainer = $('kategoriListContainer'), kategoriCount = $('kategoriCount');
     const logBatalContainer = $('logBatalContainer'), logBatalCount = $('logBatalCount');
+    const cctvTanpaNotaBody = $('cctvTanpaNotaBody'), cctvTanpaNotaCount = $('cctvTanpaNotaCount'), totalCctvTanpaNota = $('totalCctvTanpaNota');
     const setOldPass = $('setOldPass'), setNewPass = $('setNewPass'), setConfirmPass = $('setConfirmPass'), btnGantiPassword = $('btnGantiPassword');
     const settingUserInfo = $('settingUserInfo');
     const dashPendapatanHari = $('dashPendapatanHari'), dashPendapatanHariCount = $('dashPendapatanHariCount');
@@ -1292,7 +1324,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             }
         }
         if (activeTab === 'dashboard') renderDashboard();
-        if (activeTab === 'nota') { renderNotaList(); renderCctvList(); renderLaporan(); }
+        if (activeTab === 'nota') { renderNotaList(); renderCctvList(); renderLaporan(); renderCctvTanpaNota(); }
     }
 
     function switchLoginTab(tab) {
@@ -1715,7 +1747,62 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         });
         cctvListContainer.innerHTML = html;
     }
-    function renderLaporan() {
+
+
+        // ⭐ Deteksi CCTV yang tidak match dengan nota manapun (per tanggal)
+    function getCctvTanpaNota() {
+        const hasil = [];
+        cctvList.forEach(c => {
+            if (!c.jamTengah || !c.tanggal) return;
+            const jamTengah = timeToMinutes(c.jamTengah);
+            // Cek apakah ada nota di tanggal yang sama dengan range yang mencakup jamTengah
+            const adaNotaCocok = notaList.some(n => {
+                if (n.status === 'batal') return false;
+                if (n.tanggal !== c.tanggal) return false;
+                const notaMulai = timeToMinutes(n.jamMulai);
+                const notaSelesai = timeToMinutes(n.jamSelesai);
+                return jamTengah >= notaMulai && jamTengah <= notaSelesai;
+            });
+            if (!adaNotaCocok) {
+                hasil.push(c);
+            }
+        });
+        // Urutkan dari tanggal terbaru
+        return hasil.sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
+    }
+
+    function renderCctvTanpaNota() {
+        if (!currentUser || currentUser.role !== 'admin') return;
+        if (!cctvTanpaNotaBody) return;
+
+        const list = getCctvTanpaNota();
+
+        cctvTanpaNotaCount.textContent = list.length + ' CCTV';
+        if (totalCctvTanpaNota) totalCctvTanpaNota.textContent = list.length;
+
+        if (list.length === 0) {
+            cctvTanpaNotaBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">✅ Semua CCTV cocok dengan nota.</td></tr>';
+            return;
+        }
+
+        let html = '';
+        list.forEach(c => {
+            const nama = c.nama ? escapeHtml(c.nama) : '<span style="color:#94a3b8; font-style:italic;">Tanpa nama</span>';
+            const kursi = c.noKursi ? escapeHtml(c.noKursi) : '-';
+            const jam = c.jamTengah ? formatJamKeu(c.jamTengah) : '-';
+            html += `<tr>
+                <td>${formatTanggalKeu(c.tanggal)}</td>
+                <td>${nama}</td>
+                <td style="text-align:center; font-weight:700;">${kursi}</td>
+                <td style="text-align:center; font-variant-numeric:tabular-nums;">${jam}</td>
+                <td style="text-align:right;">
+                    <button class="delete-btn" onclick="deleteCctv('${c.id}')" title="Hapus CCTV">✕</button>
+                </td>
+            </tr>`;
+        });
+        cctvTanpaNotaBody.innerHTML = html;
+    }
+        function renderLaporan() {
         const filtered = getFilteredNota();
         if (filtered.length === 0) {
             laporanBody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data</td></tr>`;
@@ -1724,6 +1811,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             totalCocok.textContent = '0';
             totalTidakCocok.textContent = '0';
             rekapBarbermanContainer.innerHTML = '<div class="empty-state">Belum ada data</div>';
+            renderCctvTanpaNota();
             return;
         }
         let total = 0, cocok = 0, tidakCocok = 0, rows = '';
@@ -1781,6 +1869,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
                         </div>
                     </div>`).join('');
         }
+        renderCctvTanpaNota();
     }
 
     function renderDashboard() {
@@ -2284,9 +2373,10 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         XLSX.writeFile(wb, `Laporan_Keuangan_${getTanggalSekarang()}.xlsx`);
     };
 
-    function renderAll() {
+        function renderAll() {
         updateFilterBarbermanOptions();
         renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
+        renderCctvTanpaNota();
     }
 
     function rebuildKeuanganFromNota() {
