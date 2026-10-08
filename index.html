@@ -510,7 +510,7 @@
             <button class="btn btn-outline" id="btnTambahCctv">
                 <span>📌</span> Tambah Referensi CCTV
             </button>
-                        <div class="mt-2">
+            <div class="mt-2">
                 <div class="flex-between">
                     <span class="text-muted">Daftar CCTV</span>
                     <span class="badge" id="cctvCount">0</span>
@@ -546,7 +546,7 @@
             </div>
         </div>
 
-                <div class="card admin-only">
+        <div class="card admin-only">
             <div class="card-title" style="border-bottom:none; margin-bottom:0.75rem;">
                 <span>📊</span> Laporan & Pencocokan CCTV
             </div>
@@ -576,7 +576,7 @@
                     <tbody id="laporanBody"></tbody>
                 </table>
             </div>
-                        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; margin-top:1rem;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; margin-top:1rem;">
                 <div class="dash-card green">
                     <div class="dc-label">Total Pendapatan</div>
                     <div class="dc-value" id="totalPendapatan">Rp 0</div>
@@ -672,6 +672,9 @@
                 </div>
                 <div style="display:flex; gap:6px; align-items:center;">
                     <span class="badge badge-blue" id="keuanganCount">0 transaksi</span>
+                    <button class="btn-mini admin-only" onclick="syncSemuaKeuanganKeServer()" title="Paksa sync ke server" style="padding:6px 12px; background:#ea580c; color:white; font-weight:700;">
+                        🔄 Sync
+                    </button>
                     <button class="btn-mini print admin-only" onclick="exportKeuanganExcel()" title="Ekspor ke Excel" style="padding:6px 12px; background:#16a34a; color:white; font-weight:700;">
                         📥 Excel
                     </button>
@@ -804,7 +807,7 @@
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.5 • CCTV Sync Update</strong>
+                    <strong>v3.6 • Sync Fixed</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
@@ -1269,10 +1272,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             renderCctvKursiButtons();
         }
     }
+
     async function loadKeuanganFromServer() {
         if (!apiOnline) return;
         const res = await apiCall('getKeuangan', {}, 'GET');
-        if (res && res.ok && res.data && Array.isArray(res.data)) {
+        if (res && res.ok && res.data && Array.isArray(res.data) && res.data.length > 0) {
             const serverIds = new Set(res.data.map(k => k.id));
             const lokalBelumSync = keuanganList.filter(k => !serverIds.has(k.id));
             keuanganList = res.data.concat(lokalBelumSync);
@@ -1280,8 +1284,16 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             rebuildKeuanganFromNota();
             updateSaldo();
             renderKeuangan();
+            renderDashboard();
+        } else {
+            console.warn('[Keuangan] Server tidak mengembalikan data, pakai data lokal.');
+            rebuildKeuanganFromNota();
+            updateSaldo();
+            renderKeuangan();
+            renderDashboard();
         }
     }
+
     async function syncDataFromServer() {
         if (!apiOnline) { renderAll(); return; }
         setApiStatus('loading');
@@ -1311,6 +1323,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         updateSaldo();
         renderAll();
         refreshActiveTab();
+        renderKeuangan();
+        renderDashboard();
     }
 
     function refreshActiveTab() {
@@ -1591,7 +1605,10 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         };
         keuanganList.push(keuNota);
         saveKeuangan();
-        if (apiOnline) apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
+        if (apiOnline) {
+            const resKeu = await apiCall('addKeuangan', keuNota, 'POST').catch(() => null);
+            if (resKeu && resKeu.ok) { keuNota._synced = true; saveKeuangan(); }
+        }
         updateSaldo(); renderKeuangan(); renderDashboard();
 
         sesiAktif = null; saveSesiToCache(); updateClockUI();
@@ -1748,14 +1765,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         cctvListContainer.innerHTML = html;
     }
 
-
-        // ⭐ Deteksi CCTV yang tidak match dengan nota manapun (per tanggal)
     function getCctvTanpaNota() {
         const hasil = [];
         cctvList.forEach(c => {
             if (!c.jamTengah || !c.tanggal) return;
             const jamTengah = timeToMinutes(c.jamTengah);
-            // Cek apakah ada nota di tanggal yang sama dengan range yang mencakup jamTengah
             const adaNotaCocok = notaList.some(n => {
                 if (n.status === 'batal') return false;
                 if (n.tanggal !== c.tanggal) return false;
@@ -1767,7 +1781,6 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
                 hasil.push(c);
             }
         });
-        // Urutkan dari tanggal terbaru
         return hasil.sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
     }
 
@@ -1802,7 +1815,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         });
         cctvTanpaNotaBody.innerHTML = html;
     }
-        function renderLaporan() {
+
+    function renderLaporan() {
         const filtered = getFilteredNota();
         if (filtered.length === 0) {
             laporanBody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2rem; color:#94a3b8;">Belum ada data</td></tr>`;
@@ -1991,7 +2005,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         });
         keuanganListContainer.innerHTML = html;
     }
-    btnTambahKeuangan.addEventListener('click', function() {
+    btnTambahKeuangan.addEventListener('click', async function() {
         const jenis = keuJenis.value, kategori = keuKategori.value;
         const jumlah = parseFloat(keuJumlah.value) || 0;
         const keterangan = keuKeterangan.value.trim();
@@ -2008,7 +2022,10 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         keuanganList.push(transaksi); saveKeuangan();
         keuJumlah.value = ''; keuKeterangan.value = ''; keuKategori.value = '';
         updateSaldo(); renderKeuangan(); renderDashboard();
-        if (apiOnline) apiCall('addKeuangan', transaksi, 'POST');
+        if (apiOnline) {
+            const res = await apiCall('addKeuangan', transaksi, 'POST');
+            if (res && res.ok) { transaksi._synced = true; saveKeuangan(); }
+        }
         alert('✅ Transaksi berhasil disimpan!');
     });
     filterKeuTanggal.addEventListener('change', function() { filterKeuTanggalValue = filterKeuTanggal.value; renderKeuangan(); });
@@ -2373,7 +2390,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         XLSX.writeFile(wb, `Laporan_Keuangan_${getTanggalSekarang()}.xlsx`);
     };
 
-        function renderAll() {
+    function renderAll() {
         updateFilterBarbermanOptions();
         renderNotaList(); renderCctvList(); renderLaporan(); renderDashboard();
         renderCctvTanpaNota();
@@ -2408,6 +2425,35 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             }
         }
     }
+
+    // ⭐ Paksa kirim semua transaksi lokal ke server
+    window.syncSemuaKeuanganKeServer = async function() {
+        if (!apiOnline) { alert('Server offline, tidak bisa sync.'); return; }
+        if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
+
+        const belumSync = keuanganList.filter(k => !k._synced && k.status !== 'batal');
+        if (belumSync.length === 0) { alert('Semua transaksi sudah ter-sync.'); return; }
+
+        if (!confirm(`Akan sync ${belumSync.length} transaksi ke server. Lanjutkan?`)) return;
+
+        let sukses = 0, gagal = 0;
+        for (const k of belumSync) {
+            try {
+                const res = await apiCall('addKeuangan', k, 'POST');
+                if (res && res.ok) {
+                    k._synced = true;
+                    sukses++;
+                } else {
+                    gagal++;
+                }
+            } catch (e) {
+                gagal++;
+            }
+        }
+        saveKeuangan();
+        alert(`✅ Sync selesai!\nSukses: ${sukses}\nGagal: ${gagal}`);
+        loadKeuanganFromServer();
+    };
 
     // ============ LAYANAN ============
     function resetLayananForm() {
@@ -2630,7 +2676,6 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
 })();
 </script>
 <script>
-    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('./sw.js')
