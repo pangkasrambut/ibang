@@ -1597,48 +1597,49 @@ function saveKeuangan() { /* no-op — tidak simpan lokal */ }
     modalNamaPelanggan.addEventListener('input', function() { if (modalNamaPelanggan.value.trim()) { modalNamaPelanggan.classList.remove('error'); namaError.style.display = 'none'; } });
 
     btnOkLayanan.addEventListener('click', async function() {
-        const nama = modalNamaPelanggan.value.trim();
-        if (!nama) { modalNamaPelanggan.classList.add('error'); namaError.style.display = 'block'; return; }
-        if (layananDipilihModal.length === 0) { alert('Pilih minimal 1 layanan.'); return; }
-        const layananArr = layananDipilihModal.map(id => { const l = getLayananById(id); return { nama: l.nama, harga: l.harga }; });
-        const total = layananArr.reduce((s, l) => s + l.harga, 0);
-        const barberman = sesiAktif.barberman || '-';
-        const noKursi = selectedKursi ? String(selectedKursi) : '';
-        const tanggalNota = sesiAktif.tanggal || getTanggalSekarang();
-        const notaHariIni = notaList.filter(n => n.tanggal === tanggalNota);
-        const urut = String(notaHariIni.length + 1).padStart(3, '0');
-        const nomorNota = `INV-${tanggalNota.replace(/-/g, '')}-${urut}`;
-        const notaBaru = {
-            id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-            nomorNota, nama, noKursi, barberman, layanan: layananArr, total,
-            jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai, tanggal: tanggalNota,
-            status: 'aktif'
-        };
-        btnOkLayanan.disabled = true; btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
-        if (apiOnline) await apiCall('addNota', notaBaru, 'POST');
-        btnOkLayanan.disabled = false; btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
-        notaList.push(notaBaru);
+    const nama = modalNamaPelanggan.value.trim();
+    if (!nama) { modalNamaPelanggan.classList.add('error'); namaError.style.display = 'block'; return; }
+    if (layananDipilihModal.length === 0) { alert('Pilih minimal 1 layanan.'); return; }
+    const layananArr = layananDipilihModal.map(id => { const l = getLayananById(id); return { nama: l.nama, harga: l.harga }; });
+    const total = layananArr.reduce((s, l) => s + l.harga, 0);
+    const barberman = sesiAktif.barberman || '-';
+    const noKursi = selectedKursi ? String(selectedKursi) : '';
+    const tanggalNota = sesiAktif.tanggal || getTanggalSekarang();
+    const notaHariIni = notaList.filter(n => n.tanggal === tanggalNota);
+    const urut = String(notaHariIni.length + 1).padStart(3, '0');
+    const nomorNota = `INV-${tanggalNota.replace(/-/g, '')}-${urut}`;
+    const notaBaru = {
+        id: 'nota_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        nomorNota, nama, noKursi, barberman, layanan: layananArr, total,
+        jamMulai: sesiAktif.jamMulai, jamSelesai: sesiAktif.jamSelesai, tanggal: tanggalNota,
+        status: 'aktif'
+    };
+    const ketLayanan = layananArr.map(l => l.nama).join(', ');
+    const ketNota = `Nota ${nomorNota} - ${nama}` + (noKursi ? ` (Kursi ${noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
+    const keuNota = {
+        id: 'keu_nota_' + notaBaru.id, jenis: 'masuk', kategori: 'Layanan Barbershop',
+        jumlah: total, keterangan: ketNota, tanggal: tanggalNota, metode: 'Cash',
+        inputBy: barberman, refNotaId: notaBaru.id, status: 'aktif'
+    };
 
-                const ketLayanan = layananArr.map(l => l.nama).join(', ');
-        const ketNota = `Nota ${nomorNota} - ${nama}` + (noKursi ? ` (Kursi ${noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
-        const keuNota = {
-            id: 'keu_nota_' + notaBaru.id, jenis: 'masuk', kategori: 'Layanan Barbershop',
-            jumlah: total, keterangan: ketNota, tanggal: tanggalNota, metode: 'Cash',
-            inputBy: barberman, refNotaId: notaBaru.id, status: 'aktif'
-        };
-        
-        if (apiOnline) {
-            await apiCall('addNota', notaBaru, 'POST');
-            await apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
-        }
-        // ⭐ Ambil ulang dari server
-        await loadKeuanganFromServer();
-        await syncAfterAction();
+    btnOkLayanan.disabled = true; btnOkLayanan.innerHTML = '<span>⏳</span> Menyimpan...';
+    if (apiOnline) {
+        await apiCall('addNota', notaBaru, 'POST');
+        await apiCall('addKeuangan', keuNota, 'POST').catch(() => {});
+    }
+    btnOkLayanan.disabled = false; btnOkLayanan.innerHTML = '<span>✅</span> OK — Buat Nota & Siap Cetak';
 
-        sesiAktif = null; saveSesiToCache(); updateClockUI();
-        tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
+    sesiAktif = null; saveSesiToCache(); updateClockUI();
+    tutupModalLayanan();
 
-    function buatHtmlNota(nota) {
+    // Ambil ulang dari server
+    await loadKeuanganFromServer();
+    await syncAfterAction();
+    renderAll();
+    bukaModalCetak(notaBaru);
+});
+
+function buatHtmlNota(nota) {
         const tglFormatted = getTanggalFormatted(nota.tanggal);
         const hariFormatted = getHariFormatted(nota.tanggal);
         const durasi = Math.max(0, timeToMinutes(nota.jamSelesai) - timeToMinutes(nota.jamMulai));
