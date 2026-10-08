@@ -296,6 +296,7 @@
             .clock-panel { padding: 1rem; }
             .clock-actions { grid-template-columns: 1fr; }
         }
+        #realtimeStatus { transition: opacity 0.3s; }
     </style>
 </head>
 <body>
@@ -385,6 +386,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             <span class="api-status api-loading" id="apiStatusApp">⏳</span>
+            <span class="api-status api-online" id="realtimeStatus" title="Sync otomatis setelah input">🔄 Auto</span>
             <button class="btn-logout" id="btnLogout">🚪 Logout</button>
         </div>
     </div>
@@ -806,8 +808,12 @@
                     <span class="api-status api-loading" id="apiStatusSetting">⏳</span>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
+                    <span class="text-muted">Sync Otomatis</span>
+                    <strong>🔄 Setelah Input</strong>
+                </div>
+                <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Versi</span>
-                    <strong>v3.6 • Sync Fixed</strong>
+                    <strong>v3.8 • Smart Sync</strong>
                 </div>
                 <div class="flex-between" style="padding:6px 0;">
                     <span class="text-muted">Login Sebagai</span>
@@ -1046,6 +1052,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     let selectedLoginRole = '';
     let apiOnline = false;
     let activeTab = 'nota';
+    let isSyncing = false;
 
     const $ = id => document.getElementById(id);
     const loginPage = $('loginPage'), app = $('app');
@@ -1061,6 +1068,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     const regUsername = $('regUsername'), regPassword = $('regPassword'), regNamaOperator = $('regNamaOperator');
     const btnRegister = $('btnRegister');
     const apiStatusLogin = $('apiStatusLogin'), apiStatusApp = $('apiStatusApp'), apiStatusSetting = $('apiStatusSetting');
+    const realtimeStatus = $('realtimeStatus');
     const loginShopName = $('loginShopName');
     const userAvatar = $('userAvatar'), userName = $('userName'), userRole = $('userRole');
     const btnLogout = $('btnLogout'), subheadText = $('subheadText');
@@ -1276,17 +1284,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     async function loadKeuanganFromServer() {
         if (!apiOnline) return;
         const res = await apiCall('getKeuangan', {}, 'GET');
-        if (res && res.ok && res.data && Array.isArray(res.data) && res.data.length > 0) {
+        if (res && res.ok && res.data && Array.isArray(res.data)) {
             const serverIds = new Set(res.data.map(k => k.id));
             const lokalBelumSync = keuanganList.filter(k => !serverIds.has(k.id));
             keuanganList = res.data.concat(lokalBelumSync);
             saveKeuangan();
-            rebuildKeuanganFromNota();
-            updateSaldo();
-            renderKeuangan();
-            renderDashboard();
-        } else {
-            console.warn('[Keuangan] Server tidak mengembalikan data, pakai data lokal.');
             rebuildKeuanganFromNota();
             updateSaldo();
             renderKeuangan();
@@ -1325,6 +1327,41 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         refreshActiveTab();
         renderKeuangan();
         renderDashboard();
+    }
+
+    // ⭐ Sync setelah aksi (input/hapus) — hemat kuota
+    async function syncAfterAction() {
+        if (isSyncing || !apiOnline || !currentUser) return;
+        isSyncing = true;
+        try {
+            console.log('[Sync] Sync setelah aksi...');
+            const [notaRes, keuanganRes, cctvRes] = await Promise.all([
+                apiCall('getNota', {}, 'GET'),
+                apiCall('getKeuangan', {}, 'GET'),
+                apiCall('getCctv', {}, 'GET')
+            ]);
+            const serverNota = (notaRes && notaRes.data) ? notaRes.data : [];
+            const serverKeuangan = (keuanganRes && keuanganRes.data) ? keuanganRes.data : [];
+            const serverCctv = (cctvRes && cctvRes.data) ? cctvRes.data : [];
+
+            notaList = serverNota.filter(n => n.status !== 'batal');
+            cctvList = serverCctv;
+
+            const serverIds = new Set(serverKeuangan.map(k => k.id));
+            const lokalBelumSync = keuanganList.filter(k => !serverIds.has(k.id) && !k._synced && k.status !== 'batal');
+            keuanganList = serverKeuangan.concat(lokalBelumSync);
+            saveKeuangan();
+
+            renderAll();
+            renderKeuangan();
+            renderDashboard();
+            updateSaldo();
+            refreshActiveTab();
+            console.log('[Sync] Selesai. Nota:', notaList.length, '| Keuangan:', keuanganList.length, '| CCTV:', cctvList.length);
+        } catch (e) {
+            console.warn('[Sync] Error:', e);
+        }
+        isSyncing = false;
     }
 
     function refreshActiveTab() {
@@ -1368,9 +1405,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     loginUsername.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            if (loginUsername.value.trim()) {
-                loginPassword.focus();
-            }
+            if (loginUsername.value.trim()) { loginPassword.focus(); }
         }
     });
 
@@ -1445,6 +1480,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             if (shopJumlahKursi) shopJumlahKursi.value = shopProfile.jumlahKursi || 5;
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // ⭐ Sync saat pindah tab biar data selalu fresh
+        if (currentUser && apiOnline) setTimeout(syncAfterAction, 500);
     }
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -1520,12 +1557,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             if (selectedCctvKursi === btn.dataset.kursi) btn.classList.add('selected');
             btn.addEventListener('click', function() {
                 grid.querySelectorAll('.kursi-btn').forEach(b => b.classList.remove('selected'));
-                if (selectedCctvKursi === btn.dataset.kursi) {
-                    selectedCctvKursi = null;
-                } else {
-                    selectedCctvKursi = btn.dataset.kursi;
-                    btn.classList.add('selected');
-                }
+                if (selectedCctvKursi === btn.dataset.kursi) { selectedCctvKursi = null; }
+                else { selectedCctvKursi = btn.dataset.kursi; btn.classList.add('selected'); }
             });
         });
     }
@@ -1613,6 +1646,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
 
         sesiAktif = null; saveSesiToCache(); updateClockUI();
         tutupModalLayanan(); renderAll(); bukaModalCetak(notaBaru);
+        // ⭐ Sync setelah buat nota
+        setTimeout(syncAfterAction, 1000);
     });
 
     function buatHtmlNota(nota) {
@@ -1666,10 +1701,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             if (jamTengah >= notaMulai && jamTengah <= notaSelesai) {
                 const titikTengah = (notaMulai + notaSelesai) / 2;
                 const score = Math.abs(jamTengah - titikTengah);
-                if (score < bestScore) {
-                    bestScore = score;
-                    best = c;
-                }
+                if (score < bestScore) { bestScore = score; best = c; }
             }
         }
         return best;
@@ -1777,9 +1809,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
                 const notaSelesai = timeToMinutes(n.jamSelesai);
                 return jamTengah >= notaMulai && jamTengah <= notaSelesai;
             });
-            if (!adaNotaCocok) {
-                hasil.push(c);
-            }
+            if (!adaNotaCocok) hasil.push(c);
         });
         return hasil.sort((a, b) => (b.tanggal || '').localeCompare(a.tanggal || ''));
     }
@@ -1787,17 +1817,13 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     function renderCctvTanpaNota() {
         if (!currentUser || currentUser.role !== 'admin') return;
         if (!cctvTanpaNotaBody) return;
-
         const list = getCctvTanpaNota();
-
         cctvTanpaNotaCount.textContent = list.length + ' CCTV';
         if (totalCctvTanpaNota) totalCctvTanpaNota.textContent = list.length;
-
         if (list.length === 0) {
             cctvTanpaNotaBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:1.5rem; color:#94a3b8; font-style:italic;">✅ Semua CCTV cocok dengan nota.</td></tr>';
             return;
         }
-
         let html = '';
         list.forEach(c => {
             const nama = c.nama ? escapeHtml(c.nama) : '<span style="color:#94a3b8; font-style:italic;">Tanpa nama</span>';
@@ -1834,20 +1860,10 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             total += Number(n.total) || 0;
             const m = getMatchStatus(n);
             let statusHtml = '', cctvJam = '-';
-            if (m.status === 'match') {
-                cocok++;
-                statusHtml = `<span class="match-status match-true">✅ Cocok</span>`;
-                cctvJam = formatJamKeu(m.matchedCctv.jamTengah);
-            } else if (m.status === 'mismatch') {
-                tidakCocok++;
-                statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`;
-            } else if (m.status === 'no-cctv') {
-                tidakCocok++;
-                statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`;
-            } else {
-                tidakCocok++;
-                statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`;
-            }
+            if (m.status === 'match') { cocok++; statusHtml = `<span class="match-status match-true">✅ Cocok</span>`; cctvJam = formatJamKeu(m.matchedCctv.jamTengah); }
+            else if (m.status === 'mismatch') { tidakCocok++; statusHtml = `<span class="match-status match-false">❌ Tidak Cocok</span>`; }
+            else if (m.status === 'no-cctv') { tidakCocok++; statusHtml = `<span class="match-status match-warning">⚠️ Tanpa CCTV</span>`; }
+            else { tidakCocok++; statusHtml = `<span class="match-status match-warning">📅 Tgl kosong</span>`; }
             const b = n.barberman || '-';
             if (!rekap[b]) rekap[b] = { total: 0, count: 0 };
             rekap[b].total += Number(n.total) || 0;
@@ -2027,6 +2043,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             if (res && res.ok) { transaksi._synced = true; saveKeuangan(); }
         }
         alert('✅ Transaksi berhasil disimpan!');
+        // ⭐ Sync setelah input keuangan
+        setTimeout(syncAfterAction, 1000);
     });
     filterKeuTanggal.addEventListener('change', function() { filterKeuTanggalValue = filterKeuTanggal.value; renderKeuangan(); });
     filterKeuJenis.addEventListener('change', function() { filterKeuJenisValue = filterKeuJenis.value; renderKeuangan(); });
@@ -2052,14 +2070,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     window.openBatalNota = function(id) {
         const nota = notaList.find(n => n.id === id);
         if (!nota) return;
-        if (currentUser.role !== 'admin' && nota.barberman !== currentUser.namaOperator) {
-            alert('❌ Anda hanya bisa membatalkan nota milik Anda sendiri.');
-            return;
-        }
-        if (nota.status === 'batal') {
-            alert('Nota sudah dibatalkan.');
-            return;
-        }
+        if (currentUser.role !== 'admin' && nota.barberman !== currentUser.namaOperator) { alert('❌ Anda hanya bisa membatalkan nota milik Anda sendiri.'); return; }
+        if (nota.status === 'batal') { alert('Nota sudah dibatalkan.'); return; }
         batalContext = { jenis: 'nota', id: id, label: `Nota ${nota.nomorNota || nota.id.slice(-6)} - ${nota.nama} (${formatRupiah(nota.total)})` };
         batalRefInfo.textContent = batalContext.label;
         batalAlasan.value = '';
@@ -2072,18 +2084,9 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     window.openBatalKeuangan = function(id) {
         const k = keuanganList.find(x => x.id === id);
         if (!k) return;
-        if (k.refNotaId) {
-            alert('❌ Transaksi ini berasal dari Nota. Silakan batalkan melalui daftar Nota di tab Nota.');
-            return;
-        }
-        if (currentUser.role !== 'admin' && k.inputBy !== currentUser.namaOperator) {
-            alert('❌ Anda hanya bisa membatalkan transaksi yang Anda buat sendiri.');
-            return;
-        }
-        if (k.status === 'batal') {
-            alert('Transaksi sudah dibatalkan.');
-            return;
-        }
+        if (k.refNotaId) { alert('❌ Transaksi ini berasal dari Nota. Silakan batalkan melalui daftar Nota di tab Nota.'); return; }
+        if (currentUser.role !== 'admin' && k.inputBy !== currentUser.namaOperator) { alert('❌ Anda hanya bisa membatalkan transaksi yang Anda buat sendiri.'); return; }
+        if (k.status === 'batal') { alert('Transaksi sudah dibatalkan.'); return; }
         batalContext = { jenis: 'keuangan', id: id, label: `${k.jenis === 'masuk' ? '💵' : '💸'} ${k.kategori || '-'} - ${formatRupiah(k.jumlah)} (${k.keterangan || '-'})` };
         batalRefInfo.textContent = batalContext.label;
         batalAlasan.value = '';
@@ -2099,25 +2102,15 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
 
     modalBatalClose.addEventListener('click', tutupModalBatal);
     btnBatalPembatalan.addEventListener('click', tutupModalBatal);
-    modalBatal.addEventListener('click', function(e) {
-        if (e.target === modalBatal) tutupModalBatal();
-    });
+    modalBatal.addEventListener('click', function(e) { if (e.target === modalBatal) tutupModalBatal(); });
 
     batalAlasan.addEventListener('input', function() {
-        if (batalAlasan.value.trim()) {
-            batalAlasan.classList.remove('error');
-            batalAlasanError.style.display = 'none';
-        }
+        if (batalAlasan.value.trim()) { batalAlasan.classList.remove('error'); batalAlasanError.style.display = 'none'; }
     });
 
     btnKonfirmasiBatal.addEventListener('click', async function() {
         const alasan = batalAlasan.value.trim();
-        if (!alasan) {
-            batalAlasan.classList.add('error');
-            batalAlasanError.style.display = 'block';
-            batalAlasan.focus();
-            return;
-        }
+        if (!alasan) { batalAlasan.classList.add('error'); batalAlasanError.style.display = 'block'; batalAlasan.focus(); return; }
 
         const { jenis, id } = batalContext;
         if (!jenis || !id) { alert('Konteks tidak valid.'); return; }
@@ -2190,19 +2183,15 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         renderDashboard();
         renderLogPembatalan();
         alert('✅ Data berhasil dibatalkan. Saldo & dashboard sudah diperbarui.');
+        // ⭐ Sync setelah batal
+        setTimeout(syncAfterAction, 1000);
     });
 
     function renderLogPembatalan() {
         if (!currentUser || currentUser.role !== 'admin') return;
         if (!logBatalContainer) return;
-
         const logs = logPembatalanList;
-
-        if (logs.length === 0) {
-            logBatalContainer.innerHTML = '<div class="empty-state">Belum ada pembatalan.</div>';
-            logBatalCount.textContent = '0 log';
-            return;
-        }
+        if (logs.length === 0) { logBatalContainer.innerHTML = '<div class="empty-state">Belum ada pembatalan.</div>'; logBatalCount.textContent = '0 log'; return; }
         logBatalCount.textContent = logs.length + ' log';
         let html = '';
         [...logs].reverse().slice(0, 50).forEach(log => {
@@ -2221,11 +2210,6 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
             </div>`;
         });
         logBatalContainer.innerHTML = html;
-
-        const infoEl = document.getElementById('logBatalInfo');
-        if (infoEl) {
-            infoEl.textContent = 'Semua pembatalan nota & keuangan tercatat di sini.';
-        }
     }
 
     function renderUserList() {
@@ -2301,49 +2285,37 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         const jamTengah = elCctvJamTengah.value;
         const tanggal = elCctvTanggal.value;
         const noKursi = selectedCctvKursi || '';
-
         if (!tanggal) { alert('Tanggal CCTV wajib diisi.'); elCctvTanggal.focus(); return; }
         if (!jamTengah) { alert('Jam pertengahan duduk wajib diisi.'); elCctvJamTengah.focus(); return; }
-
-        const cctvBaru = {
-            id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-            nama: nama,
-            noKursi: noKursi,
-            jamTengah: jamTengah,
-            tanggal: tanggal
-        };
+        const cctvBaru = { id: 'cctv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6), nama: nama, noKursi: noKursi, jamTengah: jamTengah, tanggal: tanggal };
         cctvList.push(cctvBaru);
-
         elCctvNama.value = '';
         elCctvJamTengah.value = '10:15';
         selectedCctvKursi = null;
         renderCctvKursiButtons();
-
         renderCctvList();
         renderLaporan();
-
         if (apiOnline) {
             const res = await apiCall('addCctv', cctvBaru, 'POST');
             if (!res || !res.ok) alert('⚠️ Tersimpan lokal, gagal sync: ' + (res.message || 'Error'));
-        } else {
-            alert('✅ Referensi CCTV tersimpan lokal (offline).');
-        }
+        } else { alert('✅ Referensi CCTV tersimpan lokal (offline).'); }
+        // ⭐ Sync setelah tambah CCTV
+        setTimeout(syncAfterAction, 1000);
     });
     window.deleteCctv = async function(id) {
         if (!confirm('Hapus CCTV ini?')) return;
         cctvList = cctvList.filter(c => c.id !== id); renderAll();
-        if (apiOnline) apiCall('deleteCctv', { id }, 'POST');
+        if (apiOnline) {
+            await apiCall('deleteCctv', { id }, 'POST');
+            setTimeout(syncAfterAction, 1000);
+        }
     };
     window.cetakNotaById = function(id) { const nota = notaList.find(n => n.id === id); if (nota) bukaModalCetak(nota); };
 
-    // ============ EKSPOR EXCEL ============
     function formatTanggalExcel(tgl) {
         if (!tgl) return '-';
         const s = String(tgl).substring(0, 10);
-        if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-            const [y, m, d] = s.split('-');
-            return `${d}/${m}/${y}`;
-        }
+        if (/^\d{4}-\d{2}-\d{2}/.test(s)) { const [y, m, d] = s.split('-'); return `${d}/${m}/${y}`; }
         return s;
     }
     window.exportNotaExcel = function() {
@@ -2396,59 +2368,59 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
         renderCctvTanpaNota();
     }
 
+    // ⭐ rebuildKeuanganFromNota — VERSI BERSIH (tanpa auto-sync, hapus yatim)
     function rebuildKeuanganFromNota() {
         let changed = false;
+        const notaIds = new Set(notaList.map(n => n.id));
+        const sebelum = keuanganList.length;
+        keuanganList = keuanganList.filter(k => {
+            if (!k.refNotaId) return true;
+            if (!String(k.refNotaId).startsWith('nota_')) return true;
+            return notaIds.has(k.refNotaId);
+        });
+        if (keuanganList.length < sebelum) {
+            console.log('[Rebuild] Hapus ' + (sebelum - keuanganList.length) + ' keuangan yatim.');
+            changed = true;
+        }
+        const existingIds = new Set(keuanganList.map(k => k.id));
+        const existingRefIds = new Set(keuanganList.filter(k => k.refNotaId).map(k => k.refNotaId));
         notaList.forEach(n => {
             if (n.status === 'batal') return;
             const keuId = 'keu_nota_' + n.id;
-            const exists = keuanganList.some(k => k.id === keuId || k.refNotaId === n.id);
-            if (!exists && n.total > 0) {
-                const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
-                const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` + (n.noKursi ? ` (Kursi ${n.noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
-                keuanganList.push({
-                    id: keuId, jenis: 'masuk', kategori: 'Layanan Barbershop',
-                    jumlah: Number(n.total) || 0, keterangan: ketNota, tanggal: n.tanggal,
-                    metode: 'Cash', inputBy: n.barberman || '', refNotaId: n.id, status: 'aktif'
-                });
-                changed = true;
-            }
+            if (existingIds.has(keuId)) return;
+            if (existingRefIds.has(n.id)) return;
+            if (!n.total || n.total <= 0) return;
+            const ketLayanan = (n.layanan || []).map(l => l.nama).join(', ');
+            const ketNota = `Nota ${n.nomorNota || n.id.slice(-6).toUpperCase()} - ${n.nama}` + (n.noKursi ? ` (Kursi ${n.noKursi})` : '') + (ketLayanan ? ` - ${ketLayanan}` : '');
+            keuanganList.push({
+                id: keuId, jenis: 'masuk', kategori: 'Layanan Barbershop',
+                jumlah: Number(n.total) || 0, keterangan: ketNota, tanggal: n.tanggal,
+                metode: 'Cash', inputBy: n.barberman || '', refNotaId: n.id, status: 'aktif'
+            });
+            existingIds.add(keuId);
+            existingRefIds.add(n.id);
+            changed = true;
         });
-        if (changed) {
-            saveKeuangan();
-            if (apiOnline) {
-                keuanganList.forEach(k => {
-                    if (k.refNotaId && !k._synced) {
-                        apiCall('addKeuangan', k, 'POST').catch(() => {});
-                        k._synced = true;
-                    }
-                });
-            }
-        }
+        if (changed) saveKeuangan();
     }
 
-    // ⭐ Paksa kirim semua transaksi lokal ke server
+    // ⭐ Sync manual — cek server dulu untuk hindari duplikat
     window.syncSemuaKeuanganKeServer = async function() {
         if (!apiOnline) { alert('Server offline, tidak bisa sync.'); return; }
         if (!currentUser || currentUser.role !== 'admin') { alert('Hanya admin.'); return; }
-
-        const belumSync = keuanganList.filter(k => !k._synced && k.status !== 'batal');
-        if (belumSync.length === 0) { alert('Semua transaksi sudah ter-sync.'); return; }
-
-        if (!confirm(`Akan sync ${belumSync.length} transaksi ke server. Lanjutkan?`)) return;
-
+        const res = await apiCall('getKeuangan', {}, 'GET');
+        if (!res || !res.ok) { alert('Gagal ambil data server.'); return; }
+        const serverIds = new Set((res.data || []).map(k => k.id));
+        const belumSync = keuanganList.filter(k => !serverIds.has(k.id) && k.status !== 'batal');
+        if (belumSync.length === 0) { alert('Semua transaksi sudah ada di server.'); return; }
+        if (!confirm(`Akan sync ${belumSync.length} transaksi BARU ke server. Lanjutkan?`)) return;
         let sukses = 0, gagal = 0;
         for (const k of belumSync) {
             try {
-                const res = await apiCall('addKeuangan', k, 'POST');
-                if (res && res.ok) {
-                    k._synced = true;
-                    sukses++;
-                } else {
-                    gagal++;
-                }
-            } catch (e) {
-                gagal++;
-            }
+                const r = await apiCall('addKeuangan', k, 'POST');
+                if (r && r.ok) { k._synced = true; sukses++; }
+                else gagal++;
+            } catch (e) { gagal++; }
         }
         saveKeuangan();
         alert(`✅ Sync selesai!\nSukses: ${sukses}\nGagal: ${gagal}`);
@@ -2679,12 +2651,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbyp7s3LJPUhjFew29V5W0cp
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('./sw.js')
-                .then(function(registration) {
-                    console.log('[PWA] Service Worker registered:', registration.scope);
-                })
-                .catch(function(err) {
-                    console.warn('[PWA] Service Worker gagal:', err);
-                });
+                .then(function(registration) { console.log('[PWA] Service Worker registered:', registration.scope); })
+                .catch(function(err) { console.warn('[PWA] Service Worker gagal:', err); });
         });
     }
     let deferredPrompt = null;
